@@ -2,99 +2,95 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Training Plan</title>
 <style>
 :root{
-  --bg:#f6f4ef;--card:#ffffff;--ink:#1d1c1a;--muted:#6b675f;--line:#e4e0d7;
-  --accent:#2f6b4f;--accent-soft:#e3efe8;--rest:#8a8377;--rest-soft:#efece6;
-  --cardio:#a2562a;--cardio-soft:#f6e7dc;--field:#fbfaf7;--danger:#a33a2c;
+  --bg:#f4f4f2;--card:#ffffff;--ink:#1a1a19;--muted:#8a8a85;--line:#ececea;
+  --accent:#2f6b4f;--accent-soft:#e7f0eb;--field:#f2f2f0;--danger:#b0453a;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#151513;--card:#1f1f1c;--ink:#ecebe6;--muted:#a19d94;--line:#33322e;
-    --accent:#7cc39d;--accent-soft:#1f3329;--rest:#9b958a;--rest-soft:#2a2925;
-    --cardio:#e0a07a;--cardio-soft:#3a2a20;--field:#181816;--danger:#e0786a;
+    --bg:#111110;--card:#1b1b1a;--ink:#ededea;--muted:#8d8c86;--line:#2a2a28;
+    --accent:#7cc39d;--accent-soft:#1d2c24;--field:#242422;--danger:#e0786a;
   }
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;line-height:1.55}
-.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
-h1{font-size:1.45rem;margin:0 0 4px;text-align:center}
-.sub{color:var(--muted);margin:0 0 16px;font-size:.92rem;text-align:center}
-.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px}
-.box summary{font-size:1rem;font-weight:700;cursor:pointer}
-.box[open] summary{margin-bottom:8px}
-.box ul{margin:0;padding-inline-start:20px}
-.box li{margin:3px 0}
-.day{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
-.day.today{border:2px solid var(--accent)}
-.day{scroll-margin-top:84px}
-.head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;background:var(--accent-soft)}
-.day.rest .head{background:var(--rest-soft)}
-.day.cardio .head{background:var(--cardio-soft)}
-.head .t{font-size:1.1rem;font-weight:700}
-.head .d{font-size:.8rem;color:var(--muted);font-weight:400;margin-inline-start:6px}
-.tag{font-size:.88rem;font-weight:700;color:var(--accent);direction:ltr}
-.day.rest .tag{color:var(--rest)}
-.day.cardio .tag{color:var(--cardio)}
-.badge{font-size:.72rem;background:var(--accent);color:var(--card);padding:1px 8px;border-radius:99px;margin-inline-start:6px;vertical-align:middle}
-.ex{padding:11px 16px;border-top:1px solid var(--line)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:170px;
+  font-family:-apple-system,"SF Pro Text","Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 32px}
+h1{font-size:1.25rem;font-weight:600;margin:4px 0 2px;text-align:center;letter-spacing:.2px}
+.sub{color:var(--muted);margin:0 0 20px;font-size:.82rem;text-align:center}
+
+.day{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;scroll-margin-top:96px}
+.day.today{box-shadow:inset -3px 0 0 var(--accent)}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 18px 6px}
+.head .t{font-size:1.05rem;font-weight:600}
+.head .d{font-size:.78rem;color:var(--muted);margin-inline-start:6px}
+.tag{font-size:.78rem;font-weight:600;color:var(--accent);direction:ltr;letter-spacing:.3px}
+.day.rest .tag,.day.cardio .tag{color:var(--muted)}
+.badge{font-size:.68rem;color:var(--accent);margin-inline-start:6px}
+.ex{padding:12px 18px;border-top:1px solid var(--line)}
 .head + .ex{border-top:0}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.name{font-weight:600;direction:ltr;text-align:right}
-.name a{color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--muted)}
-.name a::after{content:" ▶";font-size:.7em;color:var(--accent)}
-.target{font-size:.85rem;color:var(--muted);white-space:nowrap;direction:ltr}
-.ar{font-size:.78rem;color:var(--muted)}
+.name{font-weight:500;direction:ltr;text-align:right}
+.name a{color:var(--ink);text-decoration:none}
+.name a::before{content:"▶ ";font-size:.65em;color:var(--accent);vertical-align:1px}
+.target{font-size:.8rem;color:var(--muted);white-space:nowrap;direction:ltr}
+.ar{font-size:.75rem;color:var(--muted)}
 .sets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
-.side{font-size:.75rem;color:var(--muted);min-width:34px}
-.sets input{width:56px;padding:7px 4px;text-align:center;font-size:1rem;border:1px solid var(--line);
-  border-radius:8px;background:var(--field);color:var(--ink)}
-.sets input:focus{outline:2px solid var(--accent);border-color:transparent}
-.sets input.filled{border-color:var(--accent)}
-.sets input:disabled{opacity:.35}
-.warm{background:var(--field)}
-.note{width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
-  background:var(--field);color:var(--ink);font:inherit;font-size:.9rem;resize:vertical;min-height:38px}
-.foot{padding:10px 16px 14px;border-top:1px solid var(--line)}
-.actions{display:flex;gap:8px;align-items:center;margin-top:8px}
-button{font:inherit;font-size:.85rem;padding:7px 14px;border-radius:8px;cursor:pointer;
-  border:1px solid var(--accent);background:var(--accent);color:var(--card)}
-button.ghost{background:transparent;color:var(--danger);border-color:var(--danger)}
+.side{font-size:.72rem;color:var(--muted);min-width:28px}
+input,textarea{font-size:16px}
+.sets input{width:54px;height:44px;padding:0 4px;text-align:center;font-size:17px;border:0;
+  border-radius:10px;background:var(--field);color:var(--ink);-webkit-appearance:none;appearance:none}
+.sets input:focus{outline:2px solid var(--accent)}
+.sets input.filled{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sets input:disabled{opacity:.3}
+.note{width:100%;margin-top:4px;padding:10px 12px;border:0;border-radius:10px;
+  background:var(--field);color:var(--ink);font:inherit;font-size:16px;resize:vertical;min-height:44px}
+.foot{padding:12px 18px 16px;border-top:1px solid var(--line)}
+.actions{display:flex;gap:10px;align-items:center;margin-top:10px}
+button{font:inherit;font-size:.9rem;font-weight:500;padding:0 16px;height:44px;border-radius:12px;cursor:pointer;
+  border:0;background:var(--accent);color:var(--card)}
+button.sec{background:var(--field);color:var(--ink)}
+button.ghost{background:transparent;color:var(--danger);height:auto;padding:8px}
+button:disabled{opacity:.35;cursor:default}
 .ok{font-size:.8rem;color:var(--accent)}
-.plain{padding:12px 16px;margin:0}
-.danger{text-align:center;margin-top:24px}
-.lbl{font-size:.8rem;color:var(--muted)}
+.plain{padding:4px 18px 16px;margin:0;color:var(--muted);font-size:.88rem}
+.lbl{font-size:.75rem;color:var(--muted)}
+.box{margin:24px 0 8px;padding:0 4px;color:var(--muted);font-size:.86rem}
+.box summary{font-weight:600;cursor:pointer;color:var(--ink);font-size:.9rem;padding:6px 0}
+.box ul{margin:6px 0 0;padding-inline-start:18px}
+.box li{margin:4px 0}
+.danger{text-align:center;margin-top:8px}
+
+/* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
-  box-shadow:0 4px 14px rgba(0,0,0,.06);padding:calc(8px + env(safe-area-inset-top)) 16px 8px}
-.sw .in{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.sw button{min-width:92px;white-space:nowrap}
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+.sw .in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sw button{min-width:104px;height:52px;font-size:1rem;white-space:nowrap}
 .sw .mid{text-align:center;flex:1}
-.sw .time{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;line-height:1.1}
+.sw .time{font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;line-height:1.1}
 .sw .st{font-size:.72rem;color:var(--muted)}
 .sw.running .time{color:var(--accent)}
-.sw button.sec{background:transparent;color:var(--accent)}
-.sw button:disabled{opacity:.4;cursor:default}
-body{padding-bottom:120px}
+
+/* bottom: rest timer */
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
-  box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
-.timer .in{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
-.timer .top{display:flex;align-items:center;gap:10px;width:100%}
-.timer .btns{display:flex;gap:6px;width:100%}
-.timer .btns button{flex:1;padding:8px 4px}
-.timer .btns button.ctl{flex:1.5;white-space:nowrap;font-size:.8rem}
-.timer .clock{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;min-width:76px;text-align:center}
-.timer .lab{font-size:.75rem;color:var(--muted);flex:1}
-.timer button{padding:8px 12px}
-.timer button.sec{background:transparent;color:var(--accent)}
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+.timer .in{max-width:640px;margin:0 auto}
+.timer .top{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.timer .clock{font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;line-height:1}
+.timer .lab{font-size:.78rem;color:var(--muted)}
+.timer .btns{display:flex;gap:6px}
+.timer .btns button{flex:1;height:52px;padding:0 4px;font-size:1rem;font-variant-numeric:tabular-nums}
+.timer .btns button[data-sec]{background:var(--accent-soft);color:var(--accent)}
+.timer .btns button.ctl{flex:1.4;white-space:nowrap;font-size:.88rem}
 .timer.running .clock{color:var(--accent)}
-.timer button:disabled{opacity:.4;cursor:default}
 .timer.done{background:var(--accent)}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
-.timer.done button{background:var(--card);color:var(--accent);border-color:var(--card)}
-.timer.done button.sec{background:transparent;color:var(--card);border-color:var(--card)}
+.timer.done .btns button[data-sec]{background:var(--card);color:var(--accent)}
+.timer.done .btns button.sec{background:rgba(255,255,255,.18);color:var(--card)}
 </style>
 </head>
 <body>
@@ -107,7 +103,9 @@ body{padding-bottom:120px}
 </div>
 <div class="wrap">
   <h1>Training Plan</h1>
-  <p class="sub">اضغط اسم التمرين لفتح الفيديو، ثم سجّل عدد كل مجموعة. يُحفظ ما تكتبه تلقائيًا في متصفحك.</p>
+  <p class="sub">اضغط اسم التمرين لفتح الفيديو، ثم سجّل كل مجموعة.</p>
+
+  <div id="days"></div>
 
   <details class="box">
     <summary>قواعد ثابتة</summary>
@@ -116,11 +114,10 @@ body{padding-bottom:120px}
       <li>الراحة بين المجموعات من دقيقة ونصف إلى دقيقتين.</li>
       <li>أنهِ كل مجموعة وأنت قادر على 1 إلى 3 تكرارات إضافية، فلا تصل إلى الفشل.</li>
       <li>في تمارين الرجل الواحدة ابدأ باليسرى (L)، وعددها هو الذي يحدد عدد اليمنى (R).</li>
-      <li>في نهاية اليوم اضغط «نسخ النتائج» والصقها في المحادثة.</li>
+      <li>في نهاية التمرين اضغط «توقف» في الأعلى، ثم «نسخ النتائج» والصقها في المحادثة.</li>
+      <li>ما تكتبه يُحفظ تلقائيًا في هذا المتصفح فقط.</li>
     </ul>
   </details>
-
-  <div id="days"></div>
 
   <div class="danger">
     <button class="ghost" id="clearAll">حذف كل البيانات المحفوظة</button>
@@ -275,7 +272,7 @@ body{padding-bottom:120px}
     var note=el("textarea","note"); note.value=load(pre+"note");
     note.addEventListener("input",function(){store(pre+"note",note.value);});
     foot.appendChild(note);
-    var act=el("div","actions"); var b=el("button",null,"نسخ النتائج"); var ok=el("span","ok","");
+    var act=el("div","actions"); var b=el("button","sec","نسخ النتائج"); var ok=el("span","ok","");
     act.appendChild(b); act.appendChild(ok); foot.appendChild(act);
     card.appendChild(foot);
 
