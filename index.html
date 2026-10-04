@@ -77,6 +77,12 @@ button:disabled{opacity:.35;cursor:default}
 .danger{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;margin-top:8px}
 button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
+.tipbtn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-inline-start:8px;
+  border-radius:50%;border:1.5px solid var(--muted);color:var(--muted);font:600 .72rem/1 Georgia,serif;font-style:italic;
+  background:transparent;padding:0;vertical-align:2px;cursor:pointer}
+.tipbtn.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.tip{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;line-height:1.6}
+.tip.on{display:block}
 /* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
   padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
@@ -151,20 +157,20 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
-    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner"},
-    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat"},
-    doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise"},
-    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner"},
-    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner"},
-    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form"},
-    slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge"},
-    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form"},
-    plank:{n:"Plank",ar:"الثبات",q:"plank proper form"},
-    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise"},
-    superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form"},
-    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight"},
-    calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise"},
-    walk:{n:"Brisk Walk",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes"}
+    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. الهدف القادم: 11 في المجموعة الأولى، ثم الوصول إلى 12 / 12 / 12 تدريجيًا."},
+    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"انزل في 3 ثوانٍ كاملة حتى تلمس كرسيًا خلفك (الفخذ موازٍ للأرض تقريبًا)، ولا تنزل أعمق من ذلك، فالألم يظهر عند أقصى انثناء للركبة. لا تتجاوز الحد الأعلى للنطاق."},
+    doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"قرّب قدميك من الباب ليميل جسمك أكثر، واثبت ثانية حين يصل صدرك إلى الباب. الهدف 10 إلى 12 بهذه الصعوبة."},
+    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"مدى قصير: انزل إلى منتصف المسافة فقط وتوقف قبل نقطة الألم، مع الاستناد على الجدار. إن تجاوز ألم الركبة 3 من 10 فاتركه لذلك اليوم."},
+    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"الوركان عاليان (حرف V مقلوب)، والرأس ينزل أمام اليدين لا بينهما، والمرفقان للخلف بزاوية 45° تقريبًا، والحركة بطيئة. لا نزيد الصعوبة قبل التأكد من التكنيك."},
+    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت ثانيتين في الأعلى مع شدّ المؤخرة في كل تكرار."},
+    slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"اثبت ثانية في الأعلى، وأبقِ الحوض مستويًا لا يميل إلى جهة."},
+    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء في 3 ثوانٍ، ولا تتركهما تسقطان."},
+    plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه."},
+    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"حرّك الذراعين ببطء، والصدر مرفوع قليلًا عن الأرض طوال المجموعة."},
+    superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
+    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"انحنِ من الورك والظهر مستقيم، والركبة مثنية قليلًا وثابتة. المس الجدار للتوازن عند الحاجة."},
+    calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
+    walk:{n:"Brisk Walk",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"جهد متوسط: تتنفس أسرع من المعتاد وتستطيع الكلام بجمل قصيرة. المشي في الخارج أو فيديو Walk at Home كلاهما مناسب."}
   };
 
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
@@ -246,8 +252,16 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var id=it[0],sets=it[1],tgt=it[2],type=it[3];
       var ex=el("div","ex");
       var r=el("div","row"); var nm=el("div","name"); nm.appendChild(link(id)); r.appendChild(nm);
+      var tipBox=null;
+      if(EX[id].tip){
+        var tb=el("button","tipbtn","i"); tb.type="button"; tb.setAttribute("aria-label","ملاحظات التمرين");
+        tipBox=el("div","tip",EX[id].tip);
+        tb.addEventListener("click",function(){tipBox.classList.toggle("on");tb.classList.toggle("on");});
+        nm.appendChild(tb);
+      }
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
+      if(tipBox) ex.appendChild(tipBox);
       var k=pre+idx+"-"+id+":";
       var seqs=[],seq=[];
       if(type==="lr"){
