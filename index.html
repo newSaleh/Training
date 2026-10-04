@@ -53,6 +53,7 @@ h1{font-size:1.45rem;margin:0 0 4px;text-align:center}
   border-radius:8px;background:var(--field);color:var(--ink)}
 .sets input:focus{outline:2px solid var(--accent);border-color:transparent}
 .sets input.filled{border-color:var(--accent)}
+.sets input:disabled{opacity:.35}
 .warm{background:var(--field)}
 .note{width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
   background:var(--field);color:var(--ink);font:inherit;font-size:.9rem;resize:vertical;min-height:38px}
@@ -226,19 +227,27 @@ body{padding-bottom:120px}
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
       var k=pre+idx+"-"+id+":";
+      var seq=[];
       if(type==="lr"){
+        var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
           var row=el("div","sets"); row.appendChild(el("span","side",s));
-          for(var i=1;i<=sets;i++) row.appendChild(input(k+s+i,"#"+i));
+          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i); by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
+        for(var j=0;j<sets;j++){seq.push(by.L[j]);seq.push(by.R[j]);}
       } else {
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++) row.appendChild(input(k+i,type==="m"?"":"#"+i));
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i); seq.push(inp); row.appendChild(inp);}
         ex.appendChild(row);
       }
+      function gate(){
+        seq.forEach(function(inp,n){ inp.disabled = n>0 && !inp.value && !seq[n-1].value; });
+      }
+      seq.forEach(function(inp){inp.addEventListener("input",gate);});
+      gate();
       card.appendChild(ex);
     });
 
