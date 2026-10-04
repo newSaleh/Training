@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261004151841">
+<meta name="app-version" content="20261004153713">
 <title>Training Plan</title>
 <style>
 :root{
@@ -163,9 +163,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"قرّب قدميك من الباب ليميل جسمك أكثر، واثبت ثانية حين يصل صدرك إلى الباب. الهدف 10 إلى 12 بهذه الصعوبة."},
     splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"مدى قصير: انزل إلى منتصف المسافة فقط وتوقف قبل نقطة الألم، مع الاستناد على الجدار. إن تجاوز ألم الركبة 3 من 10 فاتركه لذلك اليوم."},
     pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"الوركان عاليان (حرف V مقلوب)، والرأس ينزل أمام اليدين لا بينهما، والمرفقان للخلف بزاوية 45° تقريبًا، والحركة بطيئة. لا نزيد الصعوبة قبل التأكد من التكنيك."},
-    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت ثانيتين في الأعلى مع شدّ المؤخرة في كل تكرار."},
+    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت ثانيتين في الأعلى مع شدّ المؤخرة في كل تكرار. بهذا الثبات يصبح النطاق 12 إلى 15."},
     slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"اثبت ثانية في الأعلى، وأبقِ الحوض مستويًا لا يميل إلى جهة."},
-    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء في 3 ثوانٍ، ولا تتركهما تسقطان."},
+    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء في 3 ثوانٍ، ولا تتركهما تسقطان. بهذا البطء يصبح النطاق 10 إلى 12."},
     plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه."},
     snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"حرّك الذراعين ببطء، والصدر مرفوع قليلًا عن الأرض طوال المجموعة."},
     superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
@@ -177,19 +177,19 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
   var PLAN=[
     {name:"Full Body A",kind:"train",items:[
-      ["pushup",3,"8–12","r"],["tempoSquat",3,"10–15","r"],["doorRow",3,"8–15","r"],
-      ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["bridge",2,"12–20","r"],["revCrunch",2,"10–15","r"]]},
+      ["pushup",3,"8–12","r"],["tempoSquat",3,"10–15","r"],["doorRow",3,"10–12","r"],
+      ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["bridge",2,"12–15","r"],["revCrunch",2,"10–12","r"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r"],["pushup",3,"8–12","r"],["doorRow",3,"8–15","r"],
+      ["tempoSquat",3,"10–15","r"],["pushup",3,"8–12","r"],["doorRow",3,"10–12","r"],
       ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["slBridge",2,"8–12 / leg","lr"],["plank",2,"20–30 sec","s"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
-      ["pushup",3,"8–12","r"],["pike",2,"5–8","r"],["doorRow",3,"8–15","r"],
+      ["pushup",3,"8–12","r"],["pike",2,"5–8","r"],["doorRow",3,"10–12","r"],
       ["snowAngel",2,"10–15","r"],["superman",2,"10–15","r"],["plank",2,"20–30 sec","s"]]},
     {name:"Lower Body",kind:"train",items:[
-      ["tempoSquat",3,"12–18","r"],["splitSquat",2,"5–8 / leg","lr"],["slRdl",2,"6–10 / leg","lr"],
-      ["bridge",3,"12–20","r"],["calf",2,"15–25","r"],["revCrunch",2,"10–15","r"]]},
+      ["tempoSquat",3,"10–15","r"],["splitSquat",2,"5–8 / leg","lr"],["slRdl",2,"6–10 / leg","lr"],
+      ["bridge",3,"12–15","r"],["calf",2,"15–25","r"],["revCrunch",2,"10–12","r"]]},
     {name:"Rest",kind:"rest"}
   ];
   var DAY_AR=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
