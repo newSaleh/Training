@@ -139,7 +139,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 <div class="timer" id="timer">
   <div class="in">
     <button data-sec="90">ابدأ 1:30</button>
-    <div class="mid"><div class="clock" id="clock">0:00</div><div class="lab" id="tlab">مؤقت الراحة</div></div>
+    <div class="mid"><div class="clock" id="clock">1:30</div><div class="lab" id="tlab">مؤقت الراحة</div></div>
     <button class="sec" id="tstop">إيقاف</button>
   </div>
 </div>
@@ -383,9 +383,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     location.reload();
   });
 
-  // Rest timer
+  // Rest timer: one button = start / pause / resume
   var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
-  var endAt=0,tick=null,actx=null,remain=0,paused=false;
+  var tBtn=tEl.querySelector("button[data-sec]"),REST=parseInt(tBtn.getAttribute("data-sec"),10)*1000;
+  var endAt=0,tick=null,actx=null,remain=0,state="idle"; // idle | run | pause
   function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
   function beep(){
     try{
@@ -399,29 +400,30 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     }catch(e){}
     try{if(navigator.vibrate)navigator.vibrate([200,100,200]);}catch(e){}
   }
-  function stopTimer(reset){
-    clearInterval(tick);tick=null;endAt=0;tEl.classList.remove("running");
-    
-    if(reset){tEl.classList.remove("done");clock.textContent="0:00";tlab.textContent="مؤقت الراحة";}
+  function setIdle(done){
+    clearInterval(tick);tick=null;state="idle";tEl.classList.remove("running");
+    tBtn.textContent="ابدأ 1:30";
+    if(done){tEl.classList.add("done");clock.textContent="0:00";tlab.textContent="انتهت الراحة";}
+    else{tEl.classList.remove("done");clock.textContent=fmt(REST/1000);tlab.textContent="مؤقت الراحة";}
   }
   function update(){
     var left=(endAt-Date.now())/1000;
-    if(left<=0){
-      stopTimer(false);clock.textContent="0:00";tlab.textContent="انتهت الراحة";
-      tEl.classList.add("done");beep();return;
-    }
+    if(left<=0){setIdle(true);beep();return;}
     clock.textContent=fmt(left);
   }
-  Array.prototype.forEach.call(tEl.querySelectorAll("button[data-sec]"),function(b){
-    b.addEventListener("click",function(){
-      try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)actx=new AC();} if(actx&&actx.state==="suspended")actx.resume(); }catch(e){}
-      stopTimer(true);
-      endAt=Date.now()+parseInt(b.getAttribute("data-sec"),10)*1000;
-      tEl.classList.add("running");tlab.textContent="راحة…";update();
-      tick=setInterval(update,250);
-    });
+  function run(ms){
+    endAt=Date.now()+ms;state="run";tEl.classList.remove("done");tEl.classList.add("running");
+    tBtn.textContent="⏸ توقف";tlab.textContent="راحة…";update();clearInterval(tick);tick=setInterval(update,250);
+  }
+  tBtn.addEventListener("click",function(){
+    try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)actx=new AC();} if(actx&&actx.state==="suspended")actx.resume(); }catch(e){}
+    if(state==="idle") run(REST);
+    else if(state==="run"){remain=endAt-Date.now();clearInterval(tick);tick=null;state="pause";
+      tEl.classList.remove("running");tBtn.textContent="▶ استئناف";tlab.textContent="متوقف مؤقتًا";}
+    else run(remain);
   });
-  document.getElementById("tstop").addEventListener("click",function(){stopTimer(true);});
+  document.getElementById("tstop").addEventListener("click",function(){setIdle(false);});
+  setIdle(false);
 
   var cur=document.getElementById("day-"+tdow);
   if(cur&&tdow!==0) setTimeout(function(){cur.scrollIntoView({behavior:"smooth",block:"start"});},300);
