@@ -323,15 +323,15 @@ body{padding-bottom:120px}
   function swSave(o){store(SWK,o?JSON.stringify(o):"");}
   function swElapsed(o){return o.acc+(o.run?Date.now()-o.start:0);}
   function durationFor(ds){
-    if(ds===TODAY){var o=swState(); if(o) return hms(swElapsed(o));}
+    var o=null; try{o=JSON.parse(load("tr:"+ds+":sw")||"null");}catch(e){}
+    if(o) return hms(swElapsed(o));
     var d=load("tr:"+ds+":duration"); return d?hms(parseInt(d,10)):"";
   }
   function swRender(){
     var o=swState(); clearInterval(swTick); swTick=null; swEl.classList.remove("running");
     if(!o){
-      var d=load(DK); swTime.textContent=hms(d?parseInt(d,10):0);
-      swMain.textContent=d?"متابعة":"بدء"; swStop.disabled=true;
-      swSt.textContent=d?"انتهى تمرين اليوم":"مدة تمرين اليوم"; return;
+      swTime.textContent=hms(0); swMain.textContent="بدء"; swStop.disabled=true;
+      swSt.textContent="مدة تمرين اليوم"; return;
     }
     swStop.disabled=false; swTime.textContent=hms(swElapsed(o));
     if(o.run){
@@ -341,14 +341,15 @@ body{padding-bottom:120px}
   }
   swMain.addEventListener("click",function(){
     var o=swState();
-    if(!o){var d=load(DK); o={acc:d?parseInt(d,10):0,run:true,start:Date.now()};}
+    if(!o){o={acc:0,run:true,start:Date.now()};}
     else if(o.run){o.acc=swElapsed(o);o.run=false;}
     else {o.run=true;o.start=Date.now();}
     swSave(o); swRender();
   });
   swStop.addEventListener("click",function(){
     var o=swState(); if(!o) return;
-    store(DK,String(swElapsed(o))); swSave(null); swRender();
+    if(!confirm("سيُصفَّر العداد ويُحذف وقت تمرين اليوم. هل أنت متأكد؟")) return;
+    store(DK,""); swSave(null); swRender();
   });
   swRender();
 
