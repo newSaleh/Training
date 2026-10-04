@@ -21,7 +21,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:170px;
+body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:110px;
   font-family:-apple-system,"SF Pro Text","Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;line-height:1.5}
 .wrap{max-width:640px;margin:0 auto;padding:20px 16px 32px}
 h1{font-size:1.25rem;font-weight:600;margin:4px 0 2px;text-align:center;letter-spacing:.2px}
@@ -87,22 +87,20 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .sw .st{font-size:.72rem;color:var(--muted)}
 .sw.running .time{color:var(--accent)}
 
-/* bottom: rest timer */
+/* bottom: rest timer (mirrors top bar) */
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
-  padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
-.timer .in{max-width:640px;margin:0 auto}
-.timer .top{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
-.timer .clock{font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;line-height:1}
-.timer .lab{font-size:.78rem;color:var(--muted)}
-.timer .btns{display:flex;gap:6px}
-.timer .btns button{flex:1;height:52px;padding:0 4px;font-size:1rem;font-variant-numeric:tabular-nums}
-.timer .btns button[data-sec]{background:var(--accent-soft);color:var(--accent)}
-.timer .btns button.ctl{flex:1;white-space:nowrap}
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.timer .in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.timer button{min-width:104px;height:52px;font-size:1rem;white-space:nowrap}
+.timer button[data-sec]{background:var(--accent);color:var(--card)}
+.timer .mid{text-align:center;flex:1}
+.timer .clock{font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;line-height:1.1}
+.timer .lab{font-size:.72rem;color:var(--muted)}
 .timer.running .clock{color:var(--accent)}
 .timer.done{background:var(--accent)}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
-.timer.done .btns button[data-sec]{background:var(--card);color:var(--accent)}
-.timer.done .btns button.sec{background:rgba(255,255,255,.18);color:var(--card)}
+.timer.done button[data-sec]{background:var(--card);color:var(--accent)}
+.timer.done button.sec{background:rgba(255,255,255,.18);color:var(--card)}
 </style>
 </head>
 <body>
@@ -140,17 +138,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
 <div class="timer" id="timer">
   <div class="in">
-    <div class="top">
-      <span class="clock" id="clock">0:00</span>
-      <span class="lab" id="tlab">مؤقت الراحة</span>
-    </div>
-    <div class="btns">
-      <button data-sec="90">1:30</button>
-      <button class="sec ctl" id="tpause" disabled>⏸ توقف</button>
-      <button class="sec ctl" id="tstop">إيقاف</button>
-    </div>
+    <button data-sec="90">ابدأ 1:30</button>
+    <div class="mid"><div class="clock" id="clock">0:00</div><div class="lab" id="tlab">مؤقت الراحة</div></div>
+    <button class="sec" id="tstop">إيقاف</button>
   </div>
 </div>
+
 
 <script>
 (function(){
@@ -393,7 +386,6 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   // Rest timer
   var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
   var endAt=0,tick=null,actx=null,remain=0,paused=false;
-  var pBtn=document.getElementById("tpause");
   function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
   function beep(){
     try{
@@ -409,13 +401,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
   function stopTimer(reset){
     clearInterval(tick);tick=null;endAt=0;tEl.classList.remove("running");
-    paused=false;remain=0;pBtn.textContent="⏸ توقف";pBtn.disabled=true;
+    
     if(reset){tEl.classList.remove("done");clock.textContent="0:00";tlab.textContent="مؤقت الراحة";}
   }
   function update(){
     var left=(endAt-Date.now())/1000;
     if(left<=0){
-      stopTimer(false);clock.textContent="0:00";tlab.textContent="انتهت الراحة — المجموعة التالية";
+      stopTimer(false);clock.textContent="0:00";tlab.textContent="انتهت الراحة";
       tEl.classList.add("done");beep();return;
     }
     clock.textContent=fmt(left);
@@ -425,20 +417,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)actx=new AC();} if(actx&&actx.state==="suspended")actx.resume(); }catch(e){}
       stopTimer(true);
       endAt=Date.now()+parseInt(b.getAttribute("data-sec"),10)*1000;
-      tEl.classList.add("running");tlab.textContent="راحة…";pBtn.disabled=false;update();
+      tEl.classList.add("running");tlab.textContent="راحة…";update();
       tick=setInterval(update,250);
     });
-  });
-  pBtn.addEventListener("click",function(){
-    if(!paused){
-      if(!endAt) return;
-      remain=endAt-Date.now();clearInterval(tick);tick=null;paused=true;
-      tEl.classList.remove("running");tlab.textContent="متوقف مؤقتًا";pBtn.textContent="▶ استئناف";
-    } else {
-      endAt=Date.now()+remain;paused=false;
-      tEl.classList.add("running");tlab.textContent="راحة…";pBtn.textContent="⏸ توقف";
-      update();tick=setInterval(update,250);
-    }
   });
   document.getElementById("tstop").addEventListener("click",function(){stopTimer(true);});
 
