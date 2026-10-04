@@ -29,7 +29,11 @@ h1{font-size:1.25rem;font-weight:600;margin:4px 0 2px;text-align:center;letter-s
 
 .day{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;scroll-margin-top:96px}
 .day.today{box-shadow:inset -3px 0 0 var(--accent)}
-.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 18px 6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 18px 6px;cursor:pointer;user-select:none}
+.day.collapsed .head{padding-bottom:14px}
+.day.collapsed > :not(.head){display:none}
+.chev{display:inline-block;font-size:.7rem;color:var(--muted);margin-inline-start:8px;transition:transform .15s}
+.day.collapsed .chev{transform:rotate(90deg)}
 .head .t{font-size:1.05rem;font-weight:600}
 .head .d{font-size:.78rem;color:var(--muted);margin-inline-start:6px}
 .tag{font-size:.78rem;font-weight:600;color:var(--accent);direction:ltr;letter-spacing:.3px}
@@ -70,7 +74,7 @@ button:disabled{opacity:.35;cursor:default}
 .box summary{font-weight:600;cursor:pointer;color:var(--ink);font-size:.9rem;padding:6px 0}
 .box ul{margin:6px 0 0;padding-inline-start:18px}
 .box li{margin:4px 0}
-.danger{display:flex;justify-content:center;gap:16px;margin-top:8px}
+.danger{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;margin-top:8px}
 button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
 /* top: workout stopwatch */
@@ -128,6 +132,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   </details>
 
   <div class="danger">
+    <button class="link" id="reloadBtn">تحديث الصفحة</button>
     <button class="link" id="themeBtn">الوضع الداكن</button>
     <button class="ghost" id="clearAll">حذف كل البيانات المحفوظة</button>
   </div>
@@ -225,8 +230,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var left=el("div"); left.appendChild(el("span","t",DAY_AR[dow]));
     left.appendChild(el("span","d",date.getDate()+"/"+(date.getMonth()+1)));
     if(dow===tdow) left.appendChild(el("span","badge","اليوم"));
-    head.appendChild(left); head.appendChild(el("span","tag",p.name));
+    var right=el("span"); right.appendChild(el("span","tag",p.name)); right.appendChild(el("span","chev","▼"));
+    head.appendChild(left); head.appendChild(right);
     card.appendChild(head);
+    if(dow!==tdow) card.classList.add("collapsed");
+    head.addEventListener("click",function(){card.classList.toggle("collapsed");});
 
     if(p.kind==="rest"){
       card.appendChild(el("p","plain","لا تمارين مقاومة. المشي اليومي المعتاد فقط."));
@@ -355,6 +363,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     store(DK,""); swSave(null); swRender();
   });
   swRender();
+
+  // Hard refresh (bypasses cache; saved data stays)
+  try{ if(/[?&]v=\d+/.test(location.search)) history.replaceState(null,"",location.pathname+location.hash); }catch(e){}
+  document.getElementById("reloadBtn").addEventListener("click",function(){
+    location.replace(location.pathname+"?v="+Date.now());
+  });
 
   // Theme toggle
   var themeBtn=document.getElementById("themeBtn"),mq=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;
