@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>جدول التمارين</title>
+<style>
+:root{
+  --bg:#f6f4ef;--card:#ffffff;--ink:#1d1c1a;--muted:#6b675f;--line:#e4e0d7;
+  --accent:#2f6b4f;--accent-soft:#e3efe8;--rest:#8a8377;--rest-soft:#efece6;
+  --cardio:#a2562a;--cardio-soft:#f6e7dc;--today:#2f6b4f;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#151513;--card:#1f1f1c;--ink:#ecebe6;--muted:#a19d94;--line:#33322e;
+    --accent:#7cc39d;--accent-soft:#1f3329;--rest:#9b958a;--rest-soft:#2a2925;
+    --cardio:#e0a07a;--cardio-soft:#3a2a20;--today:#7cc39d;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:.95rem}
+.rules{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+.rules h2{font-size:1rem;margin:0 0 8px}
+.rules ul{margin:0;padding-inline-start:20px}
+.rules li{margin:3px 0}
+.day{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.day.today{border:2px solid var(--today)}
+.head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--accent-soft)}
+.day.rest .head{background:var(--rest-soft)}
+.day.cardio .head{background:var(--cardio-soft)}
+.head b{font-size:1.1rem}
+.tag{font-size:.85rem;font-weight:600;color:var(--accent)}
+.day.rest .tag{color:var(--rest)}
+.day.cardio .tag{color:var(--cardio)}
+.badge{display:none;font-size:.75rem;background:var(--today);color:var(--card);padding:2px 8px;border-radius:99px;margin-inline-start:8px}
+.day.today .badge{display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:9px 12px;border-top:1px solid var(--line);text-align:start;vertical-align:top}
+th{font-size:.8rem;color:var(--muted);font-weight:600}
+td.n{white-space:nowrap;text-align:center}
+.en{display:block;font-size:.78rem;color:var(--muted);direction:ltr;text-align:right}
+.en a{color:inherit}
+.note{display:block;font-size:.78rem;color:var(--muted)}
+.plain{padding:12px 16px;margin:0}
+.log{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.log h2{font-size:1rem;margin:0 0 8px}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  direction:rtl;white-space:pre-wrap;font-family:inherit;font-size:.9rem;margin:8px 0 0}
+@media print{body{background:#fff}.day{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>جدول التمارين — بدون أدوات</h1>
+  <p class="sub">بدأ يوم الأحد 4 أكتوبر 2026 · المراجعة بعد أسبوعين إلى أربعة أسابيع</p>
+
+  <div class="rules">
+    <h2>قواعد ثابتة</h2>
+    <ul>
+      <li>إحماء 5 دقائق قبل كل تمرين: مشي في المكان، وتدوير الذراعين والوركين، وسكوات خفيف.</li>
+      <li>الراحة بين المجموعات من دقيقة ونصف إلى دقيقتين.</li>
+      <li>أنهِ كل مجموعة وأنت قادر على 1 إلى 3 تكرارات إضافية، فلا تصل إلى الفشل.</li>
+      <li>إذا بلغت الحدّ الأعلى في كل المجموعات بتكنيك سليم، ارفع العدد في المرة التالية أو أبطئ النزول.</li>
+      <li>في تمارين الرجل الواحدة ابدأ باليسرى، وعدد تكراراتها هو الذي يحدد عدد اليمنى.</li>
+    </ul>
+  </div>
+
+  <div class="day" data-dow="0">
+    <div class="head"><b>الأحد<span class="badge">اليوم</span></b><span class="tag">Full Body أ</span></div>
+    <table>
+      <tr><th>التمرين</th><th>مجموعات</th><th>تكرارات</th></tr>
+      <tr><td>الضغط<span class="en"><a href="https://www.youtube.com/results?search_query=push+up+proper+form">Push-up</a></span></td><td class="n">3</td><td class="n">8–12</td></tr>
+      <tr><td>سكوات بنزول بطيء<span class="en"><a href="https://www.youtube.com/results?search_query=tempo+bodyweight+squat">Tempo Squat</a></span><span class="note">انزل في 3 ثوانٍ واصعد بشكل طبيعي</span></td><td class="n">3</td><td class="n">10–15</td></tr>
+      <tr><td>سحب على إطار الباب<span class="en"><a href="https://www.youtube.com/results?search_query=doorway+row+bodyweight">Doorway Row</a></span><span class="note">كلما قرّبت قدميك من الباب صعب التمرين</span></td><td class="n">3</td><td class="n">8–15</td></tr>
+      <tr><td>طعن ثابت مع الاستناد على الجدار<span class="en"><a href="https://www.youtube.com/results?search_query=split+squat+assisted+beginner">Assisted Split Squat</a></span><span class="note">لكل رجل</span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>ضغط الكتف<span class="en"><a href="https://www.youtube.com/results?search_query=pike+push+up+beginner">Pike Push-up</a></span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>رفع الحوض<span class="en"><a href="https://www.youtube.com/results?search_query=glute+bridge+form">Glute Bridge</a></span></td><td class="n">2</td><td class="n">12–20</td></tr>
+      <tr><td>رفع الركبتين للصدر<span class="en"><a href="https://www.youtube.com/results?search_query=reverse+crunch+form">Reverse Crunch</a></span></td><td class="n">2</td><td class="n">10–15</td></tr>
+    </table>
+  </div>
+
+  <div class="day cardio" data-dow="1">
+    <div class="head"><b>الاثنين<span class="badge">اليوم</span></b><span class="tag">Cardio</span></div>
+    <p class="plain">مشي سريع من 20 إلى 30 دقيقة بجهد متوسط: تتنفس بسرعة لكنك تستطيع الكلام بجمل قصيرة.</p>
+  </div>
+
+  <div class="day" data-dow="2">
+    <div class="head"><b>الثلاثاء<span class="badge">اليوم</span></b><span class="tag">Full Body ب</span></div>
+    <table>
+      <tr><th>التمرين</th><th>مجموعات</th><th>تكرارات</th></tr>
+      <tr><td>سكوات بنزول بطيء<span class="en">Tempo Squat</span></td><td class="n">3</td><td class="n">10–15</td></tr>
+      <tr><td>الضغط<span class="en">Push-up</span></td><td class="n">3</td><td class="n">8–12</td></tr>
+      <tr><td>سحب على إطار الباب<span class="en">Doorway Row</span></td><td class="n">3</td><td class="n">8–15</td></tr>
+      <tr><td>طعن ثابت مع الاستناد<span class="en">Assisted Split Squat</span><span class="note">لكل رجل</span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>ضغط الكتف<span class="en">Pike Push-up</span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>رفع الحوض برجل واحدة<span class="en"><a href="https://www.youtube.com/results?search_query=single+leg+glute+bridge">Single-leg Glute Bridge</a></span><span class="note">لكل رجل</span></td><td class="n">2</td><td class="n">8–12</td></tr>
+      <tr><td>الثبات<span class="en"><a href="https://www.youtube.com/results?search_query=plank+proper+form">Plank</a></span></td><td class="n">2</td><td class="n">20–30 ث</td></tr>
+    </table>
+  </div>
+
+  <div class="day rest" data-dow="3">
+    <div class="head"><b>الأربعاء<span class="badge">اليوم</span></b><span class="tag">راحة</span></div>
+    <p class="plain">لا تمارين مقاومة. المشي اليومي المعتاد فقط.</p>
+  </div>
+
+  <div class="day" data-dow="4">
+    <div class="head"><b>الخميس<span class="badge">اليوم</span></b><span class="tag">الجزء العلوي</span></div>
+    <table>
+      <tr><th>التمرين</th><th>مجموعات</th><th>تكرارات</th></tr>
+      <tr><td>الضغط<span class="en">Push-up</span></td><td class="n">3</td><td class="n">8–12</td></tr>
+      <tr><td>ضغط الكتف<span class="en">Pike Push-up</span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>سحب على إطار الباب<span class="en">Doorway Row</span></td><td class="n">3</td><td class="n">8–15</td></tr>
+      <tr><td>ملاك الثلج المعكوس<span class="en"><a href="https://www.youtube.com/results?search_query=reverse+snow+angel+exercise">Reverse Snow Angel</a></span><span class="note">على البطن، حرّك الذراعين ببطء</span></td><td class="n">2</td><td class="n">10–15</td></tr>
+      <tr><td>سوبرمان<span class="en"><a href="https://www.youtube.com/results?search_query=superman+exercise+form">Superman</a></span></td><td class="n">2</td><td class="n">10–15</td></tr>
+      <tr><td>الثبات<span class="en">Plank</span></td><td class="n">2</td><td class="n">20–30 ث</td></tr>
+    </table>
+  </div>
+
+  <div class="day" data-dow="5">
+    <div class="head"><b>الجمعة<span class="badge">اليوم</span></b><span class="tag">الأرجل</span></div>
+    <table>
+      <tr><th>التمرين</th><th>مجموعات</th><th>تكرارات</th></tr>
+      <tr><td>سكوات بنزول بطيء<span class="en">Tempo Squat</span></td><td class="n">3</td><td class="n">12–18</td></tr>
+      <tr><td>طعن ثابت مع الاستناد<span class="en">Assisted Split Squat</span><span class="note">لكل رجل</span></td><td class="n">2</td><td class="n">5–8</td></tr>
+      <tr><td>الرفعة الرومانية برجل واحدة<span class="en"><a href="https://www.youtube.com/results?search_query=single+leg+rdl+bodyweight">Single-leg RDL</a></span><span class="note">لكل رجل، المس الجدار للتوازن عند الحاجة</span></td><td class="n">2</td><td class="n">6–10</td></tr>
+      <tr><td>رفع الحوض<span class="en">Glute Bridge</span></td><td class="n">3</td><td class="n">12–20</td></tr>
+      <tr><td>رفع الكعبين<span class="en"><a href="https://www.youtube.com/results?search_query=calf+raise+bodyweight">Calf Raise</a></span></td><td class="n">2</td><td class="n">15–25</td></tr>
+      <tr><td>رفع الركبتين للصدر<span class="en">Reverse Crunch</span></td><td class="n">2</td><td class="n">10–15</td></tr>
+    </table>
+  </div>
+
+  <div class="day rest" data-dow="6">
+    <div class="head"><b>السبت<span class="badge">اليوم</span></b><span class="tag">راحة</span></div>
+    <p class="plain">لا تمارين مقاومة. المشي اليومي المعتاد فقط.</p>
+  </div>
+
+  <div class="log">
+    <h2>طريقة المتابعة</h2>
+    بعد كل تمرين أرسل الأرقام في المحادثة بهذا الشكل:
+    <pre>الأحد 4/10
+ضغط: 10 / 9 / 8
+سكوات: 15 / 14 / 13
+سحب الباب: 12 / 11 / 10
+طعن: يسار 5 / 5 — يمين 6 / 6
+Pike: 6 / 5
+رفع الحوض: 18 / 16
+Reverse Crunch: 12 / 10
+ملاحظة: الطعن صعب على الرجل اليسرى</pre>
+  </div>
+</div>
+<script>
+(function(){
+  var d=new Date().getDay();
+  var el=document.querySelector('.day[data-dow="'+d+'"]');
+  if(el){el.classList.add('today');}
+})();
+</script>
+</body>
+</html>
