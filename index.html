@@ -30,6 +30,7 @@ h1{font-size:1.45rem;margin:0 0 4px;text-align:center}
 .box li{margin:3px 0}
 .day{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
 .day.today{border:2px solid var(--accent)}
+.day{scroll-margin-top:84px}
 .head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;background:var(--accent-soft)}
 .day.rest .head{background:var(--rest-soft)}
 .day.cardio .head{background:var(--cardio-soft)}
@@ -66,6 +67,16 @@ button.ghost{background:transparent;color:var(--danger);border-color:var(--dange
 .plain{padding:12px 16px;margin:0}
 .danger{text-align:center;margin-top:24px}
 .lbl{font-size:.8rem;color:var(--muted)}
+.sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
+  box-shadow:0 4px 14px rgba(0,0,0,.06);padding:calc(8px + env(safe-area-inset-top)) 16px 8px}
+.sw .in{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw button{min-width:92px;white-space:nowrap}
+.sw .mid{text-align:center;flex:1}
+.sw .time{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;line-height:1.1}
+.sw .st{font-size:.72rem;color:var(--muted)}
+.sw.running .time{color:var(--accent)}
+.sw button.sec{background:transparent;color:var(--accent)}
+.sw button:disabled{opacity:.4;cursor:default}
 body{padding-bottom:120px}
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
   box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
@@ -87,6 +98,13 @@ body{padding-bottom:120px}
 </style>
 </head>
 <body>
+<div class="sw" id="sw">
+  <div class="in">
+    <button id="swMain">بدء</button>
+    <div class="mid"><div class="time" id="swTime">0:00:00</div><div class="st" id="swSt">مدة تمرين اليوم</div></div>
+    <button class="sec" id="swStop" disabled>إيقاف</button>
+  </div>
+</div>
 <div class="wrap">
   <h1>Training Plan</h1>
   <p class="sub">اضغط اسم التمرين لفتح الفيديو، ثم سجّل عدد كل مجموعة. يُحفظ ما تكتبه تلقائيًا في متصفحك.</p>
@@ -275,6 +293,7 @@ body{padding-bottom:120px}
           if(v.length) lines.push(EX[id].n+": "+v.join(" / ")+unit);
         }
       });
+      var dur=durationFor(ds); if(dur) lines.push("Duration: "+dur);
       var n=load(pre+"note").trim(); if(n) lines.push("Notes: "+n);
       if(lines.length===1) lines.push("(لا نتائج مسجلة)");
       copy(lines.join("\n"),ok);
@@ -294,6 +313,44 @@ body{padding-bottom:120px}
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done,fallback);}
     else fallback();
   }
+
+  // Workout stopwatch (today only, survives reloads)
+  var TODAY=iso(today), SWK="tr:"+TODAY+":sw", DK="tr:"+TODAY+":duration";
+  var swEl=document.getElementById("sw"),swMain=document.getElementById("swMain"),swStop=document.getElementById("swStop"),
+      swTime=document.getElementById("swTime"),swSt=document.getElementById("swSt"),swTick=null;
+  function hms(ms){var t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=t%60;return h+":"+pad(m)+":"+pad(x);}
+  function swState(){try{return JSON.parse(load(SWK)||"null");}catch(e){return null;}}
+  function swSave(o){store(SWK,o?JSON.stringify(o):"");}
+  function swElapsed(o){return o.acc+(o.run?Date.now()-o.start:0);}
+  function durationFor(ds){
+    if(ds===TODAY){var o=swState(); if(o) return hms(swElapsed(o));}
+    var d=load("tr:"+ds+":duration"); return d?hms(parseInt(d,10)):"";
+  }
+  function swRender(){
+    var o=swState(); clearInterval(swTick); swTick=null; swEl.classList.remove("running");
+    if(!o){
+      var d=load(DK); swTime.textContent=hms(d?parseInt(d,10):0);
+      swMain.textContent=d?"متابعة":"بدء"; swStop.disabled=true;
+      swSt.textContent=d?"انتهى تمرين اليوم":"مدة تمرين اليوم"; return;
+    }
+    swStop.disabled=false; swTime.textContent=hms(swElapsed(o));
+    if(o.run){
+      swEl.classList.add("running"); swMain.textContent="⏸ توقف"; swSt.textContent="التمرين جارٍ";
+      swTick=setInterval(function(){swTime.textContent=hms(swElapsed(o));},500);
+    } else { swMain.textContent="▶ استئناف"; swSt.textContent="متوقف مؤقتًا"; }
+  }
+  swMain.addEventListener("click",function(){
+    var o=swState();
+    if(!o){var d=load(DK); o={acc:d?parseInt(d,10):0,run:true,start:Date.now()};}
+    else if(o.run){o.acc=swElapsed(o);o.run=false;}
+    else {o.run=true;o.start=Date.now();}
+    swSave(o); swRender();
+  });
+  swStop.addEventListener("click",function(){
+    var o=swState(); if(!o) return;
+    store(DK,String(swElapsed(o))); swSave(null); swRender();
+  });
+  swRender();
 
   document.getElementById("clearAll").addEventListener("click",function(){
     if(!confirm("سيُحذف كل ما سجّلته في هذه الصفحة نهائيًا. هل أنت متأكد؟")) return;
