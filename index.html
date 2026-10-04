@@ -64,6 +64,17 @@ button.ghost{background:transparent;color:var(--danger);border-color:var(--dange
 .plain{padding:12px 16px;margin:0}
 .danger{text-align:center;margin-top:24px}
 .lbl{font-size:.8rem;color:var(--muted)}
+body{padding-bottom:84px}
+.timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
+  box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.timer .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px}
+.timer .clock{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;min-width:76px;text-align:center}
+.timer .lab{font-size:.75rem;color:var(--muted);flex:1}
+.timer button{padding:8px 12px}
+.timer button.sec{background:transparent;color:var(--accent)}
+.timer.running .clock{color:var(--accent)}
+.timer.done{background:var(--accent)}
+.timer.done .clock,.timer.done .lab{color:var(--card)}
 </style>
 </head>
 <body>
@@ -86,6 +97,16 @@ button.ghost{background:transparent;color:var(--danger);border-color:var(--dange
 
   <div class="danger">
     <button class="ghost" id="clearAll">حذف كل البيانات المحفوظة</button>
+  </div>
+</div>
+
+<div class="timer" id="timer">
+  <div class="in">
+    <span class="clock" id="clock">0:00</span>
+    <span class="lab" id="tlab">مؤقت الراحة</span>
+    <button data-sec="90">1:30</button>
+    <button data-sec="120">2:00</button>
+    <button class="sec" id="tstop">إيقاف</button>
   </div>
 </div>
 
@@ -256,6 +277,45 @@ button.ghost{background:transparent;color:var(--danger);border-color:var(--dange
     }catch(e){}
     location.reload();
   });
+
+  // Rest timer
+  var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
+  var endAt=0,tick=null,actx=null;
+  function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
+  function beep(){
+    try{
+      if(!actx) return;
+      [0,0.35,0.7].forEach(function(t){
+        var o=actx.createOscillator(),g=actx.createGain();
+        o.frequency.value=880;o.connect(g);g.connect(actx.destination);
+        g.gain.setValueAtTime(0.25,actx.currentTime+t);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+t+0.25);
+        o.start(actx.currentTime+t);o.stop(actx.currentTime+t+0.26);
+      });
+    }catch(e){}
+    try{if(navigator.vibrate)navigator.vibrate([200,100,200]);}catch(e){}
+  }
+  function stopTimer(reset){
+    clearInterval(tick);tick=null;endAt=0;tEl.classList.remove("running");
+    if(reset){tEl.classList.remove("done");clock.textContent="0:00";tlab.textContent="مؤقت الراحة";}
+  }
+  function update(){
+    var left=(endAt-Date.now())/1000;
+    if(left<=0){
+      stopTimer(false);clock.textContent="0:00";tlab.textContent="انتهت الراحة — المجموعة التالية";
+      tEl.classList.add("done");beep();return;
+    }
+    clock.textContent=fmt(left);
+  }
+  Array.prototype.forEach.call(tEl.querySelectorAll("button[data-sec]"),function(b){
+    b.addEventListener("click",function(){
+      try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)actx=new AC();} if(actx&&actx.state==="suspended")actx.resume(); }catch(e){}
+      stopTimer(true);
+      endAt=Date.now()+parseInt(b.getAttribute("data-sec"),10)*1000;
+      tEl.classList.add("running");tlab.textContent="راحة…";update();
+      tick=setInterval(update,250);
+    });
+  });
+  document.getElementById("tstop").addEventListener("click",function(){stopTimer(true);});
 
   var cur=document.getElementById("day-"+tdow);
   if(cur&&tdow!==0) setTimeout(function(){cur.scrollIntoView({behavior:"smooth",block:"start"});},300);
