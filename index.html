@@ -227,7 +227,7 @@ body{padding-bottom:120px}
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
       var k=pre+idx+"-"+id+":";
-      var seq=[];
+      var seqs=[],seq=[];
       if(type==="lr"){
         var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
@@ -235,19 +235,20 @@ body{padding-bottom:120px}
           for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i); by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
-        for(var j=0;j<sets;j++){seq.push(by.L[j]);seq.push(by.R[j]);}
+        seqs=[by.L,by.R];
       } else {
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
         for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i); seq.push(inp); row.appendChild(inp);}
         ex.appendChild(row);
+        seqs=[seq];
       }
-      function gate(){
-        seq.forEach(function(inp,n){ inp.disabled = n>0 && !inp.value && !seq[n-1].value; });
-      }
-      seq.forEach(function(inp){inp.addEventListener("input",gate);});
-      gate();
+      seqs.forEach(function(q){
+        function gate(){ q.forEach(function(inp,n){ inp.disabled = n>0 && !inp.value && !q[n-1].value; }); }
+        q.forEach(function(inp){inp.addEventListener("input",gate);});
+        gate();
+      });
       card.appendChild(ex);
     });
 
