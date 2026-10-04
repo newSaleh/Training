@@ -64,15 +64,20 @@ button.ghost{background:transparent;color:var(--danger);border-color:var(--dange
 .plain{padding:12px 16px;margin:0}
 .danger{text-align:center;margin-top:24px}
 .lbl{font-size:.8rem;color:var(--muted)}
-body{padding-bottom:84px}
+body{padding-bottom:120px}
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
   box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
-.timer .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px}
+.timer .in{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.timer .top{display:flex;align-items:center;gap:10px;width:100%}
+.timer .btns{display:flex;gap:6px;width:100%}
+.timer .btns button{flex:1;padding:8px 4px}
+.timer .btns button.ctl{flex:1.5;white-space:nowrap;font-size:.8rem}
 .timer .clock{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;min-width:76px;text-align:center}
 .timer .lab{font-size:.75rem;color:var(--muted);flex:1}
 .timer button{padding:8px 12px}
 .timer button.sec{background:transparent;color:var(--accent)}
 .timer.running .clock{color:var(--accent)}
+.timer button:disabled{opacity:.4;cursor:default}
 .timer.done{background:var(--accent)}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
 </style>
@@ -102,11 +107,18 @@ body{padding-bottom:84px}
 
 <div class="timer" id="timer">
   <div class="in">
-    <span class="clock" id="clock">0:00</span>
-    <span class="lab" id="tlab">مؤقت الراحة</span>
-    <button data-sec="90">1:30</button>
-    <button data-sec="120">2:00</button>
-    <button class="sec" id="tstop">إيقاف</button>
+    <div class="top">
+      <span class="clock" id="clock">0:00</span>
+      <span class="lab" id="tlab">مؤقت الراحة</span>
+    </div>
+    <div class="btns">
+      <button data-sec="30">0:30</button>
+      <button data-sec="60">1:00</button>
+      <button data-sec="90">1:30</button>
+      <button data-sec="120">2:00</button>
+      <button class="sec ctl" id="tpause" disabled>⏸ توقف</button>
+      <button class="sec ctl" id="tstop">إيقاف</button>
+    </div>
   </div>
 </div>
 
@@ -280,7 +292,8 @@ body{padding-bottom:84px}
 
   // Rest timer
   var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
-  var endAt=0,tick=null,actx=null;
+  var endAt=0,tick=null,actx=null,remain=0,paused=false;
+  var pBtn=document.getElementById("tpause");
   function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
   function beep(){
     try{
@@ -296,6 +309,7 @@ body{padding-bottom:84px}
   }
   function stopTimer(reset){
     clearInterval(tick);tick=null;endAt=0;tEl.classList.remove("running");
+    paused=false;remain=0;pBtn.textContent="⏸ توقف";pBtn.disabled=true;
     if(reset){tEl.classList.remove("done");clock.textContent="0:00";tlab.textContent="مؤقت الراحة";}
   }
   function update(){
@@ -311,9 +325,20 @@ body{padding-bottom:84px}
       try{ if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)actx=new AC();} if(actx&&actx.state==="suspended")actx.resume(); }catch(e){}
       stopTimer(true);
       endAt=Date.now()+parseInt(b.getAttribute("data-sec"),10)*1000;
-      tEl.classList.add("running");tlab.textContent="راحة…";update();
+      tEl.classList.add("running");tlab.textContent="راحة…";pBtn.disabled=false;update();
       tick=setInterval(update,250);
     });
+  });
+  pBtn.addEventListener("click",function(){
+    if(!paused){
+      if(!endAt) return;
+      remain=endAt-Date.now();clearInterval(tick);tick=null;paused=true;
+      tEl.classList.remove("running");tlab.textContent="متوقف مؤقتًا";pBtn.textContent="▶ استئناف";
+    } else {
+      endAt=Date.now()+remain;paused=false;
+      tEl.classList.add("running");tlab.textContent="راحة…";pBtn.textContent="⏸ توقف";
+      update();tick=setInterval(update,250);
+    }
   });
   document.getElementById("tstop").addEventListener("click",function(){stopTimer(true);});
 
