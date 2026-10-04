@@ -15,6 +15,10 @@
     --accent:#7cc39d;--accent-soft:#1d2c24;--field:#242422;--danger:#e0786a;
   }
 }
+:root[data-theme="dark"]{
+  --bg:#111110;--card:#1b1b1a;--ink:#ededea;--muted:#8d8c86;--line:#2a2a28;
+  --accent:#7cc39d;--accent-soft:#1d2c24;--field:#242422;--danger:#e0786a;
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:170px;
@@ -45,8 +49,11 @@ input,textarea{font-size:16px}
 .sets input{width:54px;height:44px;padding:0 4px;text-align:center;font-size:17px;border:0;
   border-radius:10px;background:var(--field);color:var(--ink);-webkit-appearance:none;appearance:none}
 .sets input:focus{outline:2px solid var(--accent)}
-.sets input.filled{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.sets input:disabled{opacity:.3}
+.sets input::placeholder{color:var(--muted);opacity:.45;font-weight:400}
+.sets input.filled{background:var(--accent);color:var(--card);font-weight:700}
+.sets input:disabled{opacity:.25}
+.sets input::-webkit-inner-spin-button,.sets input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.sets input{-moz-appearance:textfield}
 .note{width:100%;margin-top:4px;padding:10px 12px;border:0;border-radius:10px;
   background:var(--field);color:var(--ink);font:inherit;font-size:16px;resize:vertical;min-height:44px}
 .foot{padding:12px 18px 16px;border-top:1px solid var(--line)}
@@ -63,7 +70,8 @@ button:disabled{opacity:.35;cursor:default}
 .box summary{font-weight:600;cursor:pointer;color:var(--ink);font-size:.9rem;padding:6px 0}
 .box ul{margin:6px 0 0;padding-inline-start:18px}
 .box li{margin:4px 0}
-.danger{text-align:center;margin-top:8px}
+.danger{display:flex;justify-content:center;gap:16px;margin-top:8px}
+button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
 /* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
@@ -120,6 +128,7 @@ button:disabled{opacity:.35;cursor:default}
   </details>
 
   <div class="danger">
+    <button class="link" id="themeBtn">الوضع الداكن</button>
     <button class="ghost" id="clearAll">حذف كل البيانات المحفوظة</button>
   </div>
 </div>
@@ -349,6 +358,18 @@ button:disabled{opacity:.35;cursor:default}
     store(DK,""); swSave(null); swRender();
   });
   swRender();
+
+  // Theme toggle
+  var themeBtn=document.getElementById("themeBtn"),mq=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;
+  function effDark(){var t=document.documentElement.getAttribute("data-theme"); return t?t==="dark":!!(mq&&mq.matches);}
+  function themeLabel(){themeBtn.textContent=effDark()?"الوضع الفاتح":"الوضع الداكن";}
+  var savedTheme=""; try{savedTheme=localStorage.getItem("ui:theme")||"";}catch(e){}
+  if(savedTheme) document.documentElement.setAttribute("data-theme",savedTheme);
+  themeLabel();
+  themeBtn.addEventListener("click",function(){
+    var t=effDark()?"light":"dark"; document.documentElement.setAttribute("data-theme",t);
+    try{localStorage.setItem("ui:theme",t);}catch(e){} themeLabel();
+  });
 
   document.getElementById("clearAll").addEventListener("click",function(){
     if(!confirm("سيُحذف كل ما سجّلته في هذه الصفحة نهائيًا. هل أنت متأكد؟")) return;
