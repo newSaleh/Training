@@ -93,7 +93,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .timer .btns{display:flex;gap:6px}
 .timer .btns button{flex:1;height:52px;padding:0 4px;font-size:1rem;font-variant-numeric:tabular-nums}
 .timer .btns button[data-sec]{background:var(--accent-soft);color:var(--accent)}
-.timer .btns button.ctl{flex:1.4;white-space:nowrap;font-size:.88rem}
+.timer .btns button.ctl{flex:1;white-space:nowrap}
 .timer.running .clock{color:var(--accent)}
 .timer.done{background:var(--accent)}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
@@ -119,7 +119,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     <summary>قواعد ثابتة</summary>
     <ul>
       <li>ابدأ كل يوم تمرين بالإحماء (Warm-up) الموجود أعلى اليوم.</li>
-      <li>الراحة بين المجموعات من دقيقة ونصف إلى دقيقتين.</li>
+      <li>الراحة بين المجموعات دقيقة ونصف (زر 1:30 في الأسفل).</li>
       <li>أنهِ كل مجموعة وأنت قادر على 1 إلى 3 تكرارات إضافية، فلا تصل إلى الفشل.</li>
       <li>في تمارين الرجل الواحدة ابدأ باليسرى (L)، وعددها هو الذي يحدد عدد اليمنى (R).</li>
       <li>في نهاية التمرين اضغط «توقف» في الأعلى، ثم «نسخ النتائج» والصقها في المحادثة.</li>
@@ -140,10 +140,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       <span class="lab" id="tlab">مؤقت الراحة</span>
     </div>
     <div class="btns">
-      <button data-sec="30">0:30</button>
-      <button data-sec="60">1:00</button>
       <button data-sec="90">1:30</button>
-      <button data-sec="120">2:00</button>
       <button class="sec ctl" id="tpause" disabled>⏸ توقف</button>
       <button class="sec ctl" id="tstop">إيقاف</button>
     </div>
