@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="app-version" content="20261004151841">
 <title>Training Plan</title>
 <style>
 :root{
@@ -205,10 +206,19 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   function el(tag,cls,txt){var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e;}
 
+  // Arabic-Indic (٠-٩) and Persian (۰-۹) digits -> 0-9; keep digits only
+  function normDigits(t){
+    return String(t).replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-0x0660;})
+      .replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-0x06F0;})
+      .replace(/[^0-9]/g,"").slice(0,4);
+  }
   function input(key,ph){
-    var i=el("input"); i.type="number"; i.inputMode="numeric"; i.min="0"; i.placeholder=ph||"";
+    var i=el("input"); i.type="text"; i.inputMode="numeric"; i.autocomplete="off"; i.placeholder=ph||"";
     i.value=load(key); if(i.value)i.classList.add("filled");
-    i.addEventListener("input",function(){store(key,i.value.trim()); i.classList.toggle("filled",!!i.value);});
+    i.addEventListener("input",function(){
+      var v=normDigits(i.value); if(v!==i.value) i.value=v;
+      store(key,v); i.classList.toggle("filled",!!v);
+    });
     return i;
   }
 
@@ -370,6 +380,24 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     store(DK,""); swSave(null); swRender();
   });
   swRender();
+
+  // Auto-update: when a newer version is published, reload once (saved data is untouched)
+  var MYV=(document.querySelector('meta[name="app-version"]')||{}).content||"";
+  var lastCheck=0;
+  function checkUpdate(){
+    if(Date.now()-lastCheck<30000) return; lastCheck=Date.now();
+    fetch(location.pathname+"?check="+Date.now(),{cache:"no-store"}).then(function(r){return r.text();}).then(function(t){
+      var m=t.match(/name="app-version" content="([^"]+)"/);
+      if(!m||m[1]===MYV) return;
+      var guard=""; try{guard=sessionStorage.getItem("ui:upd")||"";}catch(e){}
+      if(guard===m[1]) return;
+      try{sessionStorage.setItem("ui:upd",m[1]);}catch(e){}
+      location.replace(location.pathname+"?v="+Date.now());
+    }).catch(function(){});
+  }
+  checkUpdate();
+  document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible") checkUpdate(); });
+  window.addEventListener("pageshow",function(e){ if(e.persisted) checkUpdate(); });
 
   // Hard refresh (bypasses cache; saved data stays)
   try{ if(/[?&]v=\d+/.test(location.search)) history.replaceState(null,"",location.pathname+location.hash); }catch(e){}
