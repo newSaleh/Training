@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261004153713">
+<meta name="app-version" content="20261005155424">
 <title>Training Plan</title>
 <style>
 :root{
@@ -171,7 +171,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
     slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"انحنِ من الورك والظهر مستقيم، والركبة مثنية قليلًا وثابتة. المس الجدار للتوازن عند الحاجة."},
     calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
-    walk:{n:"Brisk Walk",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"جهد متوسط: تتنفس أسرع من المعتاد وتستطيع الكلام بجمل قصيرة. المشي في الخارج أو فيديو Walk at Home كلاهما مناسب."}
+    walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"جهد متوسط: تتنفس أسرع من المعتاد وتستطيع الكلام بجمل قصيرة. المشي في الخارج أو فيديو Walk at Home كلاهما مناسب."}
   };
 
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
@@ -223,7 +223,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
 
   function link(id){
-    var a=el("a",null,EX[id].n); a.href=yt(EX[id].q); a.target="_blank"; a.rel="noopener"; return a;
+    var a=el("a",null,EX[id].n); a.href=EX[id].url||yt(EX[id].q); a.target="_blank"; a.rel="noopener"; return a;
   }
 
   var root=document.getElementById("days");
