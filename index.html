@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261006172515">
+<meta name="app-version" content="20261006172837">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -92,6 +92,24 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .tipbtn.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
 .tip{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;line-height:1.6}
 .tip.on{display:block}
+.notebtn{font-style:normal;font-family:inherit;font-size:.75rem}
+/* notes panel: fixed on the left on wide screens, bottom sheet on phones */
+.notesPanel{position:fixed;z-index:12;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  display:none;flex-direction:column;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+.notesPanel.open{display:flex}
+.np-head{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.9rem;margin-bottom:8px}
+.np-x{height:32px;width:32px;padding:0;background:var(--field);color:var(--ink);border-radius:50%}
+.notesPanel textarea{flex:1;width:100%;border:0;border-radius:10px;background:var(--field);color:var(--ink);
+  font:inherit;font-size:16px;padding:10px 12px;resize:none;line-height:1.6}
+.notesPanel textarea:focus,.note:focus{outline:2px solid var(--accent);outline-offset:0}
+.notesPanel.open + .notesToggle{display:none}
+.notesToggle{position:fixed;z-index:12;left:16px;bottom:96px;width:52px;height:52px;padding:0;border-radius:50%;
+  font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.notesPanel{left:12px;right:12px;bottom:92px;height:42vh}
+@media (min-width:1100px){
+  .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
+  .np-x,.notesToggle{display:none}
+}
 /* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
   padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
@@ -150,6 +168,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     <button class="ghost" id="clearAll">حذف كل البيانات المحفوظة</button>
   </div>
 </div>
+
+<aside class="notesPanel" id="notesPanel">
+  <div class="np-head"><span>ملاحظات اليوم</span><button type="button" class="np-x" id="panelClose" aria-label="إغلاق">✕</button></div>
+  <textarea id="panelNote" placeholder="اضغط ✎ بجانب أي تمرين لإضافة اسمه هنا، ثم اكتب ملاحظتك."></textarea>
+</aside>
+<button type="button" id="notesToggle" class="notesToggle" aria-label="ملاحظات اليوم">✎</button>
 
 <div class="timer" id="timer">
   <div class="in">
@@ -238,6 +262,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var root=document.getElementById("days");
 
+  var ORD=0, NOTE_TA={};
   PLAN.forEach(function(p,dow){
     var date=new Date(today); date.setDate(today.getDate()-tdow+dow);
     var ds=iso(date);
@@ -275,10 +300,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var tipBox=null;
       if(EX[id].tip){
         var tb=el("button","tipbtn","i"); tb.type="button"; tb.setAttribute("aria-label","ملاحظات التمرين");
-        tipBox=el("div","tip",EX[id].tip);
+        tipBox=el("div","tip on",EX[id].tip); tb.classList.add("on");
         tb.addEventListener("click",function(){tipBox.classList.toggle("on");tb.classList.toggle("on");});
         nm.appendChild(tb);
       }
+      var nb=el("button","tipbtn notebtn","✎"); nb.type="button"; nb.setAttribute("aria-label","أضف التمرين إلى الملاحظات");
+      nb.addEventListener("click",function(){appendNote(ds,EX[id].n+": ");});
+      nm.appendChild(nb);
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
       if(tipBox) ex.appendChild(tipBox);
@@ -292,11 +320,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
           ex.appendChild(row);
         });
         seqs=[by.L,by.R];
+        for(var j=0;j<sets;j++){by.L[j].dataset.ord=ORD++;by.R[j].dataset.ord=ORD++;}
       } else {
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); seq.push(inp); row.appendChild(inp);}
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ord=ORD++; seq.push(inp); row.appendChild(inp);}
         ex.appendChild(row);
         seqs=[seq];
       }
@@ -310,8 +339,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
     var foot=el("div","foot");
     foot.appendChild(el("div","lbl","ملاحظات (ألم، صعوبة، أي شيء غير طبيعي)"));
-    var note=el("textarea","note"); note.value=load(pre+"note");
-    note.addEventListener("input",function(){store(pre+"note",note.value);});
+    var note=el("textarea","note"); note.value=load(pre+"note"); NOTE_TA[ds]=note;
+    note.addEventListener("input",function(){setNote(ds,note.value,note);});
     foot.appendChild(note);
     var act=el("div","actions"); var b=el("button","sec","نسخ النتائج"); var ok=el("span","ok","");
     act.appendChild(b); act.appendChild(ok); foot.appendChild(act);
@@ -351,6 +380,25 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done,fallback);}
     else fallback();
   }
+
+  // Notes panel (today) + helpers
+  var panel=document.getElementById("notesPanel"),panelTa=document.getElementById("panelNote"),
+      panelToggle=document.getElementById("notesToggle"),TODAY_DS=iso(today);
+  function setNote(ds,val,from){
+    store("tr:"+ds+":note",val);
+    if(NOTE_TA[ds]&&NOTE_TA[ds]!==from) NOTE_TA[ds].value=val;
+    if(ds===TODAY_DS&&panelTa!==from) panelTa.value=val;
+  }
+  function endFocus(ta){ta.focus(); var n=ta.value.length; try{ta.setSelectionRange(n,n);}catch(e){} ta.scrollTop=ta.scrollHeight;}
+  function appendNote(ds,txt){
+    var v=load("tr:"+ds+":note"); if(v&&!/\n$/.test(v)) v+="\n"; v+=txt; setNote(ds,v,null);
+    if(ds===TODAY_DS){panel.classList.add("open"); endFocus(panelTa);}
+    else if(NOTE_TA[ds]){var c=NOTE_TA[ds].closest(".day"); if(c)c.classList.remove("collapsed"); endFocus(NOTE_TA[ds]);}
+  }
+  panelTa.value=load("tr:"+TODAY_DS+":note");
+  panelTa.addEventListener("input",function(){setNote(TODAY_DS,panelTa.value,panelTa);});
+  panelToggle.addEventListener("click",function(){panel.classList.toggle("open"); if(panel.classList.contains("open")) endFocus(panelTa);});
+  document.getElementById("panelClose").addEventListener("click",function(){panel.classList.remove("open");});
 
   // Workout stopwatch (today only, survives reloads)
   var TODAY=iso(today), SWK="tr:"+TODAY+":sw", DK="tr:"+TODAY+":duration";
@@ -425,6 +473,23 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   themeBtn.addEventListener("click",function(){
     var t=effDark()?"light":"dark"; document.documentElement.setAttribute("data-theme",t);
     try{localStorage.setItem("ui:theme",t);}catch(e){} themeLabel();
+  });
+
+  // Keyboard: Space = rest timer, Enter = workout stopwatch, Tab = next empty set
+  document.addEventListener("keydown",function(e){
+    var t=e.target, inText=t&&t.tagName==="TEXTAREA";
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
+    if(e.key==="Tab"&&!e.shiftKey){
+      var card=document.getElementById("day-"+tdow); if(!card) return;
+      var list=Array.prototype.slice.call(card.querySelectorAll(".sets input")).filter(function(x){return !x.disabled&&!x.value;});
+      if(!list.length) return;
+      list.sort(function(a,b){return a.dataset.ord-b.dataset.ord;});
+      e.preventDefault(); card.classList.remove("collapsed");
+      list[0].focus(); list[0].scrollIntoView({block:"center",behavior:"smooth"}); return;
+    }
+    if(inText) return;
+    if(e.key===" "||e.code==="Space"){e.preventDefault(); tBtn.click(); return;}
+    if(e.key==="Enter"){e.preventDefault(); if(t&&t.blur&&t.tagName==="INPUT")t.blur(); swMain.click(); return;}
   });
 
   document.getElementById("clearAll").addEventListener("click",function(){
