@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261006172219">
+<meta name="app-version" content="20261006172515">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -63,6 +63,8 @@ input,textarea{font-size:16px}
 .sets input::placeholder{color:var(--muted);opacity:.45;font-weight:400}
 .sets input.filled{background:var(--accent);color:var(--card);font-weight:700}
 .sets input:disabled{opacity:.25}
+.sets input.over{background:#c2410c;color:#fff}
+.sets{position:relative}
 .sets input::-webkit-inner-spin-button,.sets input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .sets input{-moz-appearance:textfield}
 .note{width:100%;margin-top:4px;padding:10px 12px;border:0;border-radius:10px;
@@ -218,15 +220,17 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       .replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-0x06F0;})
       .replace(/[^0-9]/g,"").slice(0,4);
   }
-  function input(key,ph){
+  function input(key,ph,max){
     var i=el("input"); i.type="text"; i.inputMode="numeric"; i.autocomplete="off"; i.placeholder=ph||"";
-    i.value=load(key); if(i.value)i.classList.add("filled");
+    function mark(){var v=i.value; i.classList.toggle("filled",!!v); i.classList.toggle("over",!!(max&&v&&parseInt(v,10)>max));}
+    i.value=load(key); mark();
     i.addEventListener("input",function(){
       var v=normDigits(i.value); if(v!==i.value) i.value=v;
-      store(key,v); i.classList.toggle("filled",!!v);
+      store(key,v); mark();
     });
     return i;
   }
+  function rangeMax(t){var m=String(t).match(/–\s*(\d+)/); return m?parseInt(m[1],10):0;}
 
   function link(id){
     var a=el("a",null,EX[id].n); a.href=EX[id].url||yt(EX[id].q); a.target="_blank"; a.rel="noopener"; return a;
@@ -284,7 +288,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
           var row=el("div","sets"); row.appendChild(el("span","side",s));
-          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i); by[s].push(inp); row.appendChild(inp);}
+          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
         seqs=[by.L,by.R];
@@ -292,7 +296,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i); seq.push(inp); row.appendChild(inp);}
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); seq.push(inp); row.appendChild(inp);}
         ex.appendChild(row);
         seqs=[seq];
       }
