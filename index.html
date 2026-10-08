@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261007180254">
+<meta name="app-version" content="20261008161043">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -190,7 +190,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
-    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. الهدف القادم: 11 في المجموعة الأولى، ثم الوصول إلى 12 / 12 / 12 تدريجيًا."},
+    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. الهدف القادم: 12 / 12 / 12، وبعدها ننتقل إلى نسخة أصعب."},
     tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"العدّ هو التمرين: انزل في 3 ثوانٍ كاملة (واحد، اثنان، ثلاثة) حتى تلمس كرسيًا خلفك، ثم اصعد. بهذا البطء يصبح 15 تكرارًا صعبًا. لا تنزل أعمق من الكرسي، ولا تتجاوز الحد الأعلى للنطاق."},
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"إن تعبت أصابعك قبل ظهرك: افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك، ثم مِل للخلف واسحب. قرّب قدميك من الباب ليصبح أصعب، واثبت ثانية حين يقترب صدرك. الهدف 10 إلى 12."},
     splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"مدى قصير: انزل إلى منتصف المسافة فقط وتوقف قبل نقطة الألم، مع الاستناد على الجدار. إن تجاوز ألم الركبة 3 من 10 فاتركه لذلك اليوم."},
@@ -199,7 +199,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"ابدأ باليسرى، وعددها يحدد عدد اليمنى. اثبت ثانية في الأعلى، وأبقِ الحوض مستويًا. النطاق 8 إلى 12 لكل رجل."},
     revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء في 3 ثوانٍ، ولا تتركهما تسقطان. بهذا البطء يصبح النطاق 10 إلى 12."},
     plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه. النطاق الجديد 30 إلى 45 ثانية."},
-    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"حرّك الذراعين ببطء، والصدر مرفوع قليلًا عن الأرض طوال المجموعة."},
+    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"إن كان سهلًا: ارفع صدرك أعلى قليلًا عن الأرض، وحرّك الذراعين ببطء أكثر، واثبت ثانيتين حين تكون الذراعان فوق الرأس. الهدف 12 إلى 15 بهذه الصعوبة."},
     superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
     slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"انحنِ من الورك والظهر مستقيم، والركبة مثنية قليلًا وثابتة. المس الجدار للتوازن عند الحاجة."},
     calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
@@ -217,11 +217,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["slBridge",2,"8–12 / leg","lr"],["plank",2,"30–45 sec","s"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
-      ["pushup",3,"8–12","r"],["pike",2,"5–8","r"],["doorRow",3,"10–12","r"],
-      ["snowAngel",2,"10–15","r"],["superman",2,"10–15","r"],["plank",2,"30–45 sec","s"]]},
+      ["pushup",3,"8–12","r"],["doorRow",3,"10–12","r"],["pike",2,"5–8","r"],
+      ["snowAngel",2,"10–15","r"],["plank",2,"30–45 sec","s"],["superman",2,"10–15","r"]]},
     {name:"Lower Body",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r"],["splitSquat",2,"5–8 / leg","lr"],["slRdl",2,"6–10 / leg","lr"],
-      ["bridge",3,"12–15","r"],["calf",2,"15–25","r"],["revCrunch",2,"10–12","r"]]},
+      ["tempoSquat",3,"10–15","r"],["slRdl",2,"6–10 / leg","lr"],["revCrunch",2,"10–12","r"],
+      ["splitSquat",2,"5–8 / leg","lr"],["calf",2,"15–25","r"],["bridge",3,"12–15","r"]]},
     {name:"Rest",kind:"rest"}
   ];
   var DAY_AR=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -262,6 +262,16 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var root=document.getElementById("days");
 
+  // migrate old position-based keys (tr:DATE:IDX-ID:..) to order-independent keys (tr:DATE:ID:..)
+  try{
+    Object.keys(localStorage).forEach(function(key){
+      var m=key.match(/^tr:(\d{4}-\d{2}-\d{2}):\d+-([A-Za-z]+):(.+)$/);
+      if(!m) return;
+      var nk="tr:"+m[1]+":"+m[2]+":"+m[3];
+      if(localStorage.getItem(nk)===null) localStorage.setItem(nk,localStorage.getItem(key));
+      localStorage.removeItem(key);
+    });
+  }catch(e){}
   var ORD=0, NOTE_TA={};
   PLAN.forEach(function(p,dow){
     var date=new Date(today); date.setDate(today.getDate()-tdow+dow);
@@ -310,13 +320,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
       if(tipBox) ex.appendChild(tipBox);
-      var k=pre+idx+"-"+id+":";
+      var k=pre+id+":";
       var seqs=[],seq=[];
       if(type==="lr"){
         var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
           var row=el("div","sets"); row.appendChild(el("span","side",s));
-          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); by[s].push(inp); row.appendChild(inp);}
+          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); inp.dataset.ex=EX[id].n; by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
         seqs=[by.L,by.R];
@@ -325,7 +335,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ord=ORD++; seq.push(inp); row.appendChild(inp);}
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ord=ORD++; inp.dataset.ex=EX[id].n; seq.push(inp); row.appendChild(inp);}
         ex.appendChild(row);
         seqs=[seq];
       }
@@ -349,7 +359,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     b.addEventListener("click",function(){
       var lines=[DAY_EN[dow]+" "+ds+" — "+p.name];
       p.items.forEach(function(it,idx){
-        var id=it[0],sets=it[1],type=it[3],k=pre+idx+"-"+id+":";
+        var id=it[0],sets=it[1],type=it[3],k=pre+id+":";
         var unit=type==="s"?" sec":type==="m"?" min":"";
         if(type==="lr"){
           var L=[],R=[];
@@ -473,6 +483,20 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   themeBtn.addEventListener("click",function(){
     var t=effDark()?"light":"dark"; document.documentElement.setAttribute("data-theme",t);
     try{localStorage.setItem("ui:theme",t);}catch(e){} themeLabel();
+  });
+
+  // Shift alone: add the last exercise you logged to today's notes
+  var shiftAlone=false;
+  document.addEventListener("keydown",function(e){ shiftAlone=(e.key==="Shift"&&!e.repeat)?true:(e.key==="Shift"?shiftAlone:false); },true);
+  document.addEventListener("keyup",function(e){
+    if(e.key!=="Shift"||!shiftAlone) return; shiftAlone=false;
+    var t=document.activeElement; if(t&&t.tagName==="TEXTAREA") return;
+    var card=document.getElementById("day-"+tdow); if(!card) return;
+    var last=null;
+    Array.prototype.forEach.call(card.querySelectorAll(".sets input"),function(x){
+      if(x.value&&(!last||+x.dataset.ord>+last.dataset.ord)) last=x;
+    });
+    if(last&&last.dataset.ex) appendNote(TODAY_DS,last.dataset.ex+": ");
   });
 
   // Keyboard: Space = rest timer, Enter = workout stopwatch, Tab = next empty set
