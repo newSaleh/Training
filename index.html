@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261009154803">
+<meta name="app-version" content="20261009155153">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -103,25 +103,27 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   font:inherit;font-size:16px;padding:10px 12px;resize:none;line-height:1.6}
 .notesPanel textarea:focus,.note:focus{outline:2px solid var(--accent);outline-offset:0}
 .notesPanel.open + .notesToggle{display:none}
-.notesToggle{position:fixed;z-index:12;left:16px;bottom:96px;width:52px;height:52px;padding:0;border-radius:50%;
+.notesToggle{position:fixed;z-index:12;left:16px;bottom:calc(112px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;
   font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
-.notesPanel{left:12px;right:12px;bottom:92px;height:42vh}
+.notesPanel{left:12px;right:12px;bottom:calc(108px + env(safe-area-inset-bottom));height:42vh}
 @media (min-width:1100px){
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
   .np-x,.notesToggle{display:none}
 }
 /* tempo pacer: fixed on the right */
-.pacer{position:fixed;z-index:12;right:10px;top:50%;transform:translateY(-50%);width:64px;height:64px;padding:0;border-radius:50%;
+.pacer{position:fixed;z-index:12;right:max(24px,calc((100vw - 640px)/4 - 70px));top:50%;transform:translateY(-50%);width:110px;height:110px;padding:0;border-radius:50%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;background:var(--card);color:var(--accent);
   border:2px solid var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.15)}
-.pacer span{font-size:1.5rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-.pacer small{font-size:.6rem;color:var(--muted)}
-.pacer.on{width:84px;height:84px;background:var(--accent);color:var(--card)}
-.pacer.on span{font-size:2.4rem}
+.pacer span{font-size:2.2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.pacer small{font-size:.8rem;color:var(--muted)}
+.pacer.on{width:150px;height:150px;background:var(--accent);color:var(--card)}
+.pacer.on span{font-size:4.5rem}
 .pacer.on small{color:var(--card)}
 .pacer.zero{background:#c2410c;border-color:#c2410c}
 @media (max-width:1099px){
-  .pacer{top:auto;transform:none;bottom:96px;right:16px;width:56px;height:56px}
+  .pacer{top:auto;transform:none;bottom:calc(112px + env(safe-area-inset-bottom));right:16px;width:56px;height:56px}
+  .pacer span{font-size:1.5rem}
+  .pacer small{font-size:.6rem}
   .pacer.on{width:72px;height:72px}
   .pacer.on span{font-size:2rem}
 }
