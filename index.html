@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261009140544">
+<meta name="app-version" content="20261009154803">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -110,6 +110,21 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
   .np-x,.notesToggle{display:none}
 }
+/* tempo pacer: fixed on the right */
+.pacer{position:fixed;z-index:12;right:10px;top:50%;transform:translateY(-50%);width:64px;height:64px;padding:0;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;background:var(--card);color:var(--accent);
+  border:2px solid var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.pacer span{font-size:1.5rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.pacer small{font-size:.6rem;color:var(--muted)}
+.pacer.on{width:84px;height:84px;background:var(--accent);color:var(--card)}
+.pacer.on span{font-size:2.4rem}
+.pacer.on small{color:var(--card)}
+.pacer.zero{background:#c2410c;border-color:#c2410c}
+@media (max-width:1099px){
+  .pacer{top:auto;transform:none;bottom:96px;right:16px;width:56px;height:56px}
+  .pacer.on{width:72px;height:72px}
+  .pacer.on span{font-size:2rem}
+}
 /* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
   padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
@@ -169,6 +184,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   </div>
 </div>
 
+<button type="button" id="pacer" class="pacer" aria-label="إيقاع 3 ثوانٍ"><span id="pacerNum">♩</span><small id="pacerLab">إيقاع</small></button>
+
 <aside class="notesPanel" id="notesPanel">
   <div class="np-head"><span>ملاحظات اليوم</span><button type="button" class="np-x" id="panelClose" aria-label="إغلاق">✕</button></div>
   <textarea id="panelNote" placeholder="اضغط ✎ بجانب أي تمرين لإضافة اسمه هنا، ثم اكتب ملاحظتك."></textarea>
@@ -191,17 +208,18 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
     pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. الهدف القادم: 12 / 12 / 12، وبعدها ننتقل إلى نسخة أصعب."},
-    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"العدّ هو التمرين: انزل في 3 ثوانٍ كاملة (واحد، اثنان، ثلاثة) حتى تلمس كرسيًا خلفك، ثم اصعد. بهذا البطء يصبح 15 تكرارًا صعبًا. لا تنزل أعمق من الكرسي، ولا تتجاوز الحد الأعلى للنطاق."},
+    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"شغّل زر الإيقاع (♩) على يمين الشاشة: انزل مع 3 و2 و1، وحين يصل إلى 0 اصعد. انزل حتى تلمس كرسيًا خلفك ولا أعمق. إن بلغت 15 / 15 / 15 بهذا الإيقاع، أضف توقفًا ثانية واحدة فوق الكرسي دون الجلوس عليه."},
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"إن تعبت أصابعك قبل ظهرك: افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك، ثم مِل للخلف واسحب. قرّب قدميك من الباب ليصبح أصعب، واثبت ثانية حين يقترب صدرك. الهدف 10 إلى 12."},
-    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"مدى قصير: انزل إلى منتصف المسافة فقط وتوقف قبل نقطة الألم، مع الاستناد على الجدار. إن تجاوز ألم الركبة 3 من 10 فاتركه لذلك اليوم."},
+    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"انزل أعمق قليلًا من الأسبوع الماضي (نحو ثلثي المسافة) ما دام الألم 2 من 10 أو أقل، مع الاستناد على الجدار. إن تجاوز 3 من 10 فارجع إلى المدى السابق."},
     pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"انثناء الركبتين قليلًا مقبول، فالمهم أن يبقى الوركان عاليين فوق الكتفين. قرّب قدميك من يديك إن صعب ذلك. الرأس ينزل أمام اليدين، والمرفقان للخلف، والحركة بطيئة."},
-    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت ثانيتين في الأعلى مع شدّ المؤخرة في كل تكرار. بهذا الثبات يصبح النطاق 12 إلى 15."},
+    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت 3 ثوانٍ في الأعلى مع شدّ المؤخرة في كل تكرار. بهذا الثبات يصبح 12 إلى 15 تكرارًا صعبًا."},
     slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"ابدأ باليسرى، وعددها يحدد عدد اليمنى. اثبت ثانية في الأعلى، وأبقِ الحوض مستويًا. النطاق 8 إلى 12 لكل رجل."},
-    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء في 3 ثوانٍ، ولا تتركهما تسقطان. بهذا البطء يصبح النطاق 10 إلى 12."},
+    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء مع زر الإيقاع (3 ثوانٍ)، ولا تتركهما تسقطان. النطاق 10 إلى 12."},
     plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه. النطاق الجديد 30 إلى 45 ثانية."},
     snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"إن كان سهلًا: ارفع صدرك أعلى قليلًا عن الأرض، وحرّك الذراعين ببطء أكثر، واثبت ثانيتين حين تكون الذراعان فوق الرأس. الهدف 12 إلى 15 بهذه الصعوبة."},
     superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
-    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"انحنِ من الورك والظهر مستقيم، والركبة مثنية قليلًا وثابتة. المس الجدار للتوازن عند الحاجة."},
+    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"المس الجدار بيد واحدة للتوازن، حتى تركّز على العضلة لا على الثبات. الركبة مثنية قليلًا وثابتة، وادفع الورك للخلف كأنك تغلق بابًا بمؤخرتك، والظهر مستقيم. يجب أن تشعر بالشد في خلف الفخذ للرجل الواقفة، لا في السمانة. لا نزيد العدد قبل أن تشعر بذلك."},
+    slCalf:{n:"Single-leg Calf Raise",ar:"رفع الكعب على رجل واحدة",q:"single leg calf raise bodyweight",tip:"المس الجدار بأطراف أصابعك للتوازن فقط. اصعد لأعلى نقطة واثبت ثانية، ثم انزل ببطء. ابدأ باليسرى، وعددها يحدد عدد اليمنى."},
     calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
     hipFlexor:{n:"Kneeling Hip Flexor Stretch",ar:"إطالة مقدمة الورك على ركبة واحدة",q:"kneeling hip flexor stretch",tip:"اجثُ على ركبة واحدة (ضع وسادة تحتها)، وشدّ مؤخرتك، وادفع الحوض للأمام قليلًا حتى تشعر بالإطالة في مقدمة الورك للرجل التي على الأرض. لا تقوّس أسفل ظهرك. اثبت 30 إلى 45 ثانية لكل جهة. تمرين تجريبي لميل الحوض الأمامي."},
     walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"المجهود المطلوب 5 إلى 6 من 10: تتنفس أسرع من المعتاد وتستطيع الكلام بجمل قصيرة. اكتب في الملاحظات درجة التعب من 10. إن صارت 3 أو 4 مرتين متتاليتين، نغيّر الفيديو إلى أصعب."}
@@ -222,7 +240,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["snowAngel",2,"10–15","r"],["plank",2,"30–45 sec","s"],["superman",2,"10–15","r"]]},
     {name:"Lower Body",kind:"train",items:[
       ["tempoSquat",3,"10–15","r"],["slRdl",2,"6–10 / leg","lr"],["revCrunch",2,"10–12","r"],
-      ["splitSquat",2,"5–8 / leg","lr"],["calf",2,"15–25","r"],["bridge",3,"12–15","r"],
+      ["splitSquat",2,"5–8 / leg","lr"],["slCalf",2,"10–15 / leg","lr"],["bridge",3,"12–15","r"],
       ["hipFlexor",1,"30–45 sec / side","lr"]]},
     {name:"Rest",kind:"rest"}
   ];
@@ -502,10 +520,40 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     if(last&&last.dataset.ex) appendNote(TODAY_DS,last.dataset.ex+": ");
   });
 
+  // Tempo pacer: 3,2,1,0 repeating, one per second, short beep on 0
+  var pacer=document.getElementById("pacer"),pNum=document.getElementById("pacerNum"),pLab=document.getElementById("pacerLab"),pTick=null,pActx=null;
+  function pBeep(){
+    try{ if(!pActx) return; var o=pActx.createOscillator(),g=pActx.createGain();
+      o.frequency.value=1046;o.connect(g);g.connect(pActx.destination);
+      g.gain.setValueAtTime(0.22,pActx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,pActx.currentTime+0.18);
+      o.start();o.stop(pActx.currentTime+0.2);}catch(e){}
+  }
+  function pShow(n){pNum.textContent=n; pacer.classList.toggle("zero",n===0); if(n===0)pBeep();}
+  pacer.addEventListener("click",function(){
+    if(pTick){clearInterval(pTick);pTick=null;pacer.classList.remove("on","zero");pNum.textContent="♩";pLab.textContent="إيقاع";return;}
+    try{ if(!pActx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)pActx=new AC();} if(pActx&&pActx.state==="suspended")pActx.resume(); }catch(e){}
+    var start=Date.now(); pacer.classList.add("on"); pLab.textContent="إيقاف"; pShow(3);
+    var last=3;
+    pTick=setInterval(function(){
+      var n=3-(Math.floor((Date.now()-start)/1000)%4);
+      if(n!==last){last=n;pShow(n);}
+    },50);
+  });
+
   // Keyboard: Space = rest timer, Enter = workout stopwatch, Tab = next empty set
   document.addEventListener("keydown",function(e){
     var t=e.target, inText=t&&t.tagName==="TEXTAREA";
+    // Cmd/Ctrl+C with nothing selected = copy today's results
+    if((e.metaKey||e.ctrlKey)&&!e.altKey&&!e.shiftKey&&(e.code==="KeyC"||(e.key||"").toLowerCase()==="c")){
+      var sel=String(window.getSelection?window.getSelection():"");
+      var fieldSel=t&&(t.tagName==="TEXTAREA"||t.tagName==="INPUT")&&t.selectionStart!==t.selectionEnd;
+      if(sel||fieldSel) return;
+      var cb=document.querySelector("#day-"+tdow+" .foot button"); if(!cb) return;
+      e.preventDefault(); cb.click(); return;
+    }
     if(e.ctrlKey||e.metaKey||e.altKey) return;
+    // S = tempo pacer on/off (any keyboard layout)
+    if(!inText&&e.code==="KeyS"&&!e.shiftKey){e.preventDefault(); pacer.click(); return;}
     if(e.key==="Tab"&&!e.shiftKey){
       var card=document.getElementById("day-"+tdow); if(!card) return;
       var list=Array.prototype.slice.call(card.querySelectorAll(".sets input")).filter(function(x){return !x.disabled&&!x.value;});
