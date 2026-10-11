@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261009155153">
+<meta name="app-version" content="20261011161613">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -65,6 +65,8 @@ input,textarea{font-size:16px}
 .sets input:disabled{opacity:.25}
 .sets input.over{background:#c2410c;color:#fff}
 .sets{position:relative}
+.ex.paired{border-inline-end:3px solid var(--accent-soft)}
+.pairlbl{font-size:.72rem;color:var(--accent);margin:0 0 6px}
 .sets input::-webkit-inner-spin-button,.sets input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .sets input{-moz-appearance:textfield}
 .note{width:100%;margin-top:4px;padding:10px 12px;border:0;border-radius:10px;
@@ -171,7 +173,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     <summary>قواعد ثابتة</summary>
     <ul>
       <li>ابدأ كل يوم تمرين بالإحماء (Warm-up) الموجود أعلى اليوم.</li>
-      <li>الراحة بين المجموعات دقيقة ونصف (زر 1:30 في الأسفل).</li>
+      <li>الراحة دقيقة ونصف بعد التمرين المنفرد، ودقيقة واحدة بعد كل مجموعة داخل الزوج المتناوب. يتبدل زر المؤقت تلقائيًا بحسب المجموعة التي تسجلها.</li>
+      <li>في الأزواج: مجموعة من التمرين الأول ثم مجموعة من الثاني، وهكذا. فإن اختل التكنيك أو ضاق نفَسك فأطل الراحة.</li>
+      <li>Space يبدأ المؤقت أو يوقفه مؤقتًا ثم يستأنفه، وEsc يوقفه ويعيده إلى البداية.</li>
       <li>أنهِ كل مجموعة وأنت قادر على 1 إلى 3 تكرارات إضافية، فلا تصل إلى الفشل.</li>
       <li>في تمارين الرجل الواحدة ابدأ باليسرى (L)، وعددها هو الذي يحدد عدد اليمنى (R).</li>
       <li>في نهاية التمرين اضغط «توقف» في الأعلى، ثم «نسخ النتائج» والصقها في المحادثة.</li>
@@ -209,11 +213,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
-    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. الهدف القادم: 12 / 12 / 12، وبعدها ننتقل إلى نسخة أصعب."},
+    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. بلغتَ 12 / 12 / 12. إن انتهت المجموعة الأخيرة وبقي لك تكراران أو أكثر، فاجعل النزول 3 ثوانٍ مع زر الإيقاع (♩). وإلا فكرّر 12 / 12 / 12 بالتكنيك نفسه."},
     tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"شغّل زر الإيقاع (♩) على يمين الشاشة: انزل مع 3 و2 و1، وحين يصل إلى 0 اصعد. انزل حتى تلمس كرسيًا خلفك ولا أعمق. إن بلغت 15 / 15 / 15 بهذا الإيقاع، أضف توقفًا ثانية واحدة فوق الكرسي دون الجلوس عليه."},
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"إن تعبت أصابعك قبل ظهرك: افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك، ثم مِل للخلف واسحب. قرّب قدميك من الباب ليصبح أصعب، واثبت ثانية حين يقترب صدرك. الهدف 10 إلى 12."},
-    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"انزل أعمق قليلًا من الأسبوع الماضي (نحو ثلثي المسافة) ما دام الألم 2 من 10 أو أقل، مع الاستناد على الجدار. إن تجاوز 3 من 10 فارجع إلى المدى السابق."},
-    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"انثناء الركبتين قليلًا مقبول، فالمهم أن يبقى الوركان عاليين فوق الكتفين. قرّب قدميك من يديك إن صعب ذلك. الرأس ينزل أمام اليدين، والمرفقان للخلف، والحركة بطيئة."},
+    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"بلغتَ 8 / 8 للجهتين. خفّف الاستناد على الجدار تدريجيًا (بإصبعين ثم بلا استناد)، والنزول نحو ثلثي المسافة ما دام الألم 2 من 10 أو أقل. إن تجاوز 3 من 10 فارجع إلى المدى السابق. اليسرى تحدد العدد."},
+    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"انثناء الركبتين قليلًا مقبول، فالمهم أن يبقى الوركان عاليين فوق الكتفين. قرّب قدميك من يديك إن صعب ذلك. الرأس ينزل أمام اليدين، والمرفقان للخلف، والحركة بطيئة. الهدف الآن 6 إلى 7 تكرارات في كل مجموعة."},
     bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت 3 ثوانٍ في الأعلى مع شدّ المؤخرة في كل تكرار. بهذا الثبات يصبح 12 إلى 15 تكرارًا صعبًا."},
     slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"ابدأ باليسرى، وعددها يحدد عدد اليمنى. اثبت ثانية في الأعلى، وأبقِ الحوض مستويًا. النطاق 8 إلى 12 لكل رجل."},
     revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء مع زر الإيقاع (3 ثوانٍ)، ولا تتركهما تسقطان. النطاق 10 إلى 12."},
@@ -230,19 +234,25 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
   var PLAN=[
     {name:"Full Body A",kind:"train",items:[
-      ["pushup",3,"8–12","r"],["tempoSquat",3,"10–15","r"],["doorRow",3,"10–12","r"],
-      ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["bridge",2,"12–15","r"],["revCrunch",2,"10–12","r"]]},
+      ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–15","r","a"],
+      ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
+      ["pike",2,"5–8","r","c"],["bridge",2,"12–15","r","c"],
+      ["revCrunch",2,"10–12","r"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r"],["pushup",3,"8–12","r"],["doorRow",3,"10–12","r"],
-      ["splitSquat",2,"5–8 / leg","lr"],["pike",2,"5–8","r"],["slBridge",2,"8–12 / leg","lr"],["plank",2,"30–45 sec","s"]]},
+      ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
+      ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
+      ["pike",2,"5–8","r","c"],["slBridge",2,"8–12 / leg","lr","c"],
+      ["plank",2,"30–45 sec","s"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
-      ["pushup",3,"8–12","r"],["doorRow",3,"10–12","r"],["pike",2,"5–8","r"],
-      ["snowAngel",2,"10–15","r"],["plank",2,"30–45 sec","s"],["superman",2,"10–15","r"]]},
+      ["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
+      ["pike",2,"5–8","r","b"],["snowAngel",2,"10–15","r","b"],
+      ["plank",2,"30–45 sec","s","c"],["superman",2,"10–15","r","c"]]},
     {name:"Lower Body",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r"],["slRdl",2,"6–10 / leg","lr"],["revCrunch",2,"10–12","r"],
-      ["splitSquat",2,"5–8 / leg","lr"],["slCalf",2,"10–15 / leg","lr"],["bridge",3,"12–15","r"],
+      ["tempoSquat",3,"10–15","r","a"],["revCrunch",2,"10–12","r","a"],
+      ["slRdl",2,"6–10 / leg","lr","b"],["slCalf",2,"10–15 / leg","lr","b"],
+      ["splitSquat",2,"5–8 / leg","lr"],["bridge",3,"12–15","r"],
       ["hipFlexor",1,"30–45 sec / side","lr"]]},
     {name:"Rest",kind:"rest"}
   ];
@@ -325,9 +335,18 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       card.appendChild(w);
     }
 
+    var grp=[];
+    function flushGroup(){
+      var max=0; grp.forEach(function(u){ if(u.length>max) max=u.length; });
+      for(var j=0;j<max;j++) grp.forEach(function(u){ if(u[j]) u[j].forEach(function(inp){inp.dataset.ord=ORD++;}); });
+      grp=[];
+    }
     p.items.forEach(function(it,idx){
-      var id=it[0],sets=it[1],tgt=it[2],type=it[3];
-      var ex=el("div","ex");
+      var id=it[0],sets=it[1],tgt=it[2],type=it[3],pid=it[4]||"";
+      var prevPid=idx>0?(p.items[idx-1][4]||""):"";
+      var nextPid=idx+1<p.items.length?(p.items[idx+1][4]||""):"";
+      var ex=el("div","ex"+(pid?" paired":""));
+      if(pid&&pid!==prevPid) ex.appendChild(el("div","pairlbl","زوج متناوب: مجموعة من كل تمرين بالتناوب، وراحة 1:00 بعد كل مجموعة"));
       var r=el("div","row"); var nm=el("div","name"); nm.appendChild(link(id)); r.appendChild(nm);
       var tipBox=null;
       if(EX[id].tip){
@@ -343,21 +362,21 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ex.appendChild(el("div","ar",EX[id].ar));
       if(tipBox) ex.appendChild(tipBox);
       var k=pre+id+":";
-      var seqs=[],seq=[];
+      var seqs=[],seq=[],units=[];
       if(type==="lr"){
         var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
           var row=el("div","sets"); row.appendChild(el("span","side",s));
-          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); inp.dataset.ex=EX[id].n; by[s].push(inp); row.appendChild(inp);}
+          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(pid)inp.dataset.pair="1"; by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
         seqs=[by.L,by.R];
-        for(var j=0;j<sets;j++){by.L[j].dataset.ord=ORD++;by.R[j].dataset.ord=ORD++;}
+        for(var j=0;j<sets;j++) units.push([by.L[j],by.R[j]]);
       } else {
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ord=ORD++; inp.dataset.ex=EX[id].n; seq.push(inp); row.appendChild(inp);}
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(pid)inp.dataset.pair="1"; seq.push(inp); units.push([inp]); row.appendChild(inp);}
         ex.appendChild(row);
         seqs=[seq];
       }
@@ -366,6 +385,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         q.forEach(function(inp){inp.addEventListener("input",gate);});
         gate();
       });
+      grp.push(units);
+      if(!pid||nextPid!==pid) flushGroup();
       card.appendChild(ex);
     });
 
@@ -554,6 +575,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       e.preventDefault(); cb.click(); return;
     }
     if(e.ctrlKey||e.metaKey||e.altKey) return;
+    // Esc = stop the rest timer and reset it; Space afterwards starts a fresh countdown
+    if(e.key==="Escape"){
+      if(state!=="idle"||tEl.classList.contains("done")){e.preventDefault(); setIdle(false);}
+      return;
+    }
     // S = tempo pacer on/off (any keyboard layout)
     if(!inText&&e.code==="KeyS"&&!e.shiftKey){e.preventDefault(); pacer.click(); return;}
     if(e.key==="Tab"&&!e.shiftKey){
@@ -579,7 +605,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   // Rest timer: one button = start / pause / resume
   var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
-  var tBtn=tEl.querySelector("button[data-sec]"),REST=parseInt(tBtn.getAttribute("data-sec"),10)*1000;
+  var tBtn=tEl.querySelector("button[data-sec]"),REST_SOLO=parseInt(tBtn.getAttribute("data-sec"),10)*1000,REST_PAIR=60000;
+  var REST=REST_SOLO; // current preset: 1:30 for a single exercise, 1:00 inside an alternating pair
   var endAt=0,tick=null,actx=null,remain=0,state="idle"; // idle | run | pause
   function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
   function beep(){
@@ -596,7 +623,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
   function setIdle(done){
     clearInterval(tick);tick=null;state="idle";tEl.classList.remove("running");
-    tBtn.textContent="ابدأ 1:30";
+    tBtn.textContent="ابدأ "+fmt(REST/1000);
     if(done){tEl.classList.add("done");clock.textContent="0:00";tlab.textContent="انتهت الراحة";}
     else{tEl.classList.remove("done");clock.textContent=fmt(REST/1000);tlab.textContent="مؤقت الراحة";}
   }
@@ -618,6 +645,14 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   });
   document.getElementById("tstop").addEventListener("click",function(){setIdle(false);});
   setIdle(false);
+  // The preset follows the set you are logging: inside an alternating pair = 1:00, otherwise 1:30
+  function pickRest(e){
+    var t=e.target; if(!t||!t.matches||!t.matches(".sets input")) return;
+    var ms=t.dataset.pair?REST_PAIR:REST_SOLO; if(ms===REST) return;
+    REST=ms; if(state==="idle") setIdle(tEl.classList.contains("done"));
+  }
+  document.addEventListener("focusin",pickRest);
+  document.addEventListener("input",pickRest);
 
   var cur=document.getElementById("day-"+tdow);
   if(cur&&tdow!==0) setTimeout(function(){cur.scrollIntoView({behavior:"smooth",block:"start"});},300);
