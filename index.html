@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261012180825">
+<meta name="app-version" content="20261012181128">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -87,6 +87,11 @@ button:disabled{opacity:.35;cursor:default}
 .box li{margin:4px 0}
 .hrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(128,128,128,.25)}
 .hrow .hd{flex:1;color:var(--ink)}
+.mem .plain{padding:4px 0 8px;margin:0}
+.memday{border-top:1px solid rgba(128,128,128,.25);padding:4px 0}
+.memday summary{font-weight:500;font-size:.88rem}
+.memday pre{white-space:pre-wrap;direction:ltr;text-align:left;font-size:.8rem;background:var(--card);border-radius:8px;padding:8px;margin:6px 0;color:var(--ink)}
+.mem>.ghost{margin-top:10px}
 .danger{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;margin-top:8px}
 button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
@@ -428,28 +433,73 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       return lines.join("\n");
   }
 
-  // read-only history of previous weeks (data stays in this browser), copyable per day
-  (function(){
-    var ws=new Date(today); ws.setDate(today.getDate()-tdow); var wsd=iso(ws);
-    var seen={};
-    try{ Object.keys(localStorage).forEach(function(k){ var m=k.match(/^tr:(\d{4}-\d{2}-\d{2}):/); if(m&&m[1]<wsd) seen[m[1]]=1; }); }catch(e){}
-    var list=Object.keys(seen).sort().reverse();
-    if(!list.length) return;
-    var box=el("details","box"); box.appendChild(el("summary",null,"سجل الأسابيع السابقة ("+list.length+")"));
-    function rep(ds){var d=new Date(ds+"T00:00:00"); var w=d.getDay(); return report(ds,w,PLAN[w]);}
-    var allRow=el("div","hrow"); allRow.appendChild(el("span","hd","كل الأيام السابقة"));
-    var allB=el("button","sec","نسخ الكل"); var allOk=el("span","ok","");
-    allB.addEventListener("click",function(){copy(list.slice().reverse().map(rep).join("\n\n"),allOk);});
-    allRow.appendChild(allB); allRow.appendChild(allOk); box.appendChild(allRow);
+  // "الذاكرة": a snapshot of each day's report is kept automatically on this device, and survives "delete all"
+  function snap(ds){
+    try{
+      var d=new Date(ds+"T00:00:00"), w=d.getDay(), p=PLAN[w];
+      if(!p||p.kind==="rest") return;
+      var t=report(ds,w,p);
+      if(t.indexOf("(لا نتائج مسجلة)")>=0) return;
+      if(load("mem:"+ds)!==t) store("mem:"+ds,t);
+    }catch(e){}
+  }
+  function snapAll(){
+    var seen={}; seen[iso(today)]=1;
+    try{ Object.keys(localStorage).forEach(function(k){ var m=k.match(/^tr:(\d{4}-\d{2}-\d{2}):/); if(m) seen[m[1]]=1; }); }catch(e){}
+    Object.keys(seen).forEach(snap);
+  }
+  var snapT=null;
+  function snapSoon(){ clearTimeout(snapT); snapT=setTimeout(snapAll,600); }
+  var memBox=null;
+  function memDates(){
+    var out=[];
+    try{ Object.keys(localStorage).forEach(function(k){ var m=k.match(/^mem:(\d{4}-\d{2}-\d{2})$/); if(m) out.push(m[1]); }); }catch(e){}
+    return out.sort().reverse();
+  }
+  function buildMem(){
+    var list=memDates();
+    var box=el("details","box mem");
+    if(memBox&&memBox.open) box.open=true;
+    box.appendChild(el("summary",null,"الذاكرة ("+list.length+")"));
+    box.appendChild(el("p","plain","تُحفظ نسخة من تقرير كل يوم تلقائيًا في هذا الجهاز، وتبقى حتى بعد «حذف كل البيانات المحفوظة»."));
+    if(list.length){
+      var allRow=el("div","hrow"); allRow.appendChild(el("span","hd","كل التقارير"));
+      var allB=el("button","sec","نسخ الكل"), allOk=el("span","ok","");
+      allB.addEventListener("click",function(){copy(list.slice().reverse().map(function(d){return load("mem:"+d);}).join("\n\n"),allOk);});
+      allRow.appendChild(allB); allRow.appendChild(allOk); box.appendChild(allRow);
+    }
     list.forEach(function(ds){
-      var d=new Date(ds+"T00:00:00"), w=d.getDay(), row=el("div","hrow");
-      row.appendChild(el("span","hd",DAY_AR[w]+" "+d.getDate()+"/"+(d.getMonth()+1)+" — "+PLAN[w].name));
-      var b=el("button","sec","نسخ"), ok=el("span","ok","");
-      b.addEventListener("click",function(){copy(rep(ds),ok);});
-      row.appendChild(b); row.appendChild(ok); box.appendChild(row);
+      var d=new Date(ds+"T00:00:00"), w=d.getDay(), txt=load("mem:"+ds);
+      var det=el("details","memday");
+      det.appendChild(el("summary",null,DAY_AR[w]+" "+d.getDate()+"/"+(d.getMonth()+1)+" — "+PLAN[w].name));
+      det.appendChild(el("pre",null,txt));
+      var act=el("div","actions"), b=el("button","sec","نسخ"), ok=el("span","ok","");
+      b.addEventListener("click",function(){copy(load("mem:"+ds),ok);});
+      act.appendChild(b); act.appendChild(ok); det.appendChild(act);
+      box.appendChild(det);
     });
-    root.parentNode.insertBefore(box,root.nextSibling);
-  })();
+    if(list.length){
+      var wipe=el("button","ghost","مسح الذاكرة");
+      wipe.addEventListener("click",function(){
+        if(!confirm("ستُحذف كل التقارير المحفوظة في الذاكرة نهائيًا. هل أنت متأكد؟")) return;
+        try{ Object.keys(localStorage).forEach(function(k){ if(k.indexOf("mem:")===0) localStorage.removeItem(k); }); }catch(e){}
+        renderMem();
+      });
+      box.appendChild(wipe);
+    }
+    return box;
+  }
+  function renderMem(){
+    var nb=buildMem();
+    if(memBox&&memBox.parentNode) memBox.parentNode.replaceChild(nb,memBox);
+    else { var dz=document.querySelector(".danger"); dz.parentNode.insertBefore(nb,dz); }
+    memBox=nb;
+  }
+  snapAll(); renderMem();
+  document.addEventListener("input",function(){ snapSoon(); setTimeout(function(){ if(!memBox||!memBox.open) renderMem(); },900); });
+  document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") snapAll(); });
+  window.addEventListener("pagehide",snapAll);
+  setInterval(function(){ snapAll(); },20000);
 
   function copy(text,ok){
     function done(){ok.textContent="تم النسخ"; setTimeout(function(){ok.textContent="";},2500);}
@@ -624,7 +674,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   });
 
   document.getElementById("clearAll").addEventListener("click",function(){
-    if(!confirm("سيُحذف كل ما سجّلته في هذه الصفحة نهائيًا. هل أنت متأكد؟")) return;
+    if(!confirm("سيُحذف كل ما سجّلته في الأسبوع الحالي. تقارير «الذاكرة» لا تُحذف. هل أنت متأكد؟")) return;
     try{
       Object.keys(localStorage).forEach(function(k){ if(k.indexOf("tr:")===0) localStorage.removeItem(k); });
     }catch(e){}
