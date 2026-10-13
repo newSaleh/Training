@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013123225">
+<meta name="app-version" content="20261013124110">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -67,6 +67,10 @@ input,textarea{font-size:16px}
 .sets{position:relative}
 .ex.paired{border-inline-end:3px solid var(--accent-soft)}
 .rtitle{font-weight:600;font-size:.95rem}
+.wnav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.wnav button{height:40px;padding:0 12px;font-size:.82rem;white-space:nowrap}
+.wlab{flex:1;text-align:center;font-weight:600;font-size:.9rem}
+.wlab small{display:block;font-weight:400;color:var(--muted);font-size:.75rem}
 .amcard{background:var(--accent-soft);border:1px solid var(--accent);margin-bottom:22px}
 .amcard .ex{border-top:0}
 .amcard .tip{background:var(--card)}
@@ -83,6 +87,8 @@ input,textarea{font-size:16px}
 .eod .row{align-items:center}
 .eod .row>span{display:flex;align-items:center;gap:8px}
 .eod input{width:84px}
+.eod .fl{margin-top:12px;font-size:.85rem;color:var(--muted)}
+.eod .food{min-height:110px}
 .meas input{width:64px;height:44px;padding:0 4px;text-align:center;font-size:17px;border:0;border-radius:10px;background:var(--field);color:var(--ink);-webkit-appearance:none;appearance:none}
 .meas input.filled{background:var(--accent);color:var(--card);font-weight:700}
 .pairlbl{font-size:.72rem;color:var(--accent);margin:0 0 6px}
@@ -308,9 +314,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var FLEX=[["catcow","8–10"],["threadNeedle","6–8 / side"],["pecStretch","45 sec × 2"],["wallSlide","8–10"],
     ["hamStretch","45 sec × 2 / side"],["calfStretch","30 sec × 2 / side"],["ddPedal","30 sec"],["hipFlexor","45 sec × 2 / side"],
     ["butterfly","45 sec × 2"],["figure4","45 sec × 2 / side"],["frog","45 sec × 2"]];
-  var EOD=[["steps","Steps","الخطوات (من الآيفون)","خطوة"],["sleep","Sleep","ساعات نوم الليلة الماضية","ساعة"],["protein","Protein","البروتين اليوم (غرام، الهدف نحو 100)","غ"]];
-  var EOD_UNIT={steps:"",sleep:" h",protein:" g"};
-  var PROTEIN_TIP="تقديرات تقريبية: بيضة 6 غ. علبة تونة 25 غ. 100 غ دجاج مطبوخ 30 غ. 100 غ لحم مطبوخ 25 غ. علبة زبادي عادي 170 غ نحو 6 غ، واليوناني 15 غ. 100 غ جبن قريش 11 غ. كوب حليب 8 غ. كوب عدس أو فول مطبوخ 15 إلى 18 غ. رغيف خبز 6 غ. كوب أرز مطبوخ 4 غ.";
+  var EOD=[["steps","Steps","الخطوات (من الآيفون)","خطوة"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
+  var EOD_UNIT={steps:"",sleep:""};
   var ROUT_LBL={am:"Morning routine",post:"Post-workout stretch",flex:"Flexibility session"};
   var MEAS=[["belly","Belly","محيط البطن (سم)"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (سم)"],
     ["bfly","Butterfly knee","ارتفاع الركبة عن الأرض في الفراشة (سم)"],["wall","Wall slide gap","المسافة بين اليدين والجدار فوق الرأس (سم)"]];
@@ -326,6 +331,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var today=new Date(); today.setHours(0,0,0,0);
   var tdow=today.getDay();
+  var WOFF=0; try{ WOFF=parseInt(sessionStorage.getItem("ui:woff")||"0",10)||0; }catch(e){}
+  if(WOFF>0||WOFF<-4) WOFF=0;
+  // keep about a month: drop raw entries older than 5 weeks (reports stay in «الذاكرة»)
+  try{
+    var cut=new Date(today); cut.setDate(today.getDate()-tdow-28); var cutd=iso(cut);
+    Object.keys(localStorage).forEach(function(k){ var m=k.match(/^tr:(\d{4}-\d{2}-\d{2}):/); if(m&&m[1]<cutd) localStorage.removeItem(k); });
+  }catch(e){}
 
   function el(tag,cls,txt){var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e;}
 
@@ -333,13 +345,14 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function normDigits(t,dec,len){
     var v=String(t).replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-0x0660;})
       .replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-0x06F0;});
+    if(dec==="time"){ var d=v.replace(/[^0-9]/g,"").slice(0,4); return d.length>2?d.slice(0,-2)+":"+d.slice(-2):d; }
     if(!dec) return v.replace(/[^0-9]/g,"").slice(0,len||4);
     v=v.replace(/[\u066B,\u060C]/g,".").replace(/[^0-9.]/g,"");
     var k=v.indexOf("."); if(k>=0) v=v.slice(0,k+1)+v.slice(k+1).replace(/\./g,"").slice(0,1);
     return v.slice(0,5);
   }
   function input(key,ph,max,dec,len){
-    var i=el("input"); i.type="text"; i.inputMode=dec?"decimal":"numeric"; i.autocomplete="off"; i.placeholder=ph||"";
+    var i=el("input"); i.type="text"; i.inputMode=(dec&&dec!=="time")?"decimal":"numeric"; i.autocomplete="off"; i.placeholder=ph||"";
     function mark(){var v=i.value; i.classList.toggle("filled",!!v); i.classList.toggle("over",!!(max&&v&&parseInt(v,10)>max));}
     i.value=load(key); mark();
     i.addEventListener("input",function(){
@@ -369,6 +382,18 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var ORD=0, NOTE_TA={};
   // Morning routine: its own card above the week, for today only
   (function(){
+    var nav=el("div","wnav");
+    var prev=el("button","sec","→ السابق"), next=el("button","sec","التالي ←");
+    prev.type=next.type="button"; prev.disabled=WOFF<=-4; next.disabled=WOFF>=0;
+    var a=new Date(today); a.setDate(today.getDate()-tdow+WOFF*7); var z=new Date(a); z.setDate(a.getDate()+6);
+    var lab=el("div","wlab",WOFF===0?"هذا الأسبوع":(WOFF===-1?"الأسبوع الماضي":"قبل "+(-WOFF)+" أسابيع"));
+    lab.appendChild(el("small",null,a.getDate()+"/"+(a.getMonth()+1)+" – "+z.getDate()+"/"+(z.getMonth()+1)));
+    function go(d){ try{sessionStorage.setItem("ui:woff",String(WOFF+d));}catch(e){} location.reload(); }
+    prev.addEventListener("click",function(){go(-1);}); next.addEventListener("click",function(){go(1);});
+    nav.appendChild(prev); nav.appendChild(lab); nav.appendChild(next);
+    root.appendChild(nav);
+  })();
+  if(WOFF===0) (function(){
     var c=el("div","day amcard");
     var hd=el("div","head"); var l=el("div"); l.appendChild(el("span","t","روتين الصباح"));
     hd.appendChild(l);
@@ -380,20 +405,21 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     root.appendChild(c);
   })();
   PLAN.forEach(function(p,dow){
-    var date=new Date(today); date.setDate(today.getDate()-tdow+dow);
+    var date=new Date(today); date.setDate(today.getDate()-tdow+dow+WOFF*7);
+    var isT=(WOFF===0&&dow===tdow);
     var ds=iso(date);
     var pre="tr:"+ds+":";
-    var card=el("div","day"+(p.kind==="rest"?" rest":p.kind==="cardio"?" cardio":"")+(dow===tdow?" today":""));
-    card.id="day-"+dow;
+    var card=el("div","day"+(p.kind==="rest"?" rest":p.kind==="cardio"?" cardio":"")+(isT?" today":""));
+    card.id=(WOFF===0?"day-":"wday-")+dow;
 
     var head=el("div","head");
     var left=el("div"); left.appendChild(el("span","t",DAY_AR[dow]));
     left.appendChild(el("span","d",date.getDate()+"/"+(date.getMonth()+1)));
-    if(dow===tdow) left.appendChild(el("span","badge","اليوم"));
+    if(isT) left.appendChild(el("span","badge","اليوم"));
     var right=el("span"); right.appendChild(el("span","tag",p.name)); right.appendChild(el("span","chev","▼"));
     head.appendChild(left); head.appendChild(right);
     card.appendChild(head);
-    if(dow!==tdow) card.classList.add("collapsed");
+    if(!isT) card.classList.add("collapsed");
     head.addEventListener("click",function(){card.classList.toggle("collapsed");});
 
     if(p.kind==="rest") card.appendChild(el("p","plain","لا تمارين مقاومة. المشي اليومي المعتاد، وجلسة المرونة أدناه."));
@@ -481,12 +507,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     eod.appendChild(el("div","ar","املأها قبل النوم أو عند الساعة 12، ثم انسخها وأرسلها."));
     EOD.forEach(function(m){
       var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
-      r.appendChild(input(pre+"e:"+m[0],m[3],0,m[0]==="sleep",m[0]==="steps"?5:0)); eod.appendChild(r);
+      r.appendChild(input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0)); eod.appendChild(r);
     });
-    var ptb=el("button","tipbtn","i"); ptb.type="button"; ptb.setAttribute("aria-label","مصادر البروتين");
-    var ptip=el("div","tip",PROTEIN_TIP);
-    ptb.addEventListener("click",function(){ptip.classList.toggle("on");ptb.classList.toggle("on");});
-    var pr=el("div","mrow"); pr.appendChild(el("span","mlab","تقدير البروتين تقريبي (اضغط i)")); pr.appendChild(ptb); eod.appendChild(pr); eod.appendChild(ptip);
+    eod.appendChild(el("div","lbl fl","ماذا أكلت اليوم؟ صنف في كل سطر مع الكمية (مثل: 4 بيض مسلوق)"));
+    var food=el("textarea","note food"); food.value=load(pre+"e:food"); food.placeholder="4 بيض مسلوق\n100 غ جبن قريش\nنصف دجاجة شواية";
+    food.addEventListener("input",function(){store(pre+"e:food",food.value);});
+    eod.appendChild(food);
     eb.addEventListener("click",function(){ copy(eodText(ds,dow),eok); });
     card.appendChild(eod);
 
@@ -532,6 +558,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function eodText(ds,dow){
     var pre="tr:"+ds+":", lines=[DAY_EN[dow]+" "+ds+" — End of day"];
     EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); lines.push(m[1]+": "+(v?v+EOD_UNIT[m[0]]:"-")); });
+    var f=load(pre+"e:food").trim(); lines.push("Food:"+(f?"\n"+f:" -"));
     return lines.join("\n");
   }
 
@@ -554,6 +581,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["am","post","flex"].forEach(function(k){ if(load(pre+k)) lines.push(ROUT_LBL[k]+": done"); });
       MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+" cm"); });
       EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); if(v) lines.push(m[1]+": "+v+EOD_UNIT[m[0]]); });
+      var fd=load(pre+"e:food").trim(); if(fd) lines.push("Food:\n"+fd);
       var dur=durationFor(ds); if(dur) lines.push("Duration: "+dur);
       var n=load(pre+"note").trim(); if(n) lines.push("Notes: "+n);
       if(lines.length===1) lines.push("(لا نتائج مسجلة)");
@@ -801,7 +829,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   });
 
   document.getElementById("clearAll").addEventListener("click",function(){
-    if(!confirm("سيُحذف كل ما سجّلته في الأسبوع الحالي. تقارير «الذاكرة» لا تُحذف. هل أنت متأكد؟")) return;
+    if(!confirm("سيُحذف كل ما سجّلته في الصفحة. تقارير «الذاكرة» لا تُحذف. هل أنت متأكد؟")) return;
     try{
       Object.keys(localStorage).forEach(function(k){ if(k.indexOf("tr:")===0) localStorage.removeItem(k); });
     }catch(e){}
