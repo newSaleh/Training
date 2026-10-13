@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013121909">
+<meta name="app-version" content="20261013122213">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -253,7 +253,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     slCalf:{n:"Single-leg Calf Raise",ar:"رفع الكعب على رجل واحدة",q:"single leg calf raise bodyweight",tip:"المس الجدار بأطراف أصابعك للتوازن فقط. اصعد لأعلى نقطة واثبت ثانية، ثم انزل ببطء. ابدأ باليسرى، وعددها يحدد عدد اليمنى."},
     calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
     hipFlexor:{n:"Kneeling Hip Flexor Stretch",ar:"إطالة مقدمة الورك على ركبة واحدة",q:"kneeling hip flexor stretch",tip:"اجثُ على ركبة واحدة (ضع وسادة تحتها)، وشدّ مؤخرتك، وادفع الحوض للأمام قليلًا حتى تشعر بالإطالة في مقدمة الورك للرجل التي على الأرض. لا تقوّس أسفل ظهرك. اثبت 30 إلى 45 ثانية لكل جهة. تمرين تجريبي لميل الحوض الأمامي."},
-    morningVid:{n:"Video: Feel Decades Younger",ar:"المقطع نفسه الذي أرسلته (الرابط بحث في يوتيوب، اختر المقطع بعنوانه)",q:"It's Weird, But This Makes You Feel Decades Younger morning stiffness",tip:"في Half-Lunge Ankle Rock ضع وسادة تحت الركبة ولا تدفع الركبة الأمامية أكثر مما يريحك. وفي Toe Raise Bounce اجعل الارتداد صغيرًا وناعمًا."},
+    morningVid:{n:"Video: Feel Decades Younger",url:"https://www.youtube.com/watch?v=V8P9E-PVXPY",ar:"مقطع تليين المفاصل الصباحي، نحو 5 دقائق",q:"It's Weird, But This Makes You Feel Decades Younger morning stiffness",tip:"في Half-Lunge Ankle Rock ضع وسادة تحت الركبة ولا تدفع الركبة الأمامية أكثر مما يريحك. وفي Toe Raise Bounce اجعل الارتداد صغيرًا وناعمًا."},
     bridgeAm:{n:"Glute Bridge",ar:"رفع الحوض للتنشيط",q:"glute bridge proper form",tip:"10 تكرارات بلا ثبات طويل، تنشيطًا للمؤخرة فقط."},
     calfStretch:{n:"Standing Calf Stretch",ar:"إطالة السمانة على الجدار",q:"standing calf stretch wall",tip:"اليدان على الجدار، والرجل الخلفية مستقيمة والكعب على الأرض. اثبت ثم كررها والركبة مثنية قليلًا."},
     hamStretch:{n:"Supine Hamstring Stretch",ar:"إطالة خلف الفخذ مستلقيًا بالمنشفة",q:"supine hamstring stretch towel",tip:"استلقِ على ظهرك ولفّ منشفة حول القدم، وارفع الرجل مستقيمة حتى تشعر بالشد. الرجل الأخرى ممدودة على الأرض. لا تسحب بقوة."},
@@ -362,11 +362,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   (function(){
     var c=el("div","day amcard");
     var hd=el("div","head"); var l=el("div"); l.appendChild(el("span","t","روتين الصباح"));
-    l.appendChild(el("span","d","منفصل عن تمرين اليوم")); hd.appendChild(l);
+    hd.appendChild(l);
     var r=el("span"); r.appendChild(el("span","tag","7 min")); r.appendChild(el("span","chev","▼")); hd.appendChild(r);
     c.appendChild(hd);
     hd.addEventListener("click",function(){c.classList.toggle("collapsed");});
-    routine(c,"بعد الاستيقاظ","بالترتيب: الفيديو كاملًا أولًا، ثم الإطالتان بعده. إن فاتك في الصباح فلا تعوّضه، وابدأ من الغد.",MORNING,"tr:"+iso(today)+":am",iso(today));
+    routine(c,"كل يوم بعد الاستيقاظ","جلسة قصيرة تفعلها كل يوم، حتى في أيام الراحة. تخفف تيبّس المفاصل في الصباح، وتطيل مقدمة الورك وتنشّط المؤخرة، وهذا يساعد على تصحيح ميل الحوض. نفّذها بالترتيب: المقطع كاملًا أولًا، ثم إطالة مقدمة الورك، ثم رفع الحوض. وإن فاتتك في الصباح فلا تعوّضها، وابدأ من الغد.",MORNING,"tr:"+iso(today)+":am",iso(today));
     if(load("tr:"+iso(today)+":am")) c.classList.add("collapsed");
     root.appendChild(c);
   })();
