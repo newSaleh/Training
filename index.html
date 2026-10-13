@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013222949">
+<meta name="app-version" content="20261013225951">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -144,6 +144,19 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .notesToggle{position:fixed;z-index:12;left:16px;bottom:calc(112px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;
   font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .eodGo{position:fixed;z-index:12;left:16px;bottom:calc(176px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.4rem;background:var(--accent);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
+.mealBtn{width:100%;margin-top:8px;background:var(--accent);color:var(--card)}
+.mealOv{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center}
+.mealOv.open{display:flex}
+.mealBox{background:var(--card);color:var(--ink);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.mealBox h3{margin:0 0 10px;font-size:1.05rem}
+.mealBox label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+.mealBox input{width:100%;box-sizing:border-box;height:46px;border-radius:12px;border:0;background:var(--field);color:var(--ink);padding:0 12px}
+.mealBox .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mealBox .chip{height:auto;padding:6px 12px;border-radius:999px;font-size:.85rem;background:var(--field);color:var(--ink)}
+.mealBox .chip.sel{background:var(--accent-soft);border:1px solid var(--accent)}
+.mealBox .acts{display:flex;gap:8px;margin-top:14px}
+.mealBox .acts button{flex:1}
+.mealBox .pri{background:var(--accent);color:var(--card)}
 .notesPanel{left:12px;right:12px;bottom:calc(108px + env(safe-area-inset-bottom));height:42vh}
 @media (min-width:1100px){
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
@@ -518,9 +531,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
       r.appendChild(input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0)); eod.appendChild(r);
     });
-    eod.appendChild(el("div","lbl fl","ماذا أكلت اليوم؟ رتّبه حسب الوجبات، وفي كل وجبة الأصناف مع الكمية (مثل: الفطور: 4 بيض مسلوق + تفاحة)"));
-    var food=el("textarea","note food"); food.value=load(pre+"e:food"); food.placeholder="الفطور: 4 بيض مسلوق + تفاحة\nالغداء: نصف دجاجة شواية\nالعشاء: 100 غ جبن قريش + موز";
+    eod.appendChild(el("div","lbl fl","ماذا أكلت اليوم؟ اضغط «إضافة وجبة» أو اكتب يدويًا: سطر لكل وجبة، الساعة ثم الأصناف"));
+    var food=el("textarea","note food"); food.value=load(pre+"e:food"); food.placeholder="5 عصرًا: 4 بيض مسلوق + تفاحة\n8 مساءً: 100 غ جبن قريش + موز";
     food.addEventListener("input",function(){store(pre+"e:food",food.value);grow(food);});
+    var mb=el("button","mealBtn","＋ إضافة وجبة"); mb.type="button";
+    mb.addEventListener("click",function(){ openMeal(function(line){ var v=food.value.replace(/\s+$/,""); food.value=(v?v+"\n":"")+line; store(pre+"e:food",food.value); grow(food); }); });
+    eod.appendChild(mb);
     eod.appendChild(food);
     eb.addEventListener("click",function(){ copy(eodText(ds,dow),eok); });
     card.appendChild(eod);
@@ -896,6 +912,62 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
   document.addEventListener("focusin",pickRest);
   document.addEventListener("input",pickRest);
+
+  // Meal entry dialog: time + items -> one line "5 عصرًا: 4 بيض + تفاحة"
+  var mealOv=null,mealCb=null,mealItems=[];
+  function timeAr(hhmm){
+    var p=hhmm.split(":"),h=parseInt(p[0],10),m=parseInt(p[1],10)||0;
+    var per=h<4?"فجرًا":h<12?"صباحًا":h<15?"ظهرًا":h<18?"عصرًا":h<24?"مساءً":"";
+    if(h>=0&&h<1) per="منتصف الليل";
+    var h12=h%12; if(h12===0) h12=12;
+    return h12+(m?":"+pad(m):"")+" "+per;
+  }
+  function recentFoods(){ try{ return JSON.parse(localStorage.getItem("ui:foods")||"[]"); }catch(e){ return []; } }
+  function saveFoods(list){ try{ var r=recentFoods(); list.forEach(function(x){ r=r.filter(function(y){return y!==x;}); r.unshift(x); }); localStorage.setItem("ui:foods",JSON.stringify(r.slice(0,14))); }catch(e){} }
+  function openMeal(cb){
+    mealCb=cb; mealItems=[];
+    if(!mealOv){
+      mealOv=el("div","mealOv"); var bx=el("div","mealBox"); mealOv.appendChild(bx);
+      bx.appendChild(el("h3",null,"إضافة وجبة"));
+      bx.appendChild(el("label",null,"الوقت"));
+      var tm=document.createElement("input"); tm.type="time"; tm.id="mealTime"; bx.appendChild(tm);
+      bx.appendChild(el("label",null,"الصنف والكمية (مثل: 4 بيض مسلوق)"));
+      var it=document.createElement("input"); it.type="text"; it.id="mealItem"; it.autocomplete="off"; bx.appendChild(it);
+      var added=el("div","chips"); added.id="mealAdded"; bx.appendChild(added);
+      bx.appendChild(el("label",null,"أصناف سابقة (اضغط للإضافة)"));
+      var rec=el("div","chips"); rec.id="mealRecent"; bx.appendChild(rec);
+      var acts=el("div","acts");
+      var more=el("button","sec","＋ صنف آخر"); more.type="button";
+      var done=el("button","pri","انتهاء"); done.type="button";
+      var cancel=el("button","sec","إلغاء"); cancel.type="button";
+      acts.appendChild(more); acts.appendChild(done); acts.appendChild(cancel); bx.appendChild(acts);
+      document.body.appendChild(mealOv);
+      function addCur(){ var v=it.value.trim(); if(v){ mealItems.push(v); it.value=""; } drawMeal(); it.focus(); }
+      more.addEventListener("click",addCur);
+      it.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); addCur(); } });
+      cancel.addEventListener("click",function(){ mealOv.classList.remove("open"); });
+      mealOv.addEventListener("click",function(e){ if(e.target===mealOv) mealOv.classList.remove("open"); });
+      done.addEventListener("click",function(){
+        var v=it.value.trim(); if(v) mealItems.push(v);
+        if(!mealItems.length){ it.focus(); return; }
+        saveFoods(mealItems);
+        var line=timeAr(tm.value||"12:00")+": "+mealItems.join(" + ");
+        mealOv.classList.remove("open"); if(mealCb) mealCb(line);
+      });
+    }
+    var n=new Date(); document.getElementById("mealTime").value=pad(n.getHours())+":"+pad(n.getMinutes());
+    document.getElementById("mealItem").value="";
+    drawMeal(); mealOv.classList.add("open");
+    setTimeout(function(){document.getElementById("mealItem").focus();},50);
+  }
+  function drawMeal(){
+    var a=document.getElementById("mealAdded"); a.textContent="";
+    mealItems.forEach(function(x,i){ var c=el("button","chip sel","✓ "+x+"  ✕"); c.type="button"; c.addEventListener("click",function(){ mealItems.splice(i,1); drawMeal(); }); a.appendChild(c); });
+    var r=document.getElementById("mealRecent"); r.textContent="";
+    var rf=recentFoods().filter(function(x){return mealItems.indexOf(x)<0;});
+    if(!rf.length) r.appendChild(el("span","lbl","ستظهر هنا أصنافك التي تكررها."));
+    rf.forEach(function(x){ var c=el("button","chip",x); c.type="button"; c.addEventListener("click",function(){ mealItems.push(x); drawMeal(); }); r.appendChild(c); });
+  }
 
   // Floating "end of day" button: 00:00-04:00 counts as the previous day
   function goEod(ds){
