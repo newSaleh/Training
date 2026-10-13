@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013231041">
+<meta name="app-version" content="20261013231614">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -527,10 +527,22 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var eb=el("button","sec rdone","نسخ نهاية اليوم"); eb.type="button"; var eok=el("span","ok","");
     var ebw=el("span"); ebw.appendChild(eok); ebw.appendChild(eb); eh.appendChild(ebw); eod.appendChild(eh);
     eod.appendChild(el("div","ar","املأها قبل النوم أو عند الساعة 12، ثم انسخها وأرسلها."));
+    var sleepIn=null;
     EOD.forEach(function(m){
       var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
-      r.appendChild(input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0)); eod.appendChild(r);
+      var inp=input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0); if(m[0]==="sleep") sleepIn=inp;
+      r.appendChild(inp); eod.appendChild(r);
     });
+    eod.appendChild(el("div","lbl fl","النوم: الخانة أعلاه هي إجمالي اليوم. أضف كل فترة نوم بوقتها (ليلًا أو قيلولة) وسيُحسب الإجمالي تلقائيًا، أو اكتب يدويًا."));
+    var sl=el("textarea","note sleeplog"); sl.value=load(pre+"e:sleeplog"); sl.placeholder="3:30 فجرًا → 10 صباحًا (6:30)\n6 مساءً → 7 مساءً (1:00)";
+    function sleepSum(){
+      var tot=0; sl.value.split("\n").forEach(function(l){ var m=l.match(/\((\d+):(\d\d)\)\s*$/); if(m) tot+=parseInt(m[1],10)*60+parseInt(m[2],10); });
+      if(!tot) return; sleepIn.value=Math.floor(tot/60)+pad(tot%60); sleepIn.dispatchEvent(new Event("input",{bubbles:true}));
+    }
+    sl.addEventListener("input",function(){store(pre+"e:sleeplog",sl.value);grow(sl);sleepSum();});
+    var sb=el("button","mealBtn","＋ إضافة فترة نوم"); sb.type="button";
+    sb.addEventListener("click",function(){ openSleep(function(line){ var v=sl.value.replace(/\s+$/,""); sl.value=(v?v+"\n":"")+line; store(pre+"e:sleeplog",sl.value); grow(sl); sleepSum(); }); });
+    eod.appendChild(sb); eod.appendChild(sl);
     eod.appendChild(el("div","lbl fl","ماذا أكلت اليوم؟ اضغط «إضافة وجبة» أو اكتب يدويًا: سطر لكل وجبة، الساعة ثم الأصناف"));
     var food=el("textarea","note food"); food.value=load(pre+"e:food"); food.placeholder="5 عصرًا: 4 بيض مسلوق + تفاحة\n8 مساءً: 100 غ جبن قريش + موز";
     food.addEventListener("input",function(){store(pre+"e:food",food.value);grow(food);});
@@ -584,6 +596,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function eodText(ds,dow){
     var pre="tr:"+ds+":", lines=[DAY_EN[dow]+" "+ds+" — End of day"];
     EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); lines.push(m[1]+": "+(v?v+EOD_UNIT[m[0]]:"-")); });
+    var sg=load(pre+"e:sleeplog").trim(); if(sg) lines.push("Sleep log:\n"+sg);
     var f=load(pre+"e:food").trim(); lines.push("Food:"+(f?"\n"+f:" -"));
     return lines.join("\n");
   }
@@ -607,6 +620,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["am","post","flex"].forEach(function(k){ if(load(pre+k)) lines.push(ROUT_LBL[k]+": done"); });
       MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+" cm"); });
       EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); if(v) lines.push(m[1]+": "+v+EOD_UNIT[m[0]]); });
+      var sg2=load(pre+"e:sleeplog").trim(); if(sg2) lines.push("Sleep log:\n"+sg2);
       var fd=load(pre+"e:food").trim(); if(fd) lines.push("Food:\n"+fd);
       var dur=durationFor(ds); if(dur) lines.push("Duration: "+dur);
       var n=load(pre+"note").trim(); if(n) lines.push("Notes: "+n);
@@ -968,6 +982,34 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var rf=recentFoods().filter(function(x){return mealItems.indexOf(x)<0;});
     if(!rf.length) r.appendChild(el("span","lbl","ستظهر هنا أصنافك التي تكررها."));
     rf.forEach(function(x){ var c=el("button","chip",x); c.type="button"; c.addEventListener("click",function(){ mealItems.push(x); drawMeal(); }); r.appendChild(c); });
+  }
+
+  // Sleep period dialog
+  var sleepOv=null,sleepCb=null;
+  function openSleep(cb){
+    sleepCb=cb;
+    if(!sleepOv){
+      sleepOv=el("div","mealOv"); var bx=el("div","mealBox"); sleepOv.appendChild(bx);
+      bx.appendChild(el("h3",null,"إضافة فترة نوم"));
+      bx.appendChild(el("label",null,"وقت النوم (بداية)"));
+      var a=document.createElement("input"); a.type="time"; a.id="slFrom"; a.value="23:00"; bx.appendChild(a);
+      bx.appendChild(el("label",null,"وقت الاستيقاظ (نهاية)"));
+      var b=document.createElement("input"); b.type="time"; b.id="slTo"; b.value="07:00"; bx.appendChild(b);
+      var info=el("div","lbl fl",""); info.id="slInfo"; bx.appendChild(info);
+      var acts=el("div","acts");
+      var done=el("button","pri","إضافة"); done.type="button"; var cancel=el("button","sec","إلغاء"); cancel.type="button";
+      acts.appendChild(done); acts.appendChild(cancel); bx.appendChild(acts); document.body.appendChild(sleepOv);
+      function mins(){ var f=a.value.split(":"),t=b.value.split(":"); if(f.length<2||t.length<2) return 0;
+        var d=(parseInt(t[0],10)*60+parseInt(t[1],10))-(parseInt(f[0],10)*60+parseInt(f[1],10)); if(d<=0) d+=1440; return d; }
+      function show(){ var d=mins(); info.textContent="المدة: "+Math.floor(d/60)+":"+pad(d%60); }
+      a.addEventListener("input",show); b.addEventListener("input",show);
+      cancel.addEventListener("click",function(){ sleepOv.classList.remove("open"); });
+      sleepOv.addEventListener("click",function(e){ if(e.target===sleepOv) sleepOv.classList.remove("open"); });
+      done.addEventListener("click",function(){ var d=mins(); if(!d) return;
+        var line=timeAr(a.value)+" → "+timeAr(b.value)+" ("+Math.floor(d/60)+":"+pad(d%60)+")";
+        sleepOv.classList.remove("open"); if(sleepCb) sleepCb(line); });
+    }
+    document.getElementById("slFrom").dispatchEvent(new Event("input")); sleepOv.classList.add("open");
   }
 
   // Floating "end of day" button: 00:00-04:00 counts as the previous day
