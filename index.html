@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013193515">
+<meta name="app-version" content="20261013193828">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -142,10 +142,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .notesPanel.open + .notesToggle{display:none}
 .notesToggle{position:fixed;z-index:12;left:16px;bottom:calc(112px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;
   font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.eodGo{position:fixed;z-index:12;left:16px;bottom:calc(176px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.4rem;background:var(--accent);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
 .notesPanel{left:12px;right:12px;bottom:calc(108px + env(safe-area-inset-bottom));height:42vh}
 @media (min-width:1100px){
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
-  .np-x,.notesToggle{display:none}
+  .np-x,.notesToggle,.eodGo{display:none}
 }
 /* tempo pacer: fixed on the right */
 .pacer{position:fixed;z-index:12;right:max(24px,calc((100vw - 640px)/4 - 70px));top:50%;transform:translateY(-50%);width:110px;height:110px;padding:0;border-radius:50%;
@@ -233,6 +234,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   <div class="np-head"><span>ملاحظات اليوم</span><button type="button" class="np-x" id="panelClose" aria-label="إغلاق">✕</button></div>
   <textarea id="panelNote" placeholder="اضغط ✎ بجانب أي تمرين لإضافة اسمه هنا، ثم اكتب ملاحظتك."></textarea>
 </aside>
+<button type="button" id="eodGo" class="eodGo" aria-label="الانتقال إلى نهاية اليوم">🌙</button>
 <button type="button" id="notesToggle" class="notesToggle" aria-label="ملاحظات اليوم">✎</button>
 
 <div class="timer" id="timer">
@@ -503,7 +505,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       card.appendChild(mz);
     }
 
-    var eod=el("div","ex meas eod");
+    var eod=el("div","ex meas eod"); eod.id="eod-"+ds;
     var eh=el("div","row"); eh.appendChild(el("div","rtitle","نهاية اليوم"));
     var eb=el("button","sec rdone","نسخ نهاية اليوم"); eb.type="button"; var eok=el("span","ok","");
     var ebw=el("span"); ebw.appendChild(eok); ebw.appendChild(eb); eh.appendChild(ebw); eod.appendChild(eh);
@@ -890,8 +892,27 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   document.addEventListener("focusin",pickRest);
   document.addEventListener("input",pickRest);
 
+  // Floating "end of day" button: 00:00-04:00 counts as the previous day
+  function goEod(ds){
+    var box=document.getElementById("eod-"+ds); if(!box) return false;
+    var c=box.closest(".day"); if(c) c.classList.remove("collapsed");
+    box.scrollIntoView({behavior:"smooth",block:"center"}); return true;
+  }
+  document.getElementById("eodGo").addEventListener("click",function(){
+    var n=new Date(); var d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-(n.getHours()<4?1:0));
+    var ds=iso(d);
+    if(WOFF===0&&goEod(ds)) return;
+    var ws=new Date(today); ws.setDate(today.getDate()-tdow);
+    var off=d<ws?-Math.ceil((ws-d)/604800000):0;
+    if(off<-4) off=-4;
+    try{ sessionStorage.setItem("ui:woff",String(off)); sessionStorage.setItem("ui:goeod",ds); }catch(e){}
+    location.reload();
+  });
+  (function(){ var g=""; try{ g=sessionStorage.getItem("ui:goeod")||""; sessionStorage.removeItem("ui:goeod"); }catch(e){}
+    if(g) setTimeout(function(){goEod(g);},500); })();
+
   var cur=document.getElementById("day-"+tdow);
-  if(cur&&tdow!==0) setTimeout(function(){cur.scrollIntoView({behavior:"smooth",block:"start"});},300);
+  if(cur&&tdow!==0&&WOFF===0) setTimeout(function(){cur.scrollIntoView({behavior:"smooth",block:"start"});},300);
 })();
 </script>
 </body>
