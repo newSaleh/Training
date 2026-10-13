@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261013122602">
+<meta name="app-version" content="20261013123225">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -80,6 +80,9 @@ input,textarea{font-size:16px}
 .routine.isdone .rlist{opacity:.55}
 .meas .mrow{display:flex;align-items:center;gap:10px;margin-top:8px}
 .meas .mlab{flex:1;font-size:.85rem;color:var(--muted)}
+.eod .row{align-items:center}
+.eod .row>span{display:flex;align-items:center;gap:8px}
+.eod input{width:84px}
 .meas input{width:64px;height:44px;padding:0 4px;text-align:center;font-size:17px;border:0;border-radius:10px;background:var(--field);color:var(--ink);-webkit-appearance:none;appearance:none}
 .meas input.filled{background:var(--accent);color:var(--card);font-weight:700}
 .pairlbl{font-size:.72rem;color:var(--accent);margin:0 0 6px}
@@ -305,6 +308,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var FLEX=[["catcow","8–10"],["threadNeedle","6–8 / side"],["pecStretch","45 sec × 2"],["wallSlide","8–10"],
     ["hamStretch","45 sec × 2 / side"],["calfStretch","30 sec × 2 / side"],["ddPedal","30 sec"],["hipFlexor","45 sec × 2 / side"],
     ["butterfly","45 sec × 2"],["figure4","45 sec × 2 / side"],["frog","45 sec × 2"]];
+  var EOD=[["steps","Steps","الخطوات (من الآيفون)","خطوة"],["sleep","Sleep","ساعات نوم الليلة الماضية","ساعة"],["protein","Protein","البروتين اليوم (غرام، الهدف نحو 100)","غ"]];
+  var EOD_UNIT={steps:"",sleep:" h",protein:" g"};
+  var PROTEIN_TIP="تقديرات تقريبية: بيضة 6 غ. علبة تونة 25 غ. 100 غ دجاج مطبوخ 30 غ. 100 غ لحم مطبوخ 25 غ. علبة زبادي عادي 170 غ نحو 6 غ، واليوناني 15 غ. 100 غ جبن قريش 11 غ. كوب حليب 8 غ. كوب عدس أو فول مطبوخ 15 إلى 18 غ. رغيف خبز 6 غ. كوب أرز مطبوخ 4 غ.";
   var ROUT_LBL={am:"Morning routine",post:"Post-workout stretch",flex:"Flexibility session"};
   var MEAS=[["belly","Belly","محيط البطن (سم)"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (سم)"],
     ["bfly","Butterfly knee","ارتفاع الركبة عن الأرض في الفراشة (سم)"],["wall","Wall slide gap","المسافة بين اليدين والجدار فوق الرأس (سم)"]];
@@ -324,17 +330,20 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function el(tag,cls,txt){var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e;}
 
   // Arabic-Indic (٠-٩) and Persian (۰-۹) digits -> 0-9; keep digits only
-  function normDigits(t){
-    return String(t).replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-0x0660;})
-      .replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-0x06F0;})
-      .replace(/[^0-9]/g,"").slice(0,4);
+  function normDigits(t,dec,len){
+    var v=String(t).replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-0x0660;})
+      .replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-0x06F0;});
+    if(!dec) return v.replace(/[^0-9]/g,"").slice(0,len||4);
+    v=v.replace(/[\u066B,\u060C]/g,".").replace(/[^0-9.]/g,"");
+    var k=v.indexOf("."); if(k>=0) v=v.slice(0,k+1)+v.slice(k+1).replace(/\./g,"").slice(0,1);
+    return v.slice(0,5);
   }
-  function input(key,ph,max){
-    var i=el("input"); i.type="text"; i.inputMode="numeric"; i.autocomplete="off"; i.placeholder=ph||"";
+  function input(key,ph,max,dec,len){
+    var i=el("input"); i.type="text"; i.inputMode=dec?"decimal":"numeric"; i.autocomplete="off"; i.placeholder=ph||"";
     function mark(){var v=i.value; i.classList.toggle("filled",!!v); i.classList.toggle("over",!!(max&&v&&parseInt(v,10)>max));}
     i.value=load(key); mark();
     i.addEventListener("input",function(){
-      var v=normDigits(i.value); if(v!==i.value) i.value=v;
+      var v=normDigits(i.value,dec,len); if(v!==i.value) i.value=v;
       store(key,v); mark();
     });
     return i;
@@ -465,6 +474,22 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       card.appendChild(mz);
     }
 
+    var eod=el("div","ex meas eod");
+    var eh=el("div","row"); eh.appendChild(el("div","rtitle","نهاية اليوم"));
+    var eb=el("button","sec rdone","نسخ نهاية اليوم"); eb.type="button"; var eok=el("span","ok","");
+    var ebw=el("span"); ebw.appendChild(eok); ebw.appendChild(eb); eh.appendChild(ebw); eod.appendChild(eh);
+    eod.appendChild(el("div","ar","املأها قبل النوم أو عند الساعة 12، ثم انسخها وأرسلها."));
+    EOD.forEach(function(m){
+      var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
+      r.appendChild(input(pre+"e:"+m[0],m[3],0,m[0]==="sleep",m[0]==="steps"?5:0)); eod.appendChild(r);
+    });
+    var ptb=el("button","tipbtn","i"); ptb.type="button"; ptb.setAttribute("aria-label","مصادر البروتين");
+    var ptip=el("div","tip",PROTEIN_TIP);
+    ptb.addEventListener("click",function(){ptip.classList.toggle("on");ptb.classList.toggle("on");});
+    var pr=el("div","mrow"); pr.appendChild(el("span","mlab","تقدير البروتين تقريبي (اضغط i)")); pr.appendChild(ptb); eod.appendChild(pr); eod.appendChild(ptip);
+    eb.addEventListener("click",function(){ copy(eodText(ds,dow),eok); });
+    card.appendChild(eod);
+
     var foot=el("div","foot");
     foot.appendChild(el("div","lbl","ملاحظات (ألم، صعوبة، أي شيء غير طبيعي)"));
     var note=el("textarea","note"); note.value=load(pre+"note"); NOTE_TA[ds]=note;
@@ -504,6 +529,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     box.appendChild(ul); paint(); card.appendChild(box);
   }
 
+  function eodText(ds,dow){
+    var pre="tr:"+ds+":", lines=[DAY_EN[dow]+" "+ds+" — End of day"];
+    EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); lines.push(m[1]+": "+(v?v+EOD_UNIT[m[0]]:"-")); });
+    return lines.join("\n");
+  }
+
   function report(ds,dow,p){
   var pre="tr:"+ds+":";
   var lines=[DAY_EN[dow]+" "+ds+" — "+p.name];
@@ -522,6 +553,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       });
       ["am","post","flex"].forEach(function(k){ if(load(pre+k)) lines.push(ROUT_LBL[k]+": done"); });
       MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+" cm"); });
+      EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); if(v) lines.push(m[1]+": "+v+EOD_UNIT[m[0]]); });
       var dur=durationFor(ds); if(dur) lines.push("Duration: "+dur);
       var n=load(pre+"note").trim(); if(n) lines.push("Notes: "+n);
       if(lines.length===1) lines.push("(لا نتائج مسجلة)");
