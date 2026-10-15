@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261015165512">
+<meta name="app-version" content="20261015215314">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -161,6 +161,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .mealBox .acts{display:flex;gap:8px;margin-top:14px}
 .mealBox .acts button{flex:1}
 .mealBox .pri{background:var(--accent);color:var(--card)}
+.mealBox #mealGrpActs{flex-wrap:wrap;margin-top:8px}.mealBox #mealGrpActs button{flex:1 1 auto;height:auto;padding:8px 10px;font-size:.85rem}
 .notesPanel{left:12px;right:12px;bottom:calc(108px + env(safe-area-inset-bottom));height:42vh}
 @media (min-width:1100px){
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
@@ -958,7 +959,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   document.addEventListener("input",pickRest);
 
   // Meal entry dialog: time + items -> one line "5 عصرًا: 4 بيض + تفاحة"
-  var mealOv=null,mealCb=null,mealItems=[];
+  var mealOv=null,mealCb=null,mealItems=[],mealGroup="";
   function timeAr(hhmm){
     var p=hhmm.split(":"),h=parseInt(p[0],10),m=parseInt(p[1],10)||0;
     var per=h<4?"فجرًا":h<12?"صباحًا":h<15?"ظهرًا":h<18?"عصرًا":h<24?"مساءً":"";
@@ -968,16 +969,22 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
   function recentFoods(){ try{ return JSON.parse(localStorage.getItem("ui:foods")||"[]"); }catch(e){ return []; } }
   function saveFoods(list){ try{ var r=recentFoods(); list.forEach(function(x){ r=r.filter(function(y){return y!==x;}); r.unshift(x); }); localStorage.setItem("ui:foods",JSON.stringify(r.slice(0,14))); }catch(e){} }
+  // Saved meal groups ("وجبة بعد التمرين"): name -> list of items. Stored only in this browser.
+  function getGroups(){ try{ var g=JSON.parse(localStorage.getItem("ui:groups")||"{}"); return (g&&typeof g==="object"&&!Array.isArray(g))?g:{}; }catch(e){ return {}; } }
+  function setGroups(g){ try{ localStorage.setItem("ui:groups",JSON.stringify(g)); }catch(e){} }
   function openMeal(cb){
-    mealCb=cb; mealItems=[];
+    mealCb=cb; mealItems=[]; mealGroup="";
     if(!mealOv){
       mealOv=el("div","mealOv"); var bx=el("div","mealBox"); mealOv.appendChild(bx);
       bx.appendChild(el("h3",null,"إضافة وجبة"));
       bx.appendChild(el("label",null,"الوقت"));
       var tm=document.createElement("input"); tm.type="time"; tm.id="mealTime"; bx.appendChild(tm);
+      bx.appendChild(el("label",null,"وجباتي المعتادة (اضغط لتحميلها)"));
+      var grp=el("div","chips"); grp.id="mealGroups"; bx.appendChild(grp);
       bx.appendChild(el("label",null,"الصنف والكمية (مثل: 4 بيض مسلوق)"));
       var it=document.createElement("input"); it.type="text"; it.id="mealItem"; it.autocomplete="off"; bx.appendChild(it);
       var added=el("div","chips"); added.id="mealAdded"; bx.appendChild(added);
+      var gact=el("div","acts"); gact.id="mealGrpActs"; bx.appendChild(gact);
       bx.appendChild(el("label",null,"أصناف سابقة (اضغط للإضافة)"));
       var rec=el("div","chips"); rec.id="mealRecent"; bx.appendChild(rec);
       var acts=el("div","acts");
@@ -1007,6 +1014,18 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function drawMeal(){
     var a=document.getElementById("mealAdded"); a.textContent="";
     mealItems.forEach(function(x,i){ var c=el("button","chip sel","✓ "+x+"  ✕"); c.type="button"; c.addEventListener("click",function(){ mealItems.splice(i,1); drawMeal(); }); a.appendChild(c); });
+    var gs=getGroups(), gn=Object.keys(gs), gc=document.getElementById("mealGroups"); gc.textContent="";
+    if(!gn.length) gc.appendChild(el("span","lbl","لا توجد مجموعات بعد. أضف أصنافًا ثم اضغط «حفظ كمجموعة»."));
+    gn.forEach(function(n){ var c=el("button","chip"+(n===mealGroup?" sel":""),n); c.type="button";
+      c.addEventListener("click",function(){ mealGroup=n; mealItems=(gs[n]||[]).slice(); drawMeal(); }); gc.appendChild(c); });
+    var ga=document.getElementById("mealGrpActs"); ga.textContent="";
+    function gbtn(t,fn){ var b=el("button","sec",t); b.type="button"; b.addEventListener("click",fn); ga.appendChild(b); }
+    function curList(){ var it=document.getElementById("mealItem"), v=it.value.trim(); if(v){ mealItems.push(v); it.value=""; } return mealItems.slice(); }
+    if(mealGroup) gbtn("حفظ التعديلات على «"+mealGroup+"»",function(){ var l=curList(); if(!l.length) return; var g=getGroups(); g[mealGroup]=l; setGroups(g); drawMeal(); });
+    gbtn("حفظ كمجموعة جديدة",function(){ var l=curList(); if(!l.length){ drawMeal(); return; }
+      var n=(window.prompt("اسم المجموعة (مثل: وجبة بعد التمرين)")||"").trim(); if(!n){ drawMeal(); return; }
+      var g=getGroups(); g[n]=l; setGroups(g); mealGroup=n; drawMeal(); });
+    if(mealGroup) gbtn("حذف «"+mealGroup+"»",function(){ if(!window.confirm("حذف المجموعة «"+mealGroup+"»؟")) return; var g=getGroups(); delete g[mealGroup]; setGroups(g); mealGroup=""; drawMeal(); });
     var r=document.getElementById("mealRecent"); r.textContent="";
     var rf=recentFoods().filter(function(x){return mealItems.indexOf(x)<0;});
     if(!rf.length) r.appendChild(el("span","lbl","ستظهر هنا أصنافك التي تكررها."));
