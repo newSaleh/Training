@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261014160946">
+<meta name="app-version" content="20261015155631">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -132,7 +132,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   border-radius:50%;border:1.5px solid var(--muted);color:var(--muted);font:600 .72rem/1 Georgia,serif;font-style:italic;
   background:transparent;padding:0;vertical-align:2px;cursor:pointer}
 .tipbtn.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
-.tip{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;line-height:1.6}
+.tip{white-space:pre-line;display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;line-height:1.6}
 .tip.on{display:block}
 .notebtn{font-style:normal;font-family:inherit;font-size:.75rem}
 /* notes panel: fixed on the left on wide screens, bottom sheet on phones */
@@ -270,21 +270,21 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
-    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"جسمك مستقيم من الرأس إلى الكعب، والمرفقان للخلف بزاوية 45° تقريبًا. بلغتَ 12 / 12 / 12. إن انتهت المجموعة الأخيرة وبقي لك تكراران أو أكثر، فاجعل النزول 3 ثوانٍ مع زر الإيقاع (♩). وإلا فكرّر 12 / 12 / 12 بالتكنيك نفسه."},
-    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"شغّل زر الإيقاع (♩) على يمين الشاشة: انزل مع 3 و2 و1، وحين يصل إلى 0 اصعد. انزل حتى تلمس كرسيًا خلفك ولا أعمق. بلغتَ 15 / 15 / 15، والصعوبة الشديدة تبدأ عند 11 في المجموعة الثالثة. كرّرها، وحين تتأخر الصعوبة إلى 13 تقريبًا أضف توقف ثانية فوق الكرسي. اكتب في الملاحظات عند أي تكرار بدأت الصعوبة."},
-    doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"إن تعبت أصابعك قبل ظهرك: افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك، ثم مِل للخلف واسحب. اسحب المرفقين نحو الخصر وقريبين من الجسم، وابدأ الحركة بضم لوحي الكتف قبل ثني الذراعين. بلغتَ 12 / 12 / 12، وقدماك في أقصى وضع ممكن. الخطوة التالية بالإيقاع لا بالقدمين: اثبت ثانيتين حين يقترب صدرك، ثم انزل في 3 ثوانٍ مع زر الإيقاع (♩). ابدأ من 10 ثم ابنِ إلى 12. بعدها: سحب بذراع واحدة. التعب في العضلة طبيعي، أما ألم الكوع أو الكتف فتوقف."},
-    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"الرجل الأمامية هي التي تعمل، والخلفية للتوازن. بلغتَ 8 / 8 للجهتين بلا استناد. ابدأ بالجهة الأضعف (اليمنى في الأمام)، وعددها يحدد عدد الجهة الأخرى. النزول نحو ثلثي المسافة ما دام الألم 2 من 10 أو أقل. الخطوة التالية: نزول في 3 ثوانٍ مع زر الإيقاع (♩)."},
-    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"انثناء الركبتين قليلًا مقبول، فالمهم أن يبقى الوركان عاليين فوق الكتفين. الرأس ينزل أمام اليدين، والمرفقان للخلف، والحركة بطيئة. بلغتَ 7 / 7. الهدف الآن 8 في كل مجموعة."},
-    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت 3 ثوانٍ في الأعلى مع شدّ المؤخرة في كل تكرار. بلغتَ 15 / 15 بهذا الثبات. في الأحد القادم نقرر: مجموعة ثالثة أو رفع القدمين على كرسي."},
-    slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"ابدأ باليسرى، وعددها يحدد عدد اليمنى. أبقِ الحوض مستويًا. بلغتَ 12 / 12. الآن اثبت ثانيتين في الأعلى مع شدّ المؤخرة، وارجع إلى 10 ثم ابنِ إلى 12."},
-    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك ببطء مع زر الإيقاع (3 ثوانٍ)، ولا تتركهما تسقطان. النطاق 10 إلى 12."},
-    plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه. بلغتَ 45 / 45. النطاق الجديد 45 إلى 60 ثانية."},
-    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"إن كان سهلًا: ارفع صدرك أعلى قليلًا عن الأرض، وحرّك الذراعين ببطء أكثر، واثبت ثانيتين حين تكون الذراعان فوق الرأس. الهدف 12 إلى 15 بهذه الصعوبة."},
-    superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية في الأعلى، والنظر إلى الأرض."},
-    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"المس الجدار بيد واحدة للتوازن، حتى تركّز على العضلة لا على الثبات. الركبة مثنية قليلًا وثابتة، وادفع الورك للخلف كأنك تغلق بابًا بمؤخرتك، والظهر مستقيم. يجب أن تشعر بالشد في خلف الفخذ للرجل الواقفة، لا في السمانة. لا نزيد العدد قبل أن تشعر بذلك."},
+    pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"1. الجسم مستقيم من الرأس إلى الكعب، والمرفقان للخلف قليلًا.\n2. انزل في 3 ثوانٍ (زر ♩) حتى يقترب صدرك من الأرض، ثم اصعد.\nالهدف: 12 / 12 / 12."},
+    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"1. انزل في 3 ثوانٍ (زر ♩) حتى تلمس كرسيًا خلفك ولا أعمق، ثم اصعد.\nالهدف: 15 / 15 / 15.\nحين تتأخر الصعوبة إلى ما بعد التكرار 13، أضف توقف ثانية فوق الكرسي."},
+    doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"1. افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك.\n2. مِل للخلف وأبقِ جسمك مستقيمًا.\n3. اسحب المرفقين نحو الخصر، وابدأ بضم لوحي الكتف.\n4. اثبت ثانيتين، ثم انزل في 3 ثوانٍ (زر ♩).\nالهدف: 10 / 10 / 10 ثم ابنِ إلى 12. ألم الكوع أو الكتف = توقف."},
+    splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"1. ابدأ باليمنى في الأمام، وعددها يحدد عدد اليسرى.\n2. انزل نحو ثلثي المسافة، بلا استناد.\nالهدف: 8 / 8. الخطوة التالية: النزول في 3 ثوانٍ (زر ♩). الألم الحاد = توقف."},
+    pike:{n:"Pike Push-up",ar:"ضغط الكتف",q:"pike push up beginner",tip:"1. ارفع الوركين عاليًا فوق الكتفين (ثني الركبتين قليلًا مقبول).\n2. انزل برأسك أمام اليدين ببطء، والمرفقان للخلف.\nالهدف: 8 ثم 10 في كل مجموعة."},
+    bridge:{n:"Glute Bridge",ar:"رفع الحوض",q:"glute bridge proper form",tip:"اثبت 3 ثوانٍ في الأعلى مع شدّ المؤخرة. الهدف: 15 / 15. القرار يوم الأحد 18: مجموعة ثالثة أو رفع القدمين على كرسي."},
+    slBridge:{n:"Single-leg Glute Bridge",ar:"رفع الحوض برجل واحدة",q:"single leg glute bridge",tip:"ابدأ باليسرى، وعددها يحدد عدد اليمنى. الحوض مستوٍ. اثبت ثانيتين في الأعلى مع شدّ المؤخرة.\nالهدف: 10 ثم 12."},
+    revCrunch:{n:"Reverse Crunch",ar:"رفع الركبتين للصدر",q:"reverse crunch proper form",tip:"أنزل رجليك في 3 ثوانٍ (زر ♩)، ولا تتركهما تسقطان. الهدف: 10 إلى 12."},
+    plank:{n:"Plank",ar:"الثبات",q:"plank proper form",tip:"جسمك خط مستقيم، شدّ البطن والمؤخرة، ولا ترفع الحوض أو تُسقطه. الهدف: 60 إلى 75 ثانية."},
+    snowAngel:{n:"Reverse Snow Angel",ar:"على البطن مع تحريك الذراعين ببطء",q:"reverse snow angel exercise",tip:"على البطن: ارفع صدرك عن الأرض، وحرّك الذراعين ببطء، واثبت 3 ثوانٍ وهما فوق الرأس.\nالهدف: 12 إلى 15."},
+    superman:{n:"Superman",ar:"سوبرمان",q:"superman exercise proper form",tip:"ارفع الذراعين والرجلين معًا واثبت ثانية، والنظر إلى الأرض. مجموعتان، 10 إلى 15 تكرارًا."},
+    slRdl:{n:"Single-leg RDL",ar:"الرفعة الرومانية برجل واحدة",q:"single leg romanian deadlift bodyweight",tip:"المس الجدار بيد واحدة للتوازن. ادفع الورك للخلف والظهر مستقيم والركبة مثنية قليلًا. يجب أن تشعر بالشد في خلف الفخذ لا في السمانة."},
     slCalf:{n:"Single-leg Calf Raise",ar:"رفع الكعب على رجل واحدة",q:"single leg calf raise bodyweight",tip:"المس الجدار بأطراف أصابعك للتوازن فقط. اصعد لأعلى نقطة واثبت ثانية، ثم انزل ببطء. ابدأ باليسرى، وعددها يحدد عدد اليمنى."},
     calf:{n:"Calf Raise",ar:"رفع الكعبين",q:"bodyweight calf raise",tip:"اثبت ثانية في الأعلى، وانزل ببطء."},
-    hipFlexor:{n:"Kneeling Hip Flexor Stretch",ar:"إطالة مقدمة الورك على ركبة واحدة",q:"kneeling hip flexor stretch",tip:"اجثُ على ركبة واحدة (ضع وسادة تحتها)، وشدّ مؤخرتك، وادفع الحوض للأمام قليلًا حتى تشعر بالإطالة في مقدمة الورك للرجل التي على الأرض. لا تقوّس أسفل ظهرك. اثبت 30 إلى 45 ثانية لكل جهة. تمرين تجريبي لميل الحوض الأمامي."},
+    hipFlexor:{n:"Kneeling Hip Flexor Stretch",ar:"إطالة مقدمة الورك على ركبة واحدة",q:"kneeling hip flexor stretch",tip:"اجثُ على ركبة واحدة (وسادة تحتها)، شدّ المؤخرة وادفع الحوض للأمام قليلًا دون تقويس أسفل الظهر. اثبت 30 إلى 45 ثانية لكل جهة."},
     morningVid:{n:"Video: Feel Decades Younger",url:"https://www.youtube.com/watch?v=V8P9E-PVXPY",ar:"مقطع تليين المفاصل الصباحي، 8 دقائق أو أقل",q:"It's Weird, But This Makes You Feel Decades Younger morning stiffness",tip:"في Half-Lunge Ankle Rock ضع وسادة تحت الركبة ولا تدفع الركبة الأمامية أكثر مما يريحك. وفي Toe Raise Bounce اجعل الارتداد صغيرًا وناعمًا."},
     bridgeAm:{n:"Glute Bridge",ar:"رفع الحوض للتنشيط",q:"glute bridge proper form",tip:"10 تكرارات بلا ثبات طويل، تنشيطًا للمؤخرة فقط."},
     calfStretch:{n:"Standing Calf Stretch",ar:"إطالة السمانة على الجدار",q:"standing calf stretch wall",tip:"اليدان على الجدار، والرجل الخلفية مستقيمة والكعب على الأرض. اثبت ثم كررها والركبة مثنية قليلًا."},
@@ -298,7 +298,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     threadNeedle:{n:"Thread the Needle",ar:"تدوير الظهر العلوي",q:"thread the needle stretch",tip:"على يديك وركبتيك، مرّر ذراعًا تحت الأخرى وأنزل الكتف نحو الأرض، ثم افتحها للسقف. 6 إلى 8 مرات لكل جهة."},
     pecStretch:{n:"Doorway Pec Stretch",ar:"إطالة الصدر على إطار الباب",q:"doorway pec stretch",tip:"الساعد على إطار الباب والمرفق بمستوى الكتف، ثم تقدم بخطوة حتى تشعر بالشد في الصدر. لا تدفع حتى الألم في الكتف."},
     wallSlide:{n:"Wall Slides",ar:"رفع الذراعين على الجدار",q:"wall slides shoulder mobility",tip:"ظهرك والرأس على الجدار، والذراعان على الجدار بشكل W، ثم ارفعهما ببطء دون أن يتقوس أسفل الظهر. 8 إلى 10 مرات."},
-    walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"المجهود المطلوب 5 إلى 6 من 10: تتنفس أسرع من المعتاد وتستطيع الكلام بجمل قصيرة. اكتب في الملاحظات اسم المدرب أو الفيديو ثم درجة التعب من 10. بدّل بين فيديوهات من القناة نفسها لتتجنب الملل. بلغت 3 ثم 4 في فيديوهين مختلفين، فارفع الجهد داخل الفيديو من الآن: خطوة أوسع وركبتان أعلى وذراعان أكبر، حتى لا تستطيع إلا جملًا قصيرة. فإن بقيت 3 أو 4 في الجلستين القادمتين انتقلنا إلى 40 دقيقة. جرّب فيديو من قائمة البدائل أسفل التمرين."}
+    walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"المجهود المطلوب 5 إلى 6 من 10: لا تستطيع إلا جملًا قصيرة. ارفع الجهد: خطوة أوسع، وركبتان أعلى، وذراعان أكبر.\nاكتب في الملاحظات اسم الفيديو ودرجة التعب. إن بقيت 3 أو 4 في الجلستين القادمتين انتقلنا إلى 40 دقيقة. جرّب فيديو من البدائل أسفل التمرين."}
   };
 
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
@@ -306,19 +306,19 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     {name:"Full Body A",kind:"train",items:[
       ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–15","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
-      ["pike",2,"5–8","r","c"],["bridge",2,"12–15","r","c"],
+      ["pike",2,"8–10","r","c"],["bridge",2,"12–15","r","c"],
       ["revCrunch",2,"10–12","r"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
-      ["pike",2,"5–8","r","c"],["slBridge",2,"8–12 / leg","lr","c"],
-      ["plank",2,"45–60 sec","s"]]},
+      ["pike",2,"8–10","r","c"],["slBridge",2,"8–12 / leg","lr","c"],
+      ["plank",2,"60–75 sec","s"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
       ["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
-      ["pike",2,"5–8","r","b"],["snowAngel",2,"10–15","r","b"],
-      ["plank",2,"45–60 sec","s","c"],["superman",2,"10–15","r","c"]]},
+      ["pike",2,"8–10","r","b"],["snowAngel",2,"10–15","r","b"],
+      ["plank",2,"60–75 sec","s","c"],["superman",2,"10–15","r","c"]]},
     {name:"Lower Body",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["revCrunch",2,"10–12","r","a"],
       ["slRdl",2,"6–10 / leg","lr","b"],["slCalf",2,"10–15 / leg","lr","b"],
@@ -351,6 +351,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     ["Lucy Wyndham-Read — indoor walking","Lucy Wyndham-Read indoor walking workout"],
     ["Fast walk, high knees, low impact (40 min)","brisk walking workout high knees low impact 40 minutes"]
   ];
+  // warm-up search follows the day: upper-only or lower-only days get a matching video search
+  var WARM={"Upper Body":["5 minute upper body warm up no equipment","Upper"],"Lower Body":["5 minute lower body warm up no equipment","Lower"]};
   var DAY_AR=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
   var DAY_EN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
@@ -431,7 +433,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var c=el("div","day amcard");
     var hd=el("div","head"); var l=el("div"); l.appendChild(el("span","t","روتين الصباح"));
     hd.appendChild(l);
-    var r=el("span"); r.appendChild(el("span","tag","≈ 10 min")); r.appendChild(el("span","chev","▼")); hd.appendChild(r);
+    var r=el("span"); r.appendChild(el("span","tag","≈ 12 min")); r.appendChild(el("span","chev","▼")); hd.appendChild(r);
     c.appendChild(hd);
     hd.addEventListener("click",function(){c.classList.toggle("collapsed");});
     routine(c,"كل يوم بعد الاستيقاظ","",MORNING,"tr:"+iso(today)+":am",iso(today));
@@ -460,7 +462,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
     if(p.kind==="train"){
       var w=el("div","ex warm"); var wr=el("div","row");
-      var wn=el("div","name"); wn.appendChild(link("warmup")); wr.appendChild(wn);
+      var wn=el("div","name"); var wa=link("warmup"); if(WARM[p.name]){wa.href=yt(WARM[p.name][0]); wa.textContent=EX.warmup.n+" — "+WARM[p.name][1];} wn.appendChild(wa); wr.appendChild(wn);
       wr.appendChild(el("span","target","5 min")); w.appendChild(wr);
       w.appendChild(el("div","ar","افتحه وتابعه قبل أول تمرين"));
       card.appendChild(w);
