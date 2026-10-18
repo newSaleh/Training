@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261018201541">
+<meta name="app-version" content="20261019000502">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -299,7 +299,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     threadNeedle:{n:"Thread the Needle",ar:"تدوير الظهر العلوي",q:"thread the needle stretch",tip:"على يديك وركبتيك، مرّر ذراعًا تحت الأخرى وأنزل الكتف نحو الأرض، ثم افتحها للسقف. 6 إلى 8 مرات لكل جهة."},
     pecStretch:{n:"Doorway Pec Stretch",ar:"إطالة الصدر على إطار الباب",q:"doorway pec stretch",tip:"الساعد على إطار الباب والمرفق بمستوى الكتف، ثم تقدم بخطوة حتى تشعر بالشد في الصدر. لا تدفع حتى الألم في الكتف."},
     wallSlide:{n:"Wall Slides",ar:"رفع الذراعين على الجدار",q:"wall slides shoulder mobility",tip:"ظهرك والرأس على الجدار، والذراعان على الجدار بشكل W، ثم ارفعهما ببطء دون أن يتقوس أسفل الظهر. 8 إلى 10 مرات."},
-    walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"المجهود المطلوب 5 إلى 6 من 10: لا تستطيع إلا جملًا قصيرة. ارفع الجهد: خطوة أوسع، وركبتان أعلى، وذراعان أكبر.\nاحمل هاتفك في جيبك أثناء المشي ليحسب الخطوات. اكتب في الملاحظات اسم الفيديو ودرجة التعب. إن بقيت 3 أو 4 في الجلستين القادمتين انتقلنا إلى 40 دقيقة. جرّب فيديو من البدائل أسفل التمرين."}
+    walk:{n:"Brisk Walk",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"مشي سريع بجهد متوسط",q:"brisk walking workout indoor 30 minutes",tip:"المجهود المطلوب 5 إلى 6 من 10: لا تستطيع إلا جملًا قصيرة. ارفع الجهد: خطوة أوسع، وركبتان أعلى، وذراعان أكبر.\nالخطوات لا تُسجَّل أثناء الفيديو: تُحسب +100 خطوة لكل دقيقة. اكتب في الملاحظات اسم الفيديو ودرجة التعب. إن بقيت 3 أو 4 في الجلستين القادمتين انتقلنا إلى 40 دقيقة. جرّب فيديو من البدائل أسفل التمرين."},
+    walkDaily:{n:"Walking Video",url:"https://www.youtube.com/watch?v=m3v3PN5bvZo",ar:"فيديو مشي يومي خفيف 20 دقيقة",q:"20 minute walking workout indoor",tip:"فيديو مشي بجهد خفيف إلى متوسط، في أي وقت من اليوم (يجوز 10 دقائق مرتين).\nالخطوات لا تُسجَّل: تُحسب +100 خطوة لكل دقيقة.\nاكتب الدقائق في الخانة."}
   };
 
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
@@ -308,24 +309,24 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–15","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"8–10","r","c"],["bridge",2,"12–15","r","c"],
-      ["revCrunch",2,"10–12","r"]]},
+      ["revCrunch",2,"10–12","r"],["walkDaily",1,"20 min","m"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"8–10","r","c"],["slBridge",2,"8–12 / leg","lr","c"],
-      ["plank",2,"60–75 sec","s"]]},
+      ["plank",2,"60–75 sec","s"],["walkDaily",1,"20 min","m"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"20–30 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
       ["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
       ["pike",2,"8–10","r","b"],["snowAngel",2,"10–15","r","b"],
-      ["plank",2,"60–75 sec","s","c"],["superman",2,"10–15","r","c"]]},
+      ["plank",2,"60–75 sec","s","c"],["superman",2,"10–15","r","c"],["walkDaily",1,"20 min","m"]]},
     {name:"Lower Body",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["revCrunch",2,"10–12","r","a"],
       ["slRdl",2,"6–10 / leg","lr","b"],["slCalf",2,"10–15 / leg","lr","b"],
       ["splitSquat",2,"5–8 / leg","lr"],["bridge",2,"12–15","r"],
-      ["hipFlexor",1,"30–45 sec / side","lr"]]},
-    {name:"Rest",kind:"rest",items:[]}
+      ["hipFlexor",1,"30–45 sec / side","lr"],["walkDaily",1,"20 min","m"]]},
+    {name:"Rest",kind:"rest",items:[["walkDaily",1,"20 min","m"]]}
   ];
   // routines: [id, text]
   var MORNING=[["morningVid","≤ 8 min"],["hipFlexor","30–45 sec / side"],["bridgeAm","10"]];
