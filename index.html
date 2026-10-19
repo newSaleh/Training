@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261019010620">
+<meta name="app-version" content="20261019160815">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -342,6 +342,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["hipFlexor",1,"30–45 sec / side","lr"],["walkDaily",1,"20 min","m"]]},
     {name:"Rest",kind:"rest",items:[["walkDaily",1,"20 min","m"]]}
   ];
+  // أيام الألم المؤقت: تُستبدل تمارين القوة بنسخة بلا ضغط على الركبة (أضف تاريخًا أو احذفه)
+  var KNEE_DATES=["2026-10-20"];
+  var KNEE_ITEMS=[["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
+    ["pike",2,"8–10","r","b"],["superman",2,"10–15","r","b"],
+    ["revCrunch",2,"10–12","r"],["plank",2,"60–75 sec","s"],["walkDaily",1,"20 min","m"]];
+  var KNEE_POST=[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["pecStretch","45 sec"]];
   // routines: [id, text]
   var MORNING=[["morningVid","≤ 8 min"],["hipFlexor","30–45 sec / side"],["bridgeAm","10"]];
   var POST={
@@ -490,16 +496,19 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       card.appendChild(w);
     }
 
+    var kneeDay=(p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0);
+    var items=kneeDay?KNEE_ITEMS:p.items;
+    if(kneeDay) card.appendChild(el("p","plain","نسخة مؤقتة بلا ضغط على الركبة: حُذفت تمارين الساق، وأُضيف Superman. وتوقف عن أي تمرين يعود معه الوخز."));
     var grp=[];
     function flushGroup(){
       var max=0; grp.forEach(function(u){ if(u.length>max) max=u.length; });
       for(var j=0;j<max;j++) grp.forEach(function(u){ if(u[j]) u[j].forEach(function(inp){inp.dataset.ord=ORD++;}); });
       grp=[];
     }
-    p.items.forEach(function(it,idx){
+    items.forEach(function(it,idx){
       var id=it[0],sets=it[1],tgt=it[2],type=it[3],pid=it[4]||"";
-      var prevPid=idx>0?(p.items[idx-1][4]||""):"";
-      var nextPid=idx+1<p.items.length?(p.items[idx+1][4]||""):"";
+      var prevPid=idx>0?(items[idx-1][4]||""):"";
+      var nextPid=idx+1<items.length?(items[idx+1][4]||""):"";
       var ex=el("div","ex"+(pid?" paired":""));
       if(pid&&pid!==prevPid) ex.appendChild(el("div","pairlbl","زوج متناوب: مجموعة من كل تمرين بالتناوب، وراحة 1:00 بعد كل مجموعة"));
       var r=el("div","row"); var nm=el("div","name"); nm.appendChild(link(id)); r.appendChild(nm);
@@ -551,7 +560,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       WALK_ALT.forEach(function(w){ var a=el("a",null,w[0]); a.href=yt(w[1]); a.target="_blank"; a.rel="noopener"; alt.appendChild(a); });
       card.appendChild(alt);
     }
-    if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",POST[p.name],pre+"post",ds);
+    if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds);
     if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي. شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد",FLEX,pre+"flex",ds);
     if(dow===0){
       var mz=el("div","ex meas");
@@ -646,7 +655,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function report(ds,dow,p){
   var pre="tr:"+ds+":";
   var lines=[DAY_EN[dow]+" "+ds+" — "+p.name];
-      p.items.forEach(function(it,idx){
+      (p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0?KNEE_ITEMS:p.items).forEach(function(it,idx){
         var id=it[0],sets=it[1],type=it[3],k=pre+id+":";
         var unit=type==="s"?" sec":type==="m"?" min":"";
         if(type==="lr"){
