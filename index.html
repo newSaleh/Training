@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261020223109">
+<meta name="app-version" content="20261020224036">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -149,7 +149,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .eodGo{position:fixed;z-index:12;left:16px;bottom:calc(176px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.5rem;font-weight:700;background:var(--accent);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
 .qkGo{position:fixed;z-index:12;left:16px;bottom:calc(240px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.4rem;font-weight:700;background:var(--accent);color:var(--card);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
-.qkOv{position:fixed;inset:0;z-index:30;background:var(--bg,#fff);display:none;flex-direction:column;gap:12px;padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
+.qkOv{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:none;align-items:flex-end}
+.qkOv .qs{width:100%;height:65vh;height:65dvh;box-sizing:border-box;background:var(--bg);border-radius:22px 22px 0 0;display:flex;flex-direction:column;gap:12px;padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
 .qkOv.open{display:flex}
 .qkOv .qh{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;color:var(--ink);font-weight:600}
 .qkOv .qx{height:40px;padding:0 16px}
@@ -1144,12 +1145,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function qkOpen(){
     if(WOFF!==0){ try{ sessionStorage.setItem("ui:woff","0"); sessionStorage.setItem("ui:qk","1"); }catch(e){} location.reload(); return; }
     if(!qkOv){
-      qkOv=el("div","qkOv");
-      var h=el("div","qh"); h.appendChild(el("span","qd","")); var x=el("button","sec qx","✕ إغلاق"); x.type="button"; h.appendChild(x); qkOv.appendChild(h);
-      function mk(cls,t){ var b=el("button","qb "+cls); b.type="button"; b.appendChild(document.createTextNode(t)); b.appendChild(el("small",null,"")); qkOv.appendChild(b); return b; }
+      qkOv=el("div","qkOv"); var sh=el("div","qs"); qkOv.appendChild(sh);
+      var h=el("div","qh"); h.appendChild(el("span","qd","")); var x=el("button","sec qx","✕ إغلاق"); x.type="button"; h.appendChild(x); sh.appendChild(h);
+      function mk(cls,t){ var b=el("button","qb "+cls); b.type="button"; b.appendChild(document.createTextNode(t)); b.appendChild(el("small",null,"")); sh.appendChild(b); return b; }
       var bs=mk("q-steps","خطوات"), bl=mk("q-sleep","تسجيل نوم"), bf=mk("q-food","تسجيل أكل");
       document.body.appendChild(qkOv);
       x.addEventListener("click",function(){ qkOv.classList.remove("open"); });
+      qkOv.addEventListener("click",function(e){ if(e.target===qkOv) qkOv.classList.remove("open"); });
       bs.addEventListener("click",function(){ var b=qkBox(); if(!b) return; var inp=b.querySelector('input[data-eod="steps"]');
         openSteps(function(v){ inp.value=v; inp.dispatchEvent(new Event("input",{bubbles:true})); qkPaint(); },inp.value); });
       bl.addEventListener("click",function(){ var b=qkBox(); if(!b) return; var sl=b.querySelector("textarea.sleeplog");
