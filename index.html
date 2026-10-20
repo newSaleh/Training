@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261020224036">
+<meta name="app-version" content="20261020224456">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -1088,9 +1088,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       sleepOv=el("div","mealOv"); var bx=el("div","mealBox"); sleepOv.appendChild(bx);
       bx.appendChild(el("h3",null,"إضافة فترة نوم"));
       bx.appendChild(el("label",null,"وقت النوم (بداية)"));
-      var a=document.createElement("input"); a.type="time"; a.id="slFrom"; a.value="23:00"; bx.appendChild(a);
+      var a=document.createElement("input"); a.type="time"; a.id="slFrom"; a.value="03:00"; bx.appendChild(a);
       bx.appendChild(el("label",null,"وقت الاستيقاظ (نهاية)"));
-      var b=document.createElement("input"); b.type="time"; b.id="slTo"; b.value="07:00"; bx.appendChild(b);
+      var b=document.createElement("input"); b.type="time"; b.id="slTo"; b.value="10:00"; bx.appendChild(b);
       var info=el("div","lbl fl",""); info.id="slInfo"; bx.appendChild(info);
       var acts=el("div","acts");
       var done=el("button","pri","إضافة"); done.type="button"; var cancel=el("button","sec","إلغاء"); cancel.type="button";
