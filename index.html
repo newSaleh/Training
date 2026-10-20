@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261019160815">
+<meta name="app-version" content="20261020223109">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -148,6 +148,14 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .notesToggle{position:fixed;z-index:12;left:16px;bottom:calc(112px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;
   font-size:1.2rem;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .eodGo{position:fixed;z-index:12;left:16px;bottom:calc(176px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.5rem;font-weight:700;background:var(--accent);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
+.qkGo{position:fixed;z-index:12;left:16px;bottom:calc(240px + env(safe-area-inset-bottom));width:52px;height:52px;padding:0;border-radius:50%;font-size:1.4rem;font-weight:700;background:var(--accent);color:var(--card);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}
+.qkOv{position:fixed;inset:0;z-index:30;background:var(--bg,#fff);display:none;flex-direction:column;gap:12px;padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
+.qkOv.open{display:flex}
+.qkOv .qh{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;color:var(--ink);font-weight:600}
+.qkOv .qx{height:40px;padding:0 16px}
+.qkOv .qb{flex:1;border:0;border-radius:22px;background:var(--accent);color:var(--card);font-size:2rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.qkOv .qb small{font-size:1rem;font-weight:400;opacity:.85}
+.mealBox .chip.del{border:1px solid #c0392b;color:#c0392b}
 .mealBtn{width:100%;margin-top:8px;background:var(--accent);color:var(--card)}
 .mealOv{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center}
 .mealOv.open{display:flex}
@@ -165,7 +173,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .notesPanel{left:12px;right:12px;bottom:calc(108px + env(safe-area-inset-bottom));height:42vh}
 @media (min-width:1100px){
   .notesPanel{display:flex;left:24px;right:auto;top:110px;bottom:110px;height:auto;width:min(340px,calc((100vw - 640px)/2 - 48px))}
-  .np-x,.notesToggle,.eodGo{display:none}
+  .np-x,.notesToggle,.eodGo,.qkGo{display:none}
 }
 /* tempo pacer: fixed on the right */
 .pacer{position:fixed;z-index:12;right:max(24px,calc((100vw - 640px)/4 - 70px));top:50%;transform:translateY(-50%);width:110px;height:110px;padding:0;border-radius:50%;
@@ -268,6 +276,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   <textarea id="panelNote" placeholder="اضغط ✎ بجانب أي تمرين لإضافة اسمه هنا، ثم اكتب ملاحظتك."></textarea>
 </aside>
 <button type="button" id="eodGo" class="eodGo" aria-label="الانتقال إلى نهاية اليوم">✓</button>
+<button type="button" id="qkGo" class="qkGo" aria-label="تسجيل سريع">⚡</button>
 <button type="button" id="notesToggle" class="notesToggle" aria-label="ملاحظات اليوم">✎</button>
 
 <div class="timer" id="timer">
@@ -581,7 +590,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var sleepIn=null;
     EOD.forEach(function(m){
       var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
-      var inp=input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0); if(m[0]==="sleep") sleepIn=inp;
+      var inp=input(pre+"e:"+m[0],m[3],0,m[0]==="sleep"?"time":0,m[0]==="steps"?5:0); inp.dataset.eod=m[0]; if(m[0]==="sleep") sleepIn=inp;
       r.appendChild(inp); eod.appendChild(r);
     });
     eod.appendChild(el("div","lbl fl","النوم: الخانة أعلاه هي إجمالي اليوم. أضف كل فترة نوم بوقتها (ليلًا أو قيلولة) وسيُحسب الإجمالي تلقائيًا، أو اكتب يدويًا."));
@@ -989,7 +998,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   document.addEventListener("input",pickRest);
 
   // Meal entry dialog: time + items -> one line "5 عصرًا: 4 بيض + تفاحة"
-  var mealOv=null,mealCb=null,mealItems=[],mealGroup="";
+  var mealOv=null,mealCb=null,mealItems=[],mealGroup="",mealDel=false;
   function timeAr(hhmm){
     var p=hhmm.split(":"),h=parseInt(p[0],10),m=parseInt(p[1],10)||0;
     var per=h<4?"فجرًا":h<12?"صباحًا":h<15?"ظهرًا":h<18?"عصرًا":h<24?"مساءً":"";
@@ -1003,7 +1012,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function getGroups(){ try{ var g=JSON.parse(localStorage.getItem("ui:groups")||"{}"); return (g&&typeof g==="object"&&!Array.isArray(g))?g:{}; }catch(e){ return {}; } }
   function setGroups(g){ try{ localStorage.setItem("ui:groups",JSON.stringify(g)); }catch(e){} }
   function openMeal(cb){
-    mealCb=cb; mealItems=[]; mealGroup="";
+    mealCb=cb; mealItems=[]; mealGroup=""; mealDel=false;
     if(!mealOv){
       mealOv=el("div","mealOv"); var bx=el("div","mealBox"); mealOv.appendChild(bx);
       bx.appendChild(el("h3",null,"إضافة وجبة"));
@@ -1017,6 +1026,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var gact=el("div","acts"); gact.id="mealGrpActs"; bx.appendChild(gact);
       bx.appendChild(el("label",null,"أصناف سابقة (اضغط للإضافة)"));
       var rec=el("div","chips"); rec.id="mealRecent"; bx.appendChild(rec);
+      var dlb=el("button","sec","🗑 حذف صنف أو وجبة محفوظة"); dlb.type="button"; dlb.id="mealDelBtn"; dlb.style.cssText="width:100%;margin-top:8px";
+      dlb.addEventListener("click",function(){ mealDel=!mealDel; drawMeal(); }); bx.appendChild(dlb);
       var acts=el("div","acts");
       var more=el("button","sec","＋ صنف آخر"); more.type="button";
       var done=el("button","pri","انتهاء"); done.type="button";
@@ -1046,8 +1057,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     mealItems.forEach(function(x,i){ var c=el("button","chip sel","✓ "+x+"  ✕"); c.type="button"; c.addEventListener("click",function(){ mealItems.splice(i,1); drawMeal(); }); a.appendChild(c); });
     var gs=getGroups(), gn=Object.keys(gs), gc=document.getElementById("mealGroups"); gc.textContent="";
     if(!gn.length) gc.appendChild(el("span","lbl","لا توجد مجموعات بعد. أضف أصنافًا ثم اضغط «حفظ كمجموعة»."));
-    gn.forEach(function(n){ var c=el("button","chip"+(n===mealGroup?" sel":""),n); c.type="button";
-      c.addEventListener("click",function(){ mealGroup=n; mealItems=(gs[n]||[]).slice(); drawMeal(); }); gc.appendChild(c); });
+    gn.forEach(function(n){ var c=el("button","chip"+(mealDel?" del":(n===mealGroup?" sel":"")),(mealDel?"✕ ":"")+n); c.type="button";
+      c.addEventListener("click",function(){
+        if(mealDel){ if(!window.confirm("حذف المجموعة «"+n+"»؟")) return; var g=getGroups(); delete g[n]; setGroups(g); if(mealGroup===n) mealGroup=""; drawMeal(); return; }
+        mealGroup=n; mealItems=(gs[n]||[]).slice(); drawMeal(); }); gc.appendChild(c); });
     var ga=document.getElementById("mealGrpActs"); ga.textContent="";
     function gbtn(t,fn){ var b=el("button","sec",t); b.type="button"; b.addEventListener("click",fn); ga.appendChild(b); }
     function curList(){ var it=document.getElementById("mealItem"), v=it.value.trim(); if(v){ mealItems.push(v); it.value=""; } return mealItems.slice(); }
@@ -1059,7 +1072,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var r=document.getElementById("mealRecent"); r.textContent="";
     var rf=recentFoods().filter(function(x){return mealItems.indexOf(x)<0;});
     if(!rf.length) r.appendChild(el("span","lbl","ستظهر هنا أصنافك التي تكررها."));
-    rf.forEach(function(x){ var c=el("button","chip",x); c.type="button"; c.addEventListener("click",function(){ mealItems.push(x); drawMeal(); }); r.appendChild(c); });
+    rf.forEach(function(x){ var c=el("button","chip"+(mealDel?" del":""),(mealDel?"✕ ":"")+x); c.type="button";
+      c.addEventListener("click",function(){
+        if(mealDel){ try{ localStorage.setItem("ui:foods",JSON.stringify(recentFoods().filter(function(y){return y!==x;}))); }catch(e){} drawMeal(); return; }
+        mealItems.push(x); drawMeal(); }); r.appendChild(c); });
+    var db=document.getElementById("mealDelBtn"); if(db){ db.textContent=mealDel?"تم الحذف":"🗑 حذف صنف أو وجبة محفوظة"; db.classList.toggle("pri",mealDel); }
   }
 
   // Sleep period dialog
@@ -1089,6 +1106,61 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     }
     document.getElementById("slFrom").dispatchEvent(new Event("input")); sleepOv.classList.add("open");
   }
+
+
+  // Steps dialog
+  var stepsOv=null,stepsCb=null;
+  function openSteps(cb,cur){
+    stepsCb=cb;
+    if(!stepsOv){
+      stepsOv=el("div","mealOv"); var bx=el("div","mealBox"); stepsOv.appendChild(bx);
+      bx.appendChild(el("h3",null,"الخطوات"));
+      bx.appendChild(el("label",null,"عدد الخطوات (من الآيفون)"));
+      var i=document.createElement("input"); i.type="text"; i.inputMode="numeric"; i.id="stepsVal"; i.autocomplete="off"; bx.appendChild(i);
+      var acts=el("div","acts"); var ok=el("button","pri","حفظ"); ok.type="button"; var no=el("button","sec","إلغاء"); no.type="button";
+      acts.appendChild(ok); acts.appendChild(no); bx.appendChild(acts); document.body.appendChild(stepsOv);
+      function save(){ var v=i.value.replace(/[^0-9]/g,""); if(!v){ i.focus(); return; } stepsOv.classList.remove("open"); if(stepsCb) stepsCb(v); }
+      ok.addEventListener("click",save); i.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); save(); } });
+      no.addEventListener("click",function(){ stepsOv.classList.remove("open"); });
+      stepsOv.addEventListener("click",function(e){ if(e.target===stepsOv) stepsOv.classList.remove("open"); });
+    }
+    var f=document.getElementById("stepsVal"); f.value=cur||""; stepsOv.classList.add("open"); setTimeout(function(){f.focus();},50);
+  }
+
+  // Quick log: three big buttons (steps / sleep / food) for today (00:00-04:00 counts as the previous day)
+  var qkOv=null;
+  function qkDs(){ var n=new Date(); return iso(new Date(n.getFullYear(),n.getMonth(),n.getDate()-(n.getHours()<4?1:0))); }
+  function qkBox(){ return document.getElementById("eod-"+qkDs()); }
+  function qkPaint(){
+    var b=qkBox(); if(!qkOv||!b) return;
+    var d=new Date(qkDs()+"T00:00:00");
+    qkOv.querySelector(".qd").textContent=DAY_AR[d.getDay()]+" "+d.getDate()+"/"+(d.getMonth()+1);
+    var st=b.querySelector('input[data-eod="steps"]'), sl=b.querySelector('input[data-eod="sleep"]'), fd=b.querySelector("textarea.food");
+    var n=fd?fd.value.split("\n").filter(function(x){return x.trim();}).length:0;
+    qkOv.querySelector(".q-steps small").textContent=st&&st.value?st.value:"لم تُسجَّل";
+    qkOv.querySelector(".q-sleep small").textContent=sl&&sl.value?sl.value:"لم يُسجَّل";
+    qkOv.querySelector(".q-food small").textContent=n?n+" وجبة":"لم تُسجَّل";
+  }
+  function qkOpen(){
+    if(WOFF!==0){ try{ sessionStorage.setItem("ui:woff","0"); sessionStorage.setItem("ui:qk","1"); }catch(e){} location.reload(); return; }
+    if(!qkOv){
+      qkOv=el("div","qkOv");
+      var h=el("div","qh"); h.appendChild(el("span","qd","")); var x=el("button","sec qx","✕ إغلاق"); x.type="button"; h.appendChild(x); qkOv.appendChild(h);
+      function mk(cls,t){ var b=el("button","qb "+cls); b.type="button"; b.appendChild(document.createTextNode(t)); b.appendChild(el("small",null,"")); qkOv.appendChild(b); return b; }
+      var bs=mk("q-steps","خطوات"), bl=mk("q-sleep","تسجيل نوم"), bf=mk("q-food","تسجيل أكل");
+      document.body.appendChild(qkOv);
+      x.addEventListener("click",function(){ qkOv.classList.remove("open"); });
+      bs.addEventListener("click",function(){ var b=qkBox(); if(!b) return; var inp=b.querySelector('input[data-eod="steps"]');
+        openSteps(function(v){ inp.value=v; inp.dispatchEvent(new Event("input",{bubbles:true})); qkPaint(); },inp.value); });
+      bl.addEventListener("click",function(){ var b=qkBox(); if(!b) return; var sl=b.querySelector("textarea.sleeplog");
+        openSleep(function(line){ var v=sl.value.replace(/\s+$/,""); sl.value=(v?v+"\n":"")+line; sl.dispatchEvent(new Event("input",{bubbles:true})); qkPaint(); }); });
+      bf.addEventListener("click",function(){ var b=qkBox(); if(!b) return; var fd=b.querySelector("textarea.food");
+        openMeal(function(line){ var v=fd.value.replace(/\s+$/,""); fd.value=(v?v+"\n":"")+line; fd.dispatchEvent(new Event("input",{bubbles:true})); qkPaint(); }); });
+    }
+    qkPaint(); qkOv.classList.add("open");
+  }
+  document.getElementById("qkGo").addEventListener("click",qkOpen);
+  (function(){ var q=""; try{ q=sessionStorage.getItem("ui:qk")||""; sessionStorage.removeItem("ui:qk"); }catch(e){} if(q) setTimeout(qkOpen,400); })();
 
   // Floating "end of day" button: 00:00-04:00 counts as the previous day
   function goEod(ds){
