@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261023233652">
+<meta name="app-version" content="20261024103348">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -980,7 +980,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   document.addEventListener("input",pickRest);
 
   // Meal entry dialog: time + items -> one line "5 عصرًا: 4 بيض + تفاحة"
-  var mealOv=null,mealCb=null,mealItems=[],mealGroup="",mealDel=false;
+  var mealOv=null,mealCb=null,mealItems=[],mealGroup="",mealDel=false,mealSort=false;
   function timeAr(hhmm){
     var p=hhmm.split(":"),h=parseInt(p[0],10),m=parseInt(p[1],10)||0;
     var per=h<4?"فجرًا":h<12?"صباحًا":h<15?"ظهرًا":h<18?"عصرًا":h<24?"مساءً":"";
@@ -989,12 +989,24 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     return h12+(m?":"+pad(m):"")+" "+per;
   }
   function recentFoods(){ try{ return JSON.parse(localStorage.getItem("ui:foods")||"[]"); }catch(e){ return []; } }
-  function saveFoods(list){ try{ var r=recentFoods(); list.forEach(function(x){ r=r.filter(function(y){return y!==x;}); r.unshift(x); }); localStorage.setItem("ui:foods",JSON.stringify(r.slice(0,14))); }catch(e){} }
+  function foodCnt(){ try{ var c=JSON.parse(localStorage.getItem("ui:foodcnt")||"{}"); return (c&&typeof c==="object"&&!Array.isArray(c))?c:{}; }catch(e){ return {}; } }
+  function foodPins(){ try{ var c=JSON.parse(localStorage.getItem("ui:foodpin")||"[]"); return Array.isArray(c)?c:[]; }catch(e){ return []; } }
+  function setPins(l){ try{ localStorage.setItem("ui:foodpin",JSON.stringify(l)); }catch(e){} }
+  function saveFoods(list){ try{ var r=recentFoods(), c=foodCnt();
+    list.forEach(function(x){ r=r.filter(function(y){return y!==x;}); r.unshift(x); c[x]=(c[x]||0)+1; });
+    r=r.slice(0,40); var keep={}; r.forEach(function(x){ if(c[x]) keep[x]=c[x]; });
+    localStorage.setItem("ui:foods",JSON.stringify(r)); localStorage.setItem("ui:foodcnt",JSON.stringify(keep)); }catch(e){} }
+  // الترتيب: المثبّتة يدويًا أولًا (بترتيب تثبيتها)، ثم الأكثر استخدامًا، ثم الأحدث
+  function sortedFoods(list){ var pins=foodPins(), c=foodCnt();
+    var pinned=pins.filter(function(x){return list.indexOf(x)>=0;});
+    var rest=list.filter(function(x){return pinned.indexOf(x)<0;}).map(function(x,i){return {x:x,i:i};});
+    rest.sort(function(a,b){ return ((c[b.x]||0)-(c[a.x]||0))||(a.i-b.i); });
+    return pinned.concat(rest.map(function(o){return o.x;})); }
   // Saved meal groups ("وجبة بعد التمرين"): name -> list of items. Stored only in this browser.
   function getGroups(){ try{ var g=JSON.parse(localStorage.getItem("ui:groups")||"{}"); return (g&&typeof g==="object"&&!Array.isArray(g))?g:{}; }catch(e){ return {}; } }
   function setGroups(g){ try{ localStorage.setItem("ui:groups",JSON.stringify(g)); }catch(e){} }
   function openMeal(cb){
-    mealCb=cb; mealItems=[]; mealGroup=""; mealDel=false;
+    mealCb=cb; mealItems=[]; mealGroup=""; mealDel=false; mealSort=false;
     if(!mealOv){
       mealOv=el("div","mealOv"); var bx=el("div","mealBox"); mealOv.appendChild(bx);
       bx.appendChild(el("h3",null,"إضافة وجبة"));
@@ -1009,7 +1021,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       bx.appendChild(el("label",null,"أصناف سابقة (اضغط للإضافة)"));
       var rec=el("div","chips"); rec.id="mealRecent"; bx.appendChild(rec);
       var dlb=el("button","sec","🗑 حذف صنف أو وجبة محفوظة"); dlb.type="button"; dlb.id="mealDelBtn"; dlb.style.cssText="width:100%;margin-top:8px";
-      dlb.addEventListener("click",function(){ mealDel=!mealDel; drawMeal(); }); bx.appendChild(dlb);
+      dlb.addEventListener("click",function(){ mealDel=!mealDel; mealSort=false; drawMeal(); }); bx.appendChild(dlb);
+      var srb=el("button","sec","↕ ترتيب الأصناف السابقة"); srb.type="button"; srb.id="mealSortBtn"; srb.style.cssText="width:100%;margin-top:8px";
+      srb.addEventListener("click",function(){ mealSort=!mealSort; mealDel=false; drawMeal(); }); bx.appendChild(srb);
       var acts=el("div","acts");
       var more=el("button","sec","＋ صنف آخر"); more.type="button";
       var done=el("button","pri","انتهاء"); done.type="button";
@@ -1052,12 +1066,16 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var g=getGroups(); g[n]=l; setGroups(g); mealGroup=n; drawMeal(); });
     if(mealGroup) gbtn("حذف «"+mealGroup+"»",function(){ if(!window.confirm("حذف المجموعة «"+mealGroup+"»؟")) return; var g=getGroups(); delete g[mealGroup]; setGroups(g); mealGroup=""; drawMeal(); });
     var r=document.getElementById("mealRecent"); r.textContent="";
-    var rf=recentFoods().filter(function(x){return mealItems.indexOf(x)<0;});
+    var rf=sortedFoods(recentFoods().filter(function(x){return mealItems.indexOf(x)<0;}));
     if(!rf.length) r.appendChild(el("span","lbl","ستظهر هنا أصنافك التي تكررها."));
-    rf.forEach(function(x){ var c=el("button","chip"+(mealDel?" del":""),(mealDel?"✕ ":"")+x); c.type="button";
+    if(mealSort) r.appendChild(el("span","lbl","اضغط الصنف ليُثبَّت في الأعلى بترتيب ضغطك، واضغطه مرة أخرى لإلغاء التثبيت."));
+    var pinsNow=foodPins();
+    rf.forEach(function(x){ var pn=pinsNow.indexOf(x)>=0; var c=el("button","chip"+(mealDel?" del":(mealSort&&pn?" sel":"")),(mealDel?"✕ ":(pn?"📌 ":""))+x); c.type="button";
       c.addEventListener("click",function(){
+        if(mealSort){ var pl=foodPins(), k=pl.indexOf(x); if(k>=0) pl.splice(k,1); else pl.push(x); setPins(pl); drawMeal(); return; }
         if(mealDel){ try{ localStorage.setItem("ui:foods",JSON.stringify(recentFoods().filter(function(y){return y!==x;}))); }catch(e){} drawMeal(); return; }
         mealItems.push(x); drawMeal(); }); r.appendChild(c); });
+    var sb=document.getElementById("mealSortBtn"); if(sb){ sb.textContent=mealSort?"تم الترتيب":"↕ ترتيب الأصناف السابقة"; sb.classList.toggle("pri",mealSort); }
     var db=document.getElementById("mealDelBtn"); if(db){ db.textContent=mealDel?"تم الحذف":"🗑 حذف صنف أو وجبة محفوظة"; db.classList.toggle("pri",mealDel); }
   }
 
