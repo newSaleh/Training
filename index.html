@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261024142219">
+<meta name="app-version" content="20261024181924">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -324,29 +324,29 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–15","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"8–10","r","c"],["bridge",2,"12–15","r","c"],
-      ["revCrunch",2,"10–12","r"],["walkDaily",1,"30 min","m"]]},
+      ["revCrunch",2,"10–12","r"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"35 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
       ["doorRow",3,"10–12","r","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"8–10","r","c"],["slBridge",2,"8–12 / leg","lr","c"],
-      ["plank",2,"60–75 sec","s"],["walkDaily",1,"30 min","m"]]},
+      ["plank",2,"60–75 sec","s"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"35 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
       ["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
       ["pike",2,"8–10","r","b"],["snowAngel",2,"10–15","r","b"],
-      ["plank",2,"60–75 sec","s","c"],["superman",2,"10–15","r","c"],["walkDaily",1,"30 min","m"]]},
+      ["plank",2,"60–75 sec","s","c"],["superman",2,"10–15","r","c"]]},
     {name:"Lower Body",kind:"train",items:[
       ["tempoSquat",2,"10–12","r","a"],["revCrunch",2,"10–12","r","a"],
       ["slRdl",2,"6–10 / leg","lr","b"],["slCalf",2,"10–15 / leg","lr","b"],
-      ["standHip",1,"30–45 sec / side","lr"],["walkDaily",1,"30 min","m"]]},
-    {name:"Rest",kind:"rest",items:[["walkDaily",1,"30 min","m"]]}
+      ["standHip",1,"30–45 sec / side","lr"]]},
+    {name:"Rest",kind:"rest",items:[]}
   ];
   // أيام الألم المؤقت: تُستبدل تمارين القوة بنسخة بلا ضغط على الركبة (أضف تاريخًا أو احذفه)
   var KNEE_DATES=[];
   var KNEE_ITEMS=[["pushup",3,"8–12","r","a"],["doorRow",3,"10–12","r","a"],
     ["pike",2,"8–10","r","b"],["superman",2,"10–15","r","b"],
-    ["revCrunch",2,"10–12","r"],["plank",2,"60–75 sec","s"],["walkDaily",1,"30 min","m"]];
+    ["revCrunch",2,"10–12","r"],["plank",2,"60–75 sec","s"]];
   var KNEE_POST=[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["pecStretch","45 sec"]];
   // routines: [id, text]
   var MORNING=[["wallSlide","8"],["pecStretch","45 sec"],["hamStretch","30 sec / side"],["calfStretch","30 sec / side"],["standHip","30 sec / side"],["morningSearch","optional 6 min"]];
@@ -359,8 +359,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var FLEX=[["catcow","8–10"],["threadNeedle","6–8 / side"],["pecStretch","45 sec × 2"],["wallSlide","8–10"],
     ["hamStretch","45 sec × 2 / side"],["calfStretch","30 sec × 2 / side"],["ddPedal","30 sec"],["hipFlexor","45 sec × 2 / side"],
     ["butterfly","45 sec × 2"],["figure4","45 sec × 2 / side"],["frog","45 sec × 2"]];
-  var EOD=[["steps","Steps","الخطوات (من الآيفون)","خطوة"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
-  var EOD_UNIT={steps:"",sleep:""};
+  var EOD=[["steps","Steps","الخطوات (من الآيفون)","خطوة"],["walk","Walk + Reflection","مشي هادئ وتأمل اليوم (دقائق). المطلوب 30 دقيقة خارج البيت، ويجوز 15 + 15","30"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
+  var EOD_UNIT={steps:"",walk:" min",sleep:""};
   var ROUT_LBL={am:"Morning routine",post:"Post-workout stretch",flex:"Flexibility session"};
   var MEAS=[["belly","Belly","محيط البطن (سم)"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (سم)"],
     ["bfly","Butterfly knee","ارتفاع الركبة عن الأرض في الفراشة (سم)"],["wall","Wall slide gap","المسافة بين اليدين والجدار فوق الرأس (سم)"]];
