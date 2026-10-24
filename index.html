@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261024184656">
+<meta name="app-version" content="20261024184916">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -86,7 +86,9 @@ input,textarea{font-size:16px}
 .routine .rchev{font-size:.7rem;opacity:.7;transition:transform .15s}
 .routine.rcol .rchev{transform:rotate(90deg)}
 .routine.rcol .rlist,.routine.rcol > .ar,.routine.rcol .rcnt{display:none}
-.eod.rcol > :not(:first-child){display:none}
+.eod.rcol > :not(:first-child),.mzbox.rcol > :not(:first-child){display:none}
+.mzbox .rchev{font-size:.7rem;opacity:.7;margin-inline-start:8px;display:inline-block;transition:transform .15s}
+.mzbox.rcol .rchev{transform:rotate(90deg)}
 .eod .rchev{font-size:.7rem;opacity:.7;margin-inline-start:8px;display:inline-block;transition:transform .15s}
 .eod.rcol .rchev{transform:rotate(90deg)}
 .wkbox > .rlist > .ex{border-top:1px dashed var(--line)}
@@ -559,11 +561,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       WALK_ALT.forEach(function(w){ var a=el("a",null,w[0]); a.href=yt(w[1]); a.target="_blank"; a.rel="noopener"; alt.appendChild(a); });
       wkBody.appendChild(alt);
     }
-    if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds);
-    if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي (11 حركة نحو 1.5 دقيقة لكل حركة). شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds);
+    if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds,true);
+    if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي (11 حركة نحو 1.5 دقيقة لكل حركة). شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds,true);
     if(dow===0){
-      var mz=el("div","ex meas");
-      mz.appendChild(el("div","rtitle","القياسات الأسبوعية"));
+      var mz=el("div","ex meas mzbox rcol");
+      var mzt=el("div","rtitle","القياسات الأسبوعية"); mzt.appendChild(el("span","rchev","▼")); mzt.style.cursor="pointer";
+      mzt.addEventListener("click",function(){ mz.classList.toggle("rcol"); setTimeout(function(){ if(typeof growAll==="function") growAll(); },0); });
+      mz.appendChild(mzt);
       mz.appendChild(el("div","ar","صباح الأحد صائمًا قبل التمرين. البطن كل أسبوع، والمرونة كل أسبوعين. بالسنتيمتر."));
       MEAS.forEach(function(m){
         var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
