@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261024184405">
+<meta name="app-version" content="20261024184656">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -86,6 +86,10 @@ input,textarea{font-size:16px}
 .routine .rchev{font-size:.7rem;opacity:.7;transition:transform .15s}
 .routine.rcol .rchev{transform:rotate(90deg)}
 .routine.rcol .rlist,.routine.rcol > .ar,.routine.rcol .rcnt{display:none}
+.eod.rcol > :not(:first-child){display:none}
+.eod .rchev{font-size:.7rem;opacity:.7;margin-inline-start:8px;display:inline-block;transition:transform .15s}
+.eod.rcol .rchev{transform:rotate(90deg)}
+.wkbox > .rlist > .ex{border-top:1px dashed var(--line)}
 .rdone{height:36px;padding:0 14px;font-size:.85rem}
 .ck{width:30px;height:30px;min-width:30px;padding:0;margin-inline-end:8px;border-radius:8px;font-size:1rem}
 .ck.on{background:var(--accent);color:var(--card)}
@@ -474,6 +478,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     head.addEventListener("click",function(){card.classList.toggle("collapsed"); setTimeout(growAll,0);});
 
     routine(card,"روتين الصباح (≈ 10 دقائق)","",MORNING,pre+"am",ds,true);
+    var wkBody=card;
+    if(p.kind!=="rest"){
+      var wkBox=el("div","ex routine wkbox rcol"); var wkh=el("div","row");
+      var wkt=el("div","rtitle",p.kind==="train"?"التمرين اليومي":"الكارديو اليومي"); wkt.appendChild(el("span","rchev","▼")); wkh.appendChild(wkt); wkBox.appendChild(wkh);
+      wkt.addEventListener("click",function(){ wkBox.classList.toggle("rcol"); setTimeout(function(){ if(typeof growAll==="function") growAll(); },0); });
+      wkBody=el("div","rlist"); wkBox.appendChild(wkBody); card.appendChild(wkBox);
+    }
     if(p.kind==="rest") card.appendChild(el("p","plain","لا تمارين مقاومة. المشي اليومي المعتاد، وجلسة المرونة أدناه."));
 
     if(p.kind==="train"){
@@ -481,12 +492,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var wn=el("div","name"); var wa=link("warmup"); if(WARM[p.name]){wa.href=yt(WARM[p.name][0]); wa.textContent=EX.warmup.n+" — "+WARM[p.name][1];} wn.appendChild(wa); wr.appendChild(wn);
       wr.appendChild(el("span","target","5 min")); w.appendChild(wr);
       w.appendChild(el("div","ar","افتحه وتابعه قبل أول تمرين"));
-      card.appendChild(w);
+      wkBody.appendChild(w);
     }
 
     var kneeDay=(p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0);
     var items=kneeDay?KNEE_ITEMS:p.items;
-    if(kneeDay) card.appendChild(el("p","plain","نسخة مؤقتة بلا ضغط على الركبة: حُذفت تمارين الساق، وأُضيف Superman. وتوقف عن أي تمرين يعود معه الوخز."));
+    if(kneeDay) wkBody.appendChild(el("p","plain","نسخة مؤقتة بلا ضغط على الركبة: حُذفت تمارين الساق، وأُضيف Superman. وتوقف عن أي تمرين يعود معه الوخز."));
     var grp=[];
     function flushGroup(){
       var max=0; grp.forEach(function(u){ if(u.length>max) max=u.length; });
@@ -539,14 +550,14 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       });
       grp.push(units);
       if(!pid||nextPid!==pid) flushGroup();
-      card.appendChild(ex);
+      wkBody.appendChild(ex);
     });
 
     if(p.kind==="cardio"){
       var alt=el("details","ex walkalt");
       alt.appendChild(el("summary",null,"بدائل لفيديو المشي"));
       WALK_ALT.forEach(function(w){ var a=el("a",null,w[0]); a.href=yt(w[1]); a.target="_blank"; a.rel="noopener"; alt.appendChild(a); });
-      card.appendChild(alt);
+      wkBody.appendChild(alt);
     }
     if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds);
     if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي (11 حركة نحو 1.5 دقيقة لكل حركة). شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds);
@@ -562,7 +573,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     }
 
     var eod=el("div","ex meas eod"); eod.id="eod-"+ds;
-    var eh=el("div","row"); eh.appendChild(el("div","rtitle","نهاية اليوم"));
+    var eh=el("div","row"); var eht=el("div","rtitle","نهاية اليوم"); eht.appendChild(el("span","rchev","▼")); eh.appendChild(eht);
+    eod.classList.add("rcol"); eht.style.cursor="pointer"; eht.addEventListener("click",function(){ eod.classList.toggle("rcol"); setTimeout(function(){ if(typeof growAll==="function") growAll(); },0); });
     var eb=el("button","sec rdone","نسخ نهاية اليوم"); eb.type="button"; var eok=el("span","ok","");
     var ebw=el("span"); ebw.appendChild(eok); ebw.appendChild(eb); eh.appendChild(ebw); eod.appendChild(eh);
     eod.appendChild(el("div","ar","املأها قبل النوم أو عند الساعة 12، ثم انسخها وأرسلها. الخطوات: احمل هاتفك في جيبك أثناء المشي، والهدف 8000. النوم: الليل المتصل أهم من القيلولة، فقدّم موعد نومك 30 دقيقة كل 3 أيام حتى تبلغ نحو 7 إلى 8 ساعات ليلًا."));
@@ -1175,7 +1187,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   // Floating "end of day" button: 00:00-04:00 counts as the previous day
   function goEod(ds){
     var box=document.getElementById("eod-"+ds); if(!box) return false;
-    var c=box.closest(".day"); if(c) c.classList.remove("collapsed"); growAll();
+    var c=box.closest(".day"); if(c) c.classList.remove("collapsed"); box.classList.remove("rcol"); growAll();
     box.scrollIntoView({behavior:"smooth",block:"center"}); return true;
   }
   document.getElementById("eodGo").addEventListener("click",function(){
