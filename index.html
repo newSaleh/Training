@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261024103348">
+<meta name="app-version" content="20261024142219">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -83,6 +83,9 @@ input,textarea{font-size:16px}
 .ritem:first-child{border-top:0}
 .name[data-n]::before{content:attr(data-n) ".";color:var(--accent);font-weight:700;margin-inline-end:6px}
 .rdone{height:36px;padding:0 14px;font-size:.85rem}
+.ck{width:30px;height:30px;min-width:30px;padding:0;margin-inline-end:8px;border-radius:8px;font-size:1rem}
+.ck.on{background:var(--accent);color:var(--card)}
+.rcnt{font-size:.85rem;opacity:.8;margin:2px 0 4px}
 .rdone.on{background:var(--accent);color:var(--card)}
 .routine.isdone .rlist{opacity:.55}
 .meas .mrow{display:flex;align-items:center;gap:10px;margin-top:8px}
@@ -552,7 +555,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       card.appendChild(alt);
     }
     if(p.kind==="train"&&POST[p.name]) routine(card,"إطالة بعد التمرين","والعضلات دافئة، 5 إلى 8 دقائق",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds);
-    if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي. شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد",FLEX,pre+"flex",ds);
+    if(p.kind!=="train") routine(card,"جلسة المرونة","15 إلى 20 دقيقة بعد المشي (11 حركة نحو 1.5 دقيقة لكل حركة). شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds);
     if(dow===0){
       var mz=el("div","ex meas");
       mz.appendChild(el("div","rtitle","القياسات الأسبوعية"));
@@ -618,10 +621,18 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     done.addEventListener("click",function(){store(key,load(key)?"":"1"); paint(); if(typeof snapSoon==="function") snapSoon();});
     hd.appendChild(done); box.appendChild(hd);
     if(sub) box.appendChild(el("div","ar",sub));
+    var withChecks=(list===FLEX), cnt=null;
+    function paintCnt(){ if(!cnt) return; var n=0; list.forEach(function(x){ if(load(key+":"+x[0])) n++; }); cnt.textContent="أنجزت "+n+" من "+list.length+" حركة"; }
+    if(withChecks){ cnt=el("div","rcnt",""); box.appendChild(cnt); paintCnt(); }
     var ul=el("div","rlist");
     list.forEach(function(it){
       var id=it[0], li=el("div","ritem");
-      var r=el("div","row"); var nm=el("div","name"); nm.appendChild(link(id));
+      var r=el("div","row"); var nm=el("div","name");
+      if(withChecks){ var ck=el("button","sec ck",""); ck.type="button"; ck.setAttribute("aria-label","تمت هذه الحركة");
+        var ckKey=key+":"+id; var ckPaint=function(){ var on=!!load(ckKey); ck.textContent=on?"✓":""; ck.classList.toggle("on",on); };
+        ck.addEventListener("click",function(){ store(ckKey,load(ckKey)?"":"1"); ckPaint(); paintCnt(); if(typeof snapSoon==="function") snapSoon(); });
+        ckPaint(); r.appendChild(ck); }
+      nm.appendChild(link(id));
       if(list===MORNING) nm.setAttribute("data-n",list.indexOf(it)+1);
       if(EX[id].tip){
         var tb=el("button","tipbtn","i"); tb.type="button"; tb.setAttribute("aria-label","ملاحظات التمرين");
@@ -659,7 +670,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
           if(v.length) lines.push(EX[id].n+": "+v.join(" / ")+unit);
         }
       });
-      ["am","post","flex"].forEach(function(k){ if(load(pre+k)) lines.push(ROUT_LBL[k]+": done"); });
+      ["am","post","flex"].forEach(function(k){ if(load(pre+k)){ var extra="";
+          if(k==="flex"){ var dn=[],sk=[]; FLEX.forEach(function(x){ (load(pre+"flex:"+x[0])?dn:sk).push(EX[x[0]].n); }); if(dn.length&&sk.length) extra=" ("+dn.length+"/"+FLEX.length+"; skipped: "+sk.join(", ")+")"; }
+          lines.push(ROUT_LBL[k]+": done"+extra); } });
       MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+" cm"); });
       EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); if(v) lines.push(m[1]+": "+v+EOD_UNIT[m[0]]); });
       var sg2=load(pre+"e:sleeplog").trim(); if(sg2) lines.push("Sleep log:\n"+sg2);
