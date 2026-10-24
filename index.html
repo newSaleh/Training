@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261024184916">
+<meta name="app-version" content="20261024191002">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -372,8 +372,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EOD=[["steps","Steps","الخطوات (من الآيفون، وأضف +100 لكل دقيقة مشي بفيديو)","خطوة"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
   var EOD_UNIT={steps:"",sleep:""};
   var ROUT_LBL={am:"Morning routine",post:"Post-workout stretch",flex:"Flexibility session"};
-  var MEAS=[["belly","Belly","محيط البطن (سم)"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (سم)"],
-    ["bfly","Butterfly knee","ارتفاع الركبة عن الأرض في الفراشة (سم)"],["wall","Wall slide gap","المسافة بين اليدين والجدار فوق الرأس (سم)"]];
+  var MEAS=[["belly","Belly","محيط البطن (سم)","سم"," cm"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (كف)","كف"," palm"]];
 
   // search links (not fixed videos): women-led brisk-walk workouts to rotate between
   var WALK_ALT=[
@@ -568,10 +567,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var mzt=el("div","rtitle","القياسات الأسبوعية"); mzt.appendChild(el("span","rchev","▼")); mzt.style.cursor="pointer";
       mzt.addEventListener("click",function(){ mz.classList.toggle("rcol"); setTimeout(function(){ if(typeof growAll==="function") growAll(); },0); });
       mz.appendChild(mzt);
-      mz.appendChild(el("div","ar","صباح الأحد صائمًا قبل التمرين. البطن كل أسبوع، والمرونة كل أسبوعين. بالسنتيمتر."));
+      mz.appendChild(el("div","ar","صباح الأحد صائمًا قبل التمرين. محيط البطن بالسنتيمتر (إصبعان تحت السرة)، والمسافة بين أصابعك والأرض بالكف."));
       MEAS.forEach(function(m){
         var r=el("div","mrow"); r.appendChild(el("span","mlab",m[2]));
-        r.appendChild(input(pre+"m:"+m[0],"سم",0)); mz.appendChild(r);
+        r.appendChild(input(pre+"m:"+m[0],m[3],0,1)); mz.appendChild(r);
       });
       card.appendChild(mz);
     }
@@ -685,7 +684,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["am","post","flex"].forEach(function(k){ if(load(pre+k)){ var extra="";
           if(k==="flex"){ var dn=[],sk=[]; FLEX.forEach(function(x){ (load(pre+"flex:"+x[0])?dn:sk).push(EX[x[0]].n); }); if(dn.length&&sk.length) extra=" ("+dn.length+"/"+FLEX.length+"; skipped: "+sk.join(", ")+")"; }
           lines.push(ROUT_LBL[k]+": done"+extra); } });
-      MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+" cm"); });
+      MEAS.forEach(function(m){ var v=load(pre+"m:"+m[0]); if(v) lines.push(m[1]+": "+v+m[4]); });
       EOD.forEach(function(m){ var v=load(pre+"e:"+m[0]); if(v) lines.push(m[1]+": "+v+EOD_UNIT[m[0]]); });
       var sg2=load(pre+"e:sleeplog").trim(); if(sg2) lines.push("Sleep log:\n"+sg2);
       var fd=load(pre+"e:food").trim(); if(fd) lines.push("Food:\n"+fd);
