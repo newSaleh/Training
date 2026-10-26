@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261026233705">
+<meta name="app-version" content="20261026234904">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#2f6b4f">
 <title>Training Plan</title>
@@ -32,7 +32,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:110px;
+body{margin:0;background:var(--bg);color:var(--ink);padding-bottom:110px;padding-top:env(safe-area-inset-top);
   font-family:-apple-system,"SF Pro Text","Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;line-height:1.5}
 .wrap{max-width:640px;margin:0 auto;padding:20px 16px 32px}
 h1{font-size:1.25rem;font-weight:600;margin:4px 0 2px;text-align:center;letter-spacing:.2px}
@@ -234,8 +234,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
 .timer.done button[data-sec]{background:var(--card);color:var(--accent)}
 .timer.done button.sec{background:rgba(255,255,255,.18);color:var(--card)}
-#walkOv{position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column}
-#walkOv .wbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 14px 8px;background:#000;color:#eee}
+#sbStrip{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:#111110;z-index:50;pointer-events:none}
+#walkOv{position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;box-sizing:border-box;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#walkOv .wbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px 8px;background:#000;color:#eee}
 #walkOv .wtt{font-weight:600;font-size:.95rem}
 #walkOv .wx{height:36px;padding:0 14px;font-size:.85rem;border-radius:10px;border:1px solid #444;background:#222;color:#eee}
 #walkOv iframe{flex:1;width:100%;border:0;background:#000}
@@ -249,6 +250,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     <button class="sec" id="swStop" disabled>إيقاف</button>
   </div>
 </div>
+<div id="sbStrip"></div>
 <div class="wrap">
   <h1>Training Plan</h1>
   <p class="sub">اضغط اسم التمرين لفتح الفيديو، ثم سجّل كل مجموعة.</p>
