@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261025204234">
+<meta name="app-version" content="20261026173846">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -311,6 +311,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     hipFlexor:{n:"Kneeling Hip Flexor Stretch",ar:"إطالة مقدمة الورك على ركبة واحدة",q:"kneeling hip flexor stretch",tip:"اجثُ على ركبة واحدة (وسادة تحتها)، شدّ المؤخرة وادفع الحوض للأمام قليلًا دون تقويس أسفل الظهر. اثبت 30 إلى 45 ثانية لكل جهة."},
     standHip:{n:"Standing Hip Flexor Stretch",ar:"إطالة مقدمة الورك واقفًا بلا جثو",q:"standing hip flexor stretch no kneeling",tip:"قف ورجل خلفك على أصابعها، شدّ المؤخرة وادفع الحوض للأمام قليلًا دون تقويس الظهر، والركبة الخلفية مستقيمة. اثبت 30 ثانية لكل جهة."},
     morningSearch:{n:"Morning Mobility (بحث يوتيوب)",ar:"اختياري: روتين صباح لطيف واقف أو مستلقٍ بلا ركبتين",q:"6 minute gentle morning mobility routine standing no kneeling no squats beginners",tip:"اختر مقطعًا مدته 6 دقائق تقريبًا (البحث يطلب ذلك) كل حركاته واقفة أو مستلقية. تجاوز أي حركة فيها جثو أو سكوات أو ضغط على الركبة."},
+    lowerVid:{n:"Video: Lower Body Stretch (Juice & Toya)",url:"https://www.youtube.com/watch?v=UIRTPXj1Q1U",ar:"فيديو تجربة (11:44): هامسترينج وHip Flexor، يحل محل تمارين الإطالة السفلية اليوم",q:"10 Minute Lower Body Stretch Routine For Tight Hamstrings & Hip Flexors Juice & Toya",tip:"تجربة ليوم الثلاثاء 27 أكتوبر. تابع الحركات مع المدرّبين، وتجاوز أي حركة فيها جثو أو ضغط على الركبة. بعده أرسل: هل شعرت بشد في الهامسترينج؟ هل في أي حركة ضغط على الركبة؟ وكم صعوبته؟"},
     morningVid:{n:"Video: Feel Decades Younger",url:"https://www.youtube.com/watch?v=V8P9E-PVXPY",ar:"مقطع تليين المفاصل الصباحي، 8 دقائق أو أقل",q:"It's Weird, But This Makes You Feel Decades Younger morning stiffness",tip:"في Half-Lunge Ankle Rock ضع وسادة تحت الركبة ولا تدفع الركبة الأمامية أكثر مما يريحك. وفي Toe Raise Bounce اجعل الارتداد صغيرًا وناعمًا."},
     bridgeAm:{n:"Glute Bridge",ar:"رفع الحوض للتنشيط",q:"glute bridge proper form",tip:"10 تكرارات بلا ثبات طويل، تنشيطًا للمؤخرة فقط."},
     calfStretch:{n:"Standing Calf Stretch",ar:"إطالة السمانة على الجدار",q:"standing calf stretch wall",tip:"اليدان على الجدار، والرجل الخلفية مستقيمة والكعب على الأرض. اثبت ثم كررها والركبة مثنية قليلًا."},
@@ -360,7 +361,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     ["revCrunch",2,"10–12","r"],["plank",2,"60–75 sec","s"]];
   var KNEE_POST=[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["pecStretch","45 sec"]];
   // routines: [id, text]
-  var MORNING=[["wallSlide","8"],["pecStretch","45 sec"],["hamStretch","30 sec / side"],["calfStretch","30 sec / side"],["standHip","30 sec / side"],["morningSearch","optional 6 min"]];
+  var MORNING=[["wallSlide","8"],["pecStretch","45 sec"],["lowerVid","≈ 12 min"]];
   var POST={
     "Full Body A":[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["hipFlexor","45 sec / side"],["pecStretch","45 sec"]],
     "Full Body B":[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["hipFlexor","45 sec / side"],["pecStretch","45 sec"]],
@@ -479,7 +480,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     card.classList.add("collapsed");
     head.addEventListener("click",function(){card.classList.toggle("collapsed"); setTimeout(growAll,0);});
 
-    routine(card,"روتين الصباح (≈ 10 دقائق)","",MORNING,pre+"am",ds,true);
+    routine(card,"روتين الصباح (≈ 15 دقيقة)","",MORNING,pre+"am",ds,true);
     var wkBody=card;
     if(p.kind!=="rest"){
       var wkBox=el("div","ex routine wkbox rcol"); var wkh=el("div","row");
