@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261026232338">
+<meta name="app-version" content="20261026233705">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -234,11 +234,11 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .timer.done .clock,.timer.done .lab{color:var(--card)}
 .timer.done button[data-sec]{background:var(--card);color:var(--accent)}
 .timer.done button.sec{background:rgba(255,255,255,.18);color:var(--card)}
-#walkOv{position:fixed;inset:0;z-index:99999;background:#111;display:none;flex-direction:column}
-#walkOv .wbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 14px 8px;background:#111;color:#eee}
+#walkOv{position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column}
+#walkOv .wbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 14px 8px;background:#000;color:#eee}
 #walkOv .wtt{font-weight:600;font-size:.95rem}
 #walkOv .wx{height:36px;padding:0 14px;font-size:.85rem;border-radius:10px;border:1px solid #444;background:#222;color:#eee}
-#walkOv iframe{flex:1;width:100%;border:0;background:#111}
+#walkOv iframe{flex:1;width:100%;border:0;background:#000}
 </style>
 </head>
 <body>
@@ -453,7 +453,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var x=el("button","wx","✕ إغلاق"); x.type="button";
       window.addEventListener("message",function(ev){
         if(ev.origin!=="https://newsaleh.github.io"||!ev.data||ev.data.jw!=="screen") return;
-        x.style.display=(ev.data.id==="setup")?"":"none"; // close button only on the timer's main page
+        bar.style.display=(ev.data.id==="setup")?"":"none"; // header + close only on the timer's main page; full screen otherwise
       });
       x.addEventListener("click",function(){ if(confirm("إغلاق المؤقت؟ ستتوقف الجلسة الجارية.")) closeWalk(); });
       bar.appendChild(t); bar.appendChild(x); ov.appendChild(bar);
@@ -804,6 +804,36 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     else { var dz=document.querySelector(".danger"); dz.parentNode.insertBefore(nb,dz); }
     memBox=nb;
   }
+  // Full backup / restore of everything saved on this device (to move to a fresh install without losing anything)
+  function buildBackup(){
+    var box=el("details","box bkp");
+    box.appendChild(el("summary",null,"نسخة احتياطية لكل بياناتي"));
+    box.appendChild(el("p","plain","قبل حذف التطبيق أو إعادة تثبيته: اضغط «نسخ كل البيانات»، ثم ألصقها في ملاحظة أو أرسلها لنفسك. وفي التطبيق الجديد: ألصقها في الخانة واضغط «استعادة»."));
+    var ta=el("textarea","note"); ta.style.minHeight="90px"; ta.style.direction="ltr"; ta.placeholder="الصق هنا النسخة الاحتياطية للاستعادة";
+    var row=el("div","actions"), exp=el("button","sec","نسخ كل البيانات"), ok=el("span","ok","");
+    exp.addEventListener("click",function(){
+      var o={};
+      try{ Object.keys(localStorage).forEach(function(k){ o[k]=localStorage.getItem(k); }); }catch(e){}
+      var txt=JSON.stringify({trainingBackup:1,at:new Date().toISOString(),data:o});
+      ta.value=txt; ta.focus(); ta.select();
+      copy(txt,ok);
+    });
+    row.appendChild(exp); row.appendChild(ok); box.appendChild(row);
+    box.appendChild(ta);
+    var row2=el("div","actions"), imp=el("button","sec","استعادة"), ok2=el("span","ok","");
+    imp.addEventListener("click",function(){
+      var o=null;
+      try{ o=JSON.parse(ta.value.trim()); }catch(e){}
+      if(!o||!o.trainingBackup||!o.data||typeof o.data!=="object"){ ok2.textContent="النص غير صالح"; return; }
+      var n=Object.keys(o.data).length;
+      if(!confirm("ستُستعاد "+n+" عنصرًا وتُدمج مع الموجود (القيم المستعادة تحل محل المتعارضة). متابعة؟")) return;
+      try{ Object.keys(o.data).forEach(function(k){ if(typeof o.data[k]==="string") localStorage.setItem(k,o.data[k]); }); }catch(e){ ok2.textContent="تعذّرت الاستعادة"; return; }
+      ok2.textContent="تمت الاستعادة"; setTimeout(function(){ location.reload(); },600);
+    });
+    row2.appendChild(imp); row2.appendChild(ok2); box.appendChild(row2);
+    return box;
+  }
+  (function(){ var dz=document.querySelector(".danger"); if(dz) dz.parentNode.insertBefore(buildBackup(),dz); })();
   snapAll(); renderMem();
   document.addEventListener("input",function(){ snapSoon(); setTimeout(function(){ if(!memBox||!memBox.open) renderMem(); },900); });
   document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") snapAll(); });
