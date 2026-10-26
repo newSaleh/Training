@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261027000605">
+<meta name="app-version" content="20261027001148">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -235,7 +235,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .timer.done button[data-sec]{background:var(--card);color:var(--accent)}
 .timer.done button.sec{background:rgba(255,255,255,.18);color:var(--card)}
 #sbStrip{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:#111110;z-index:50;pointer-events:none}
-#walkOv{position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;box-sizing:border-box;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#walkOv{overscroll-behavior:none;position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;box-sizing:border-box;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #walkOv .wx{position:absolute;z-index:2;top:calc(env(safe-area-inset-top) + 52px);left:14px;width:42px;height:42px;min-width:42px;padding:0;border-radius:50%;border:1px solid #555;background:#2b2b2b;color:#fff;font-size:1.2rem;font-weight:700;line-height:1;opacity:1}
 #walkOv iframe{flex:1;width:100%;border:0;background:#000}
 .wsum{margin:0 0 14px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;color:var(--ink)}
@@ -472,12 +472,24 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     }
     var f=document.getElementById("walkFr");
     if(!f.getAttribute("src")||f.getAttribute("src")==="about:blank") f.src="https://newsaleh.github.io/JapWalking/?embed=1";
-    ov.style.display="flex"; document.body.style.overflow="hidden";
+    ov.style.display="flex"; lockPage(true);
+  }
+  // While the timer is open: freeze the page behind it (no scroll bar, no scroll-through) and paint the system edges black
+  function lockPage(on){
+    var h=document.documentElement, b=document.body, tc=document.querySelector('meta[name="theme-color"]');
+    if(on){
+      if(tc&&!tc.dataset.orig) tc.dataset.orig=tc.getAttribute("content");
+      h.style.overflow="hidden"; b.style.overflow="hidden"; h.style.background="#000"; b.style.background="#000"; h.style.overscrollBehavior="none";
+      if(tc) tc.setAttribute("content","#000000");
+    } else {
+      h.style.overflow=""; b.style.overflow=""; h.style.background=""; b.style.background=""; h.style.overscrollBehavior="";
+      if(tc&&tc.dataset.orig) tc.setAttribute("content",tc.dataset.orig);
+    }
   }
   function closeWalk(){
     var ov=document.getElementById("walkOv"); if(!ov) return;
     var f=document.getElementById("walkFr"); if(f) f.src="about:blank";
-    ov.style.display="none"; document.body.style.overflow="";
+    ov.style.display="none"; lockPage(false);
   }
 
   function link(id){
