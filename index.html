@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261028190002">
+<meta name="app-version" content="20261029002130">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -241,12 +241,6 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .timer.done button[data-sec]{background:var(--card);color:var(--accent)}
 .timer.done button.sec{background:rgba(255,255,255,.18);color:var(--card)}
 #sbStrip{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:#111110;z-index:50;pointer-events:none}
-.wsum{margin:0 0 14px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;color:var(--ink)}
-.wsum summary{font-weight:600;cursor:pointer;font-size:.9rem}
-.wsum .g{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:10px}
-.wsum .c{display:flex;flex-direction:column;gap:2px}
-.wsum .c b{font-size:1.1rem;font-variant-numeric:tabular-nums}
-.wsum .c span{font-size:.75rem;color:var(--muted)}
 .last{font-size:.8rem;color:var(--muted);margin-top:2px}
 .lib .cat{margin:14px 0 4px;font-weight:600;color:var(--ink);font-size:.88rem}
 .lib .li{padding:8px 0;border-top:1px dashed var(--line)}
@@ -489,36 +483,6 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     prev.addEventListener("click",function(){go(-1);}); next.addEventListener("click",function(){go(1);});
     nav.appendChild(next); nav.appendChild(lab); nav.appendChild(prev);
     root.appendChild(nav);
-  })();
-  (function(){
-    var ws=new Date(today); ws.setDate(today.getDate()-tdow+WOFF*7);
-    var steps=[],sl=[],wk=0,plan=0,wlk=0,wlkPlan=0,am=0,fx=0,fxPlan=0,days=0;
-    for(var d=0;d<7;d++){
-      var dt=new Date(ws); dt.setDate(ws.getDate()+d); if(dt>today) break;
-      var pre="tr:"+iso(dt)+":", p=PLAN[d];
-      // today counts only once something is recorded for it, so a fresh day does not lower the totals
-      if(iso(dt)===iso(today)){ var any=false; try{ any=Object.keys(localStorage).some(function(k){return k.indexOf(pre)===0;}); }catch(e){} if(!any) break; }
-      days++;
-      var st=parseInt(load(pre+"e:steps"),10); if(st) steps.push(st);
-      var m=load(pre+"e:sleep").match(/(\d+):(\d\d)/); if(m) sl.push(parseInt(m[1],10)*60+parseInt(m[2],10));
-      if(p.kind!=="rest"){ plan++; if(load(pre+"wk")) wk++; }
-      if(WALKDAY[d]){ wlkPlan++; if(load(pre+"wlk")) wlk++; }
-      if(load(pre+"am")) am++;
-      if(p.kind==="train"?POST[p.name]:true){ fxPlan++; if(load(pre+(p.kind==="train"?"post":"flex"))) fx++; }
-    }
-    function avg(a){ return a.length?Math.round(a.reduce(function(x,y){return x+y;},0)/a.length):0; }
-    var as=avg(steps), al=avg(sl), okS=steps.filter(function(v){return v>=8000;}).length, okL=sl.filter(function(v){return v>=420;}).length;
-    var box=el("details","wsum");
-    box.appendChild(el("summary",null,"ملخص الأسبوع"));
-    var g=el("div","g"); box.appendChild(g);
-    function cell(v,l){ var c=el("div","c"); c.appendChild(el("b",null,v)); c.appendChild(el("span",null,l)); g.appendChild(c); }
-    cell(steps.length?as.toLocaleString("en"):"-","متوسط الخطوات (الهدف 8000)"+(steps.length?" · "+okS+"/"+steps.length+" أيام بلغته":""));
-    cell(sl.length?Math.floor(al/60)+":"+pad(al%60):"-","متوسط النوم"+(sl.length?" · "+okL+"/"+sl.length+" ليالٍ ≥ 7 ساعات":""));
-    cell(wk+"/"+plan,"تمارين وكارديو منجزة (من المقرر حتى اليوم)");
-    cell(wlk+"/"+wlkPlan,"مشي يومي منجز");
-    cell(am+"/"+days,"روتين الصباح");
-    cell(fx+"/"+fxPlan,"إطالة ومرونة");
-    root.appendChild(box);
   })();
   PLAN.forEach(function(p,dow){
     var date=new Date(today); date.setDate(today.getDate()-tdow+dow+WOFF*7);
