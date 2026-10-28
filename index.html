@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261028174601">
+<meta name="app-version" content="20261028175506">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -219,6 +219,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .sw .time{font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;line-height:1.1}
 .sw .st{font-size:.72rem;color:var(--muted)}
 .sw.running .time{color:var(--accent)}
+/* while the workout is running: big clock on its own row, readable at a glance */
+.sw.running .in{flex-wrap:wrap}
+.sw.running .mid{order:-1;flex:1 0 100%}
+.sw.running .time{font-size:3.6rem;line-height:1.05;font-weight:700}
+.sw.running .st{font-size:.8rem}
+.sw.running button{flex:1}
 
 /* bottom: rest timer (mirrors top bar) */
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);
@@ -927,8 +933,20 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     if(o) return hms(swElapsed(o));
     var d=load("tr:"+ds+":duration"); return d?hms(parseInt(d,10)):"";
   }
+  // keep the screen awake while the workout clock runs
+  var swLock=null;
+  function swWake(on){
+    try{
+      if(on){
+        if("wakeLock" in navigator && !swLock && document.visibilityState==="visible"){
+          navigator.wakeLock.request("screen").then(function(l){ swLock=l; l.addEventListener("release",function(){ swLock=null; }); }).catch(function(){});
+        }
+      } else if(swLock){ swLock.release(); swLock=null; }
+    }catch(e){}
+  }
+  document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible"){ var o=swState(); swWake(!!(o&&o.run)); } });
   function swRender(){
-    var o=swState(); clearInterval(swTick); swTick=null; swEl.classList.remove("running");
+    var o=swState(); clearInterval(swTick); swTick=null; swEl.classList.remove("running"); swWake(!!(o&&o.run));
     if(!o){
       swTime.textContent=hms(0); swMain.textContent="بدء"; swStop.disabled=true;
       swSt.textContent="مدة تمرين اليوم"; return;
