@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261101170752">
+<meta name="app-version" content="20261103185902">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -1050,7 +1050,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       if(!list.length) return;
       list.sort(function(a,b){return a.dataset.ord-b.dataset.ord;});
       e.preventDefault(); card.classList.remove("collapsed");
-      list[0].focus(); list[0].scrollIntoView({block:"center",behavior:"smooth"}); return;
+      var rc=list[0].closest(".rcol"); if(rc){ rc.classList.remove("rcol"); if(typeof growAll==="function") growAll(); }
+      list[0].focus({preventScroll:true});
+      // put the exercise name right under the sticky workout clock
+      var ex=list[0].closest(".ex"), nmRow=ex&&ex.querySelector(".row"), tgtEl=nmRow||ex||list[0];
+      var off=swEl.getBoundingClientRect().bottom+8;
+      window.scrollTo({top:window.scrollY+tgtEl.getBoundingClientRect().top-off,behavior:"smooth"}); return;
     }
     if(inText) return;
     if(e.key===" "||e.code==="Space"){e.preventDefault(); tBtn.click(); return;}
