@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261106160909">
+<meta name="app-version" content="20261106161556">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -207,12 +207,15 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 .pacer.on span{font-size:4.5rem}
 .pacer.on small{color:var(--card)}
 .pacer.zero{background:#c2410c;border-color:#c2410c}
+.pacer.p2{top:calc(50% - 150px)}
+.pacer.p2.on{top:calc(50% - 175px)}
 @media (max-width:1099px){
   .pacer{top:auto;transform:none;bottom:calc(112px + env(safe-area-inset-bottom));right:16px;width:56px;height:56px}
   .pacer span{font-size:1.5rem}
   .pacer small{font-size:.6rem}
   .pacer.on{width:72px;height:72px}
   .pacer.on span{font-size:2rem}
+  .pacer.p2,.pacer.p2.on{top:auto;bottom:calc(196px + env(safe-area-inset-bottom))}
 }
 /* top: workout stopwatch */
 .sw{position:sticky;top:0;z-index:11;background:var(--card);border-bottom:1px solid var(--line);
@@ -290,7 +293,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   </div>
 </div>
 
-<button type="button" id="pacer" class="pacer" aria-label="إيقاع 3 ثوانٍ"><span id="pacerNum">♩</span><small id="pacerLab">إيقاع</small></button>
+<button type="button" id="pacer" class="pacer" aria-label="إيقاع 3 ثوانٍ"><span id="pacerNum">♩</span><small id="pacerLab">3 ث</small></button>
+<button type="button" id="pacer2" class="pacer p2" aria-label="إيقاع 4 ثوانٍ وتوقف"><span id="pacer2Num">♩</span><small id="pacer2Lab">4 + توقف</small></button>
 
 <aside class="notesPanel" id="notesPanel">
   <div class="np-head"><span>ملاحظات اليوم</span><button type="button" class="np-x" id="panelClose" aria-label="إغلاق">✕</button></div>
@@ -316,7 +320,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
     pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"1. الجسم مستقيم من الرأس إلى الكعب، والمرفقان للخلف قليلًا.\n2. انزل في 3 ثوانٍ (زر ♩): الأرقام 3 ثم 2 ثم 1 نزول، وعند الصفر (الصفّارة) تكون في الأسفل، ثم اصعد.\nالهدف: 12 / 12 / 12 نظيفة.\nالنزول البطيء (3 ثوانٍ) على المجموعات الثلاث كلها الآن، لأن 12/12/12 ثبتت نظيفة."},
-    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول في 3 ثوانٍ",q:"tempo bodyweight squat",tip:"1. انزل في 3 ثوانٍ (زر ♩) حتى تلمس كرسيًا خلفك ولا أعمق.\n2. اثبت ثانية فوق الكرسي، ثم اصعد.\nالهدف: 3 مجموعات من 10 إلى 15 تكرارًا، وابدأ بما تستطيعه (12 مناسب الآن) وارفع تدريجيًا نحو 15. الثبات يرفع الصعوبة."},
+    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول بطيء وتوقف",q:"tempo bodyweight squat",tip:"شغّل زر «4 + توقف».\n1. انزل مع العد 4، 3، 2، 1 حتى تلمس الكرسي.\n2. «قف»: اثبت ثانية.\n3. «↑»: اصعد.\nالهدف: 3 × 15."},
     dbRow:{n:"One-arm Dumbbell Row",ar:"سحب دمبل بذراع واحدة",q:"one arm dumbbell row without bench at home",tip:"1. ضع يدًا وركبة على الأرض أو كرسي ثابت، وظهرك مستقيم موازٍ للأرض، والدمبل بيدك الأخرى مدلّى تحت الكتف.\n2. اسحب المرفق نحو الحوض (لا نحو الكتف)، وابدأ بضم لوح الكتف.\n3. اثبت ثانية في الأعلى، ثم انزل في 3 ثوانٍ (زر ♩).\n4. لا تُدر الجذع ولا ترفع الكتف نحو الأذن.\nالوزن الحالي: 9 كغ (على كل طرف قرص 2 + قرص 1.25). سجل 1 نوفمبر: 7.5 كغ × 12 / 12 لكل ذراع. ارفع الوزن حين تبلغ 12 / 12 بنزول نظيف: 10.5 كغ (قرصان 2 على كل طرف) ثم 12.5 كغ (قرص 5 على كل طرف). شدّ الأقفال النجمية قبل كل مجموعة. ألم الكوع أو الظهر = توقف."},
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"1. افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك.\n2. مِل للخلف وأبقِ جسمك مستقيمًا.\n3. اسحب المرفقين نحو الخصر، وابدأ بضم لوحي الكتف.\n4. اثبت ثانيتين، ثم انزل في 3 ثوانٍ (زر ♩).\nالهدف: 12 / 12 / 12 ثبتت سهلة، فابنِ الآن إلى 15 / 15 / 15، ثم اجعل النزول 4 ثوانٍ. ألم الكوع أو الكتف = توقف."},
     splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"1. ابدأ باليمنى في الأمام، وعددها يحدد عدد اليسرى.\n2. انزل نحو ثلثي المسافة، بلا استناد.\n3. انزل في 3 ثوانٍ (زر ♩).\nالهدف: 8 / 8 بهذا النزول البطيء، ثم 10 / 10. الألم الحاد = توقف."},
@@ -1015,25 +1019,31 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     appendNote(TODAY_DS,names.join(": \n")+": ");
   });
 
-  // Tempo pacer: 3,2,1,0 repeating, one per second, short beep on 0
-  var pacer=document.getElementById("pacer"),pNum=document.getElementById("pacerNum"),pLab=document.getElementById("pacerLab"),pTick=null,pActx=null;
-  function pBeep(){
+  // Tempo pacers. 1: 3,2,1,0 (3-sec descent). 2: 4,3,2,1, stop (pause 1 sec), up.
+  var pActx=null, pacers=[];
+  function pBeep(f){
     try{ if(!pActx) return; var o=pActx.createOscillator(),g=pActx.createGain();
-      o.frequency.value=1046;o.connect(g);g.connect(pActx.destination);
+      o.frequency.value=f||1046;o.connect(g);g.connect(pActx.destination);
       g.gain.setValueAtTime(0.22,pActx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,pActx.currentTime+0.18);
       o.start();o.stop(pActx.currentTime+0.2);}catch(e){}
   }
-  function pShow(n){pNum.textContent=n; pacer.classList.toggle("zero",n===0); if(n===0)pBeep();}
-  pacer.addEventListener("click",function(){
-    if(pTick){clearInterval(pTick);pTick=null;pacer.classList.remove("on","zero");pNum.textContent="♩";pLab.textContent="إيقاع";return;}
-    try{ if(!pActx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)pActx=new AC();} if(pActx&&pActx.state==="suspended")pActx.resume(); }catch(e){}
-    var start=Date.now(); pacer.classList.add("on"); pLab.textContent="إيقاف"; pShow(3);
-    var last=3;
-    pTick=setInterval(function(){
-      var n=3-(Math.floor((Date.now()-start)/1000)%4);
-      if(n!==last){last=n;pShow(n);}
-    },50);
-  });
+  function makePacer(btn,num,lab,seq,idleLab){
+    var tick=null, P={btn:btn};
+    function stop(){ if(!tick) return; clearInterval(tick); tick=null; btn.classList.remove("on","zero"); num.textContent="♩"; lab.textContent=idleLab; }
+    function show(i){ var st=seq[i]; num.textContent=st[0]; btn.classList.toggle("zero",!!st[1]); if(st[1]) pBeep(st[1]); }
+    btn.addEventListener("click",function(){
+      if(tick){ stop(); return; }
+      pacers.forEach(function(o){ if(o!==P) o.stop(); });
+      try{ if(!pActx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)pActx=new AC();} if(pActx&&pActx.state==="suspended")pActx.resume(); }catch(e){}
+      var start=Date.now(), last=0; btn.classList.add("on"); lab.textContent="إيقاف"; show(0);
+      tick=setInterval(function(){ var i=Math.floor((Date.now()-start)/1000)%seq.length; if(i!==last){ last=i; show(i); } },50);
+    });
+    P.stop=stop; pacers.push(P); return P;
+  }
+  var pacer=document.getElementById("pacer");
+  makePacer(pacer,document.getElementById("pacerNum"),document.getElementById("pacerLab"),[["3"],["2"],["1"],["0",1046]],"3 ث");
+  var pacer2=document.getElementById("pacer2");
+  makePacer(pacer2,document.getElementById("pacer2Num"),document.getElementById("pacer2Lab"),[["4"],["3"],["2"],["1"],["قف",880],["↑",1318]],"4 + توقف");
 
   // Keyboard: Space = rest timer, Enter = workout stopwatch, Tab = next empty set
   document.addEventListener("keydown",function(e){
@@ -1055,6 +1065,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     }
     // S = tempo pacer on/off (any keyboard layout)
     if(!inText&&e.code==="KeyS"&&!e.shiftKey){e.preventDefault(); pacer.click(); return;}
+    // D = second pacer (4-sec descent + pause)
+    if(!inText&&e.code==="KeyD"&&!e.shiftKey){e.preventDefault(); pacer2.click(); return;}
     if(e.key==="Tab"&&!e.shiftKey){
       var card=document.getElementById("day-"+tdow); if(!card) return;
       var list=Array.prototype.slice.call(card.querySelectorAll(".sets input")).filter(function(x){return !x.disabled&&!x.value;});
