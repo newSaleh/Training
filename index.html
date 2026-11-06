@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="app-version" content="20261106140045">
+<meta name="app-version" content="20261106160909">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -373,8 +373,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["plank",2,"75 sec","s","c"],["superman",2,"10–15","r","c"]]},
     {name:"Lower Body",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["revCrunch",2,"10–12","r","a"],
-      ["slRdl",2,"6–10 / leg","lr","b"],["slCalf",2,"10–15 / leg","lr","b"],
-      ["splitSquat",2,"5–8 / leg","lr"],["bridge",2,"12–15","r"]]},
+      ["slRdl",2,"10–12 / leg","lr","b"],["slCalf",2,"15 / leg + ثبات 2 ث","lr","b"],
+      ["splitSquat",2,"8–10 / leg","lr"],["bridge",2,"12–15","r"]]},
     {name:"Rest",kind:"rest",items:[]}
   ];
   // أيام الألم المؤقت: تُستبدل تمارين القوة بنسخة بلا ضغط على الركبة (أضف تاريخًا أو احذفه)
@@ -397,7 +397,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EOD=[["steps","Steps","الخطوات (من الآيفون، وأضف +100 لكل دقيقة مشي بفيديو)","خطوة"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
   var EOD_UNIT={steps:"",sleep:""};
   var ROUT_LBL={am:"Morning routine",wk:"Workout",wlk:"Daily walk",post:"Post-workout stretch",flex:"Flexibility session"};
-  var WALKDAY={0:"walkEasy",2:"walkEasy",4:"walkInt",5:"walkEasy",6:"walkInt"};
+  var WALKDAY={4:"walkInt",6:"walkInt"};
   var MEAS=[["belly","Belly","محيط البطن (سم)","سم"," cm"],["toe","Toe-to-floor","المسافة بين أصابعك والأرض في الانحناء (كف)","كف"," palm"]];
 
   // search links (not fixed videos): women-led brisk-walk workouts to rotate between
@@ -599,6 +599,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     if(p.kind!=="train"){ sBody.appendChild(el("div","shd",(p.kind==="rest"?"2":"3")+". جلسة المرونة (15–20 دقيقة)")); routine(sBody,null,"10 حركات، نحو 1.5 دقيقة لكل حركة. شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds,false,true); }
     sPaint();
     if(WALKDAY[dow]) routine(card,WALKDAY[dow]==="walkInt"?"المشي اليومي: فترات (35 دقيقة)":"المشي اليومي: هادئ (30 دقيقة)","في أي وقت من اليوم",[[WALKDAY[dow],WALKDAY[dow]==="walkInt"?"35 min":"30 min"]],pre+"wlk",ds,true);
+    if(p.kind!=="cardio") card.appendChild(el("p","plain stepnote",WALKDAY[dow]
+      ?"لا تستطيع تبديل ملابسك؟ أدِّ الفترات بالثوب بخطوة أسرع، أو امشِ 50–60 دقيقة متصلة (≈ 6000 خطوة) ومجموع اليوم 10000 على الأقل. مرة واحدة في الأسبوع كحد أقصى."
+      :"لا مشي مخصص اليوم. إن كانت خطواتك عند الثامنة مساءً أقل من 6000، فامشِ 20–30 دقيقة قبل النوم. الهدف 8000."));
     if(dow===0){
       var mz=el("div","ex meas mzbox rcol");
       var mzt=el("div","rtitle","القياسات الأسبوعية"); mzt.appendChild(el("span","rchev","▼")); mzt.style.cursor="pointer";
