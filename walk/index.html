@@ -672,10 +672,16 @@
 
   // ---------- presets ----------
   const SEED = [
-    { id: 'std', name: 'قياسي', fast: 3, slow: 3, rounds: 5, warm: 3, cool: 0 },
+    { id: 'std', name: 'قياسي', fast: 3, slow: 3, rounds: 5, warm: 5, cool: 2 },
     { id: 'beg', name: 'مبتدئ', fast: 3, slow: 3, rounds: 3, warm: 3, cool: 0 },
   ];
   let presets = store.get('jw-presets', null) || SEED;
+  // one-time migration: the untouched old 'std' preset (warm 3, cool 0) becomes warm 5, cool 2
+  if (!store.get('jw-mig-std52', false)) {
+    presets.forEach((p) => { if (p.id === 'std' && p.fast === 3 && p.slow === 3 && p.rounds === 5 && p.warm === 3 && p.cool === 0) { p.warm = 5; p.cool = 2; } });
+    store.set('jw-presets', presets);
+    store.set('jw-mig-std52', true);
+  }
   let defaultId = store.get('jw-default', 'std');
   let editPresets = false;
   const pick = (o) => Object.fromEntries(KEYS.map((k) => [k, o[k]]));
@@ -732,6 +738,8 @@
       plan.push({ type: 'fast', dur: cfg.fast * 60, round: cfg.rounds + r });
       plan.push({ type: 'slow', dur: cfg.slow * 60, round: cfg.rounds + r });
     }
+    // cfg.coolExtra = minutes of extra cool-down added when the user resumes a finished session (e.g. walking to the car)
+    if (cfg.coolExtra) plan.push({ type: 'cool', dur: cfg.coolExtra * 60 });
     let t = 0;
     for (const p of plan) { p.start = t; t += p.dur; }
     return { plan, total: t };
@@ -744,7 +752,7 @@
   const planText = (c) => {
     let s = `${c.rounds + (c.extra || 0)} × (${c.fast} د سريع + ${c.slow} د هادئ)`;
     if (c.warm) s += `، تسخين ${c.warm} د`;
-    if (c.cool) s += `، تهدئة ${c.cool} د`;
+    if (c.cool || c.coolExtra) s += `، تهدئة ${(c.cool || 0) + (c.coolExtra || 0)} د`;
     return s;
   };
 
@@ -1065,6 +1073,7 @@
   // ---------- session engine ----------
   // S: { cfg, plan, total, running, startAt, before, skipped, startedAt, recId, idx, lastSec }
   let S = null;
+  const COOL_STEP = 5; // minutes of extra cool-down added each time a finished session is resumed
   let last = null; // the just-finished session, so it can be continued
   let tickT = null;
   const elapsed = () => S.before + (S.running ? (Date.now() - S.startAt) / 1000 : 0);
@@ -1249,7 +1258,7 @@
     if (!last) return;
     initAudio();
     const cfg = { ...last.cfg };
-    if (last.completed) cfg.extra = (cfg.extra || 0) + 1;
+    if (last.completed) cfg.coolExtra = (cfg.coolExtra || 0) + COOL_STEP;
     const state = { cfg, running: true, startAt: Date.now(), before: last.before, skipped: last.skipped, startedAt: last.startedAt, recId: last.recId };
     last = null;
     begin(state, true);
@@ -1266,7 +1275,7 @@
       ? (r.completed ? 'أنهيت الخطة كاملة. سجّل إحساسك بالجهد ثم انسخ البيانات للتقييم.' : 'أوقفت الجلسة مبكرًا، يمكنك متابعتها.')
       : (r.cfg ? planText(r.cfg) : 'أدخل البيانات يدويًا');
     $('continueBtn').hidden = !canContinue;
-    if (canContinue) $('continueBtn').textContent = last.completed ? '+ جولة إضافية' : 'متابعة الجلسة';
+    if (canContinue) $('continueBtn').textContent = last.completed ? `استئناف · تهدئة ${COOL_STEP} د` : 'متابعة الجلسة';
     $('shareBtn').hidden = !navigator.share;
     $('recActions').classList.toggle('single', !navigator.share);
 
