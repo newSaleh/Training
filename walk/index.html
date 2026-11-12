@@ -682,6 +682,12 @@
     store.set('jw-presets', presets);
     store.set('jw-mig-std52', true);
   }
+  // one-time: add the short preset (3 rounds, warm 3, cool 1 = about 22 min) for crowded days
+  if (!store.get('jw-mig-short', false)) {
+    if (!presets.some((p) => p.id === 'short')) presets.push({ id: 'short', name: 'مختصر', fast: 3, slow: 3, rounds: 3, warm: 3, cool: 1 });
+    store.set('jw-presets', presets);
+    store.set('jw-mig-short', true);
+  }
   let defaultId = store.get('jw-default', 'std');
   let editPresets = false;
   const pick = (o) => Object.fromEntries(KEYS.map((k) => [k, o[k]]));
@@ -690,6 +696,8 @@
   const savePresets = () => { store.set('jw-presets', presets); store.set('jw-default', defaultId); };
 
   const settings = pick(defaultPreset() || SEED[0]);
+  // ?p=<preset id> (e.g. walk/?p=short) opens the timer on that preset without changing the default
+  try { const qp = new URLSearchParams(location.search).get('p'); const qpre = qp && presets.find((x) => x.id === qp); if (qpre) Object.assign(settings, pick(qpre)); } catch {}
 
   let soundMode = store.get('jw-sound', 'tones');
   if (soundMode !== 'off') soundMode = 'tones'; // spoken cues were removed

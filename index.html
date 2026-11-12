@@ -97,6 +97,10 @@ input,textarea{font-size:16px}
 .eod.rcol .rchev{transform:rotate(90deg)}
 .wkbox > .rlist > .ex{border-top:1px dashed var(--line)}
 .rdone{height:36px;padding:0 14px;font-size:.85rem}
+.modebar{display:flex;gap:8px;margin:8px 0 4px}
+.modebar button{flex:1;height:38px;font-size:.85rem}
+.modebar button.on{background:var(--accent);color:var(--card)}
+.ar.warn{color:#b3261e;font-weight:600}
 .ck{width:30px;height:30px;min-width:30px;padding:0;margin-inline-end:8px;border-radius:8px;font-size:1rem}
 .ck.on{background:var(--accent);color:var(--card)}
 .rcnt{font-size:.85rem;opacity:.8;margin:2px 0 4px}
@@ -351,8 +355,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     threadNeedle:{n:"Thread the Needle",ar:"تدوير الظهر العلوي",q:"thread the needle stretch",tip:"على يديك وركبتيك، مرّر ذراعًا تحت الأخرى وأنزل الكتف نحو الأرض، ثم افتحها للسقف. 6 إلى 8 مرات لكل جهة."},
     pecStretch:{n:"Doorway Pec Stretch",ar:"إطالة الصدر على إطار الباب",q:"doorway pec stretch",tip:"الساعد على إطار الباب والمرفق بمستوى الكتف، ثم تقدم بخطوة حتى تشعر بالشد في الصدر. لا تدفع حتى الألم في الكتف."},
     wallSlide:{n:"Wall Slides",ar:"رفع الذراعين على الجدار",q:"wall slides shoulder mobility",tip:"ظهرك والرأس على الجدار، والذراعان على الجدار بشكل W، ثم ارفعهما ببطء دون أن يتقوس أسفل الظهر. 8 إلى 10 مرات."},
-    walk:{n:"Brisk Walk",url:"walk/",self:1,ar:"مشي سريع بفترات في الخارج (اضغط الاسم لفتح مؤقت المشي)",q:"japanese interval walking workout",tip:"1. في الخارج، والهاتف في الجيب، بلا هرولة ولا قفز.\n2. 5 دقائق إحماء بإيقاع نحو 110 خطوات في الدقيقة.\n3. 6 جولات: دقيقتان سريعتان (نحو 130 إلى 135 خطوة في الدقيقة) ثم دقيقتان عاديتان (نحو 120). استخدم مؤقت Clock بدقيقتين.\n4. 6 دقائق تهدئة بإيقاع أبطأ تدريجيًا.\n5. الهدف: جهد 6 إلى 7 من 10 في الفترات السريعة (جمل قصيرة فقط). إن بلغ 8 أو أكثر، أو شعرت بثقل واضح في الساقين، فاجعل السريع 125 إلى 130.\n6. اكتب في الملاحظات: الخطوات، والجهد، وهل أتممت الجولات الست، والركبة.\nإن نمت أقل من 7 ساعات في أغلب ليالي الأسبوع فاجعل هذا اليوم مشيًا هادئًا.\nفي الداخل (عند التعذر): فيديو من البدائل، وتُحسب +100 خطوة لكل دقيقة."},
-    walkInt:{n:"Interval Walk",url:"walk/",self:1,ar:"مشي بفترات على طريقة المشي الياباني، 35 دقيقة (اضغط الاسم لفتح مؤقت المشي)",q:"japanese interval walking workout",tip:"1. في الخارج، والهاتف في الجيب، بلا هرولة ولا قفز.\n2. 5 دقائق إحماء بإيقاع نحو 110 خطوات في الدقيقة.\n3. 6 جولات: دقيقتان سريعتان (نحو 130 إلى 135 خطوة في الدقيقة) ثم دقيقتان عاديتان (نحو 120). استخدم مؤقت Clock بدقيقتين.\n4. 6 دقائق تهدئة بإيقاع أبطأ تدريجيًا.\n5. الهدف: جهد 6 إلى 7 من 10 في الفترات السريعة (جمل قصيرة فقط). إن بلغ 8 أو أكثر، أو شعرت بثقل واضح في الساقين، فاجعل السريع 125 إلى 130.\n6. اكتب في الملاحظات: الخطوات، والجهد، وهل أتممت الجولات الست، والركبة.\nإن نمت أقل من 7 ساعات في أغلب ليالي الأسبوع فاجعل هذا اليوم مشيًا هادئًا.\nفي الداخل (عند التعذر): فيديو من البدائل، وتُحسب +100 خطوة لكل دقيقة."},
+    walk:{n:"Brisk Walk",url:"walk/",self:1,ar:"مشي سريع بفترات، نحو 37 دقيقة (اضغط الاسم لفتح مؤقت المشي)",q:"japanese interval walking workout",tip:"1. في الخارج، والهاتف في الجيب، بلا هرولة ولا قفز.\n2. إحماء 5 دقائق بإيقاع نحو 110 إلى 120 خطوة في الدقيقة.\n3. 5 جولات: 3 دقائق سريعة (140 خطوة في الدقيقة فأكثر) ثم 3 دقائق بطيئة (110 إلى 120). استخدم مؤقت الصفحة (اضغط اسم التمرين).\n4. تهدئة دقيقتان بإيقاع أبطأ تدريجيًا. المجموع نحو 37 دقيقة.\n5. الجهد: 6 إلى 7 من 10 في السريع (جمل قصيرة فقط). إن بلغ 8 أو أكثر، أو شعرت بثقل واضح في الساقين، فخفّف السرعة قليلًا.\n6. اكتب في الملاحظات: الخطوات، والجهد، وعدد الجولات، والركبة.\nإن نمت أقل من نحو 6:30 ساعة في الليلة السابقة فاجعلها مشيًا هادئًا.\nفي الداخل (عند التعذر): فيديو من البدائل، وتُحسب +100 خطوة لكل دقيقة."},
+    walkInt:{n:"Interval Walk",url:"walk/",self:1,ar:"مشي بفترات على طريقة المشي الياباني، نحو 37 دقيقة (اضغط الاسم لفتح مؤقت المشي)",q:"japanese interval walking workout",tip:"1. في الخارج، والهاتف في الجيب، بلا هرولة ولا قفز.\n2. إحماء 5 دقائق بإيقاع نحو 110 إلى 120 خطوة في الدقيقة.\n3. 5 جولات: 3 دقائق سريعة (140 خطوة في الدقيقة فأكثر) ثم 3 دقائق بطيئة (110 إلى 120). استخدم مؤقت الصفحة (اضغط اسم التمرين).\n4. تهدئة دقيقتان بإيقاع أبطأ تدريجيًا. المجموع نحو 37 دقيقة.\n5. الجهد: 6 إلى 7 من 10 في السريع (جمل قصيرة فقط). إن بلغ 8 أو أكثر، أو شعرت بثقل واضح في الساقين، فخفّف السرعة قليلًا.\n6. اكتب في الملاحظات: الخطوات، والجهد، وعدد الجولات، والركبة.\nإن نمت أقل من نحو 6:30 ساعة في الليلة السابقة فاجعلها مشيًا هادئًا.\nفي الداخل (عند التعذر): فيديو من البدائل، وتُحسب +100 خطوة لكل دقيقة."},
+    walkShort:{n:"Short Interval Walk",url:"walk/?p=short",self:1,ar:"مشي بفترات مختصر، نحو 22 دقيقة (اضغط الاسم لفتح المؤقت على الإعداد المختصر)",q:"japanese interval walking workout",tip:"نسخة اليوم المزدحم: إحماء 3 دقائق، ثم 3 جولات (3 دقائق سريعة + 3 دقائق بطيئة)، ثم تهدئة دقيقة. المجموع نحو 22 دقيقة.\nالسريع 140 خطوة في الدقيقة فأكثر بجهد 6 إلى 7 من 10، والبطيء 110 إلى 120.\nإن نمت أقل من نحو 6:30 ساعة فاجعلها مشيًا هادئًا 20 دقيقة.\nاكتب في الملاحظات: الخطوات، والجهد، وعدد الجولات، والركبة."},
     walkEasy:{n:"Easy Walk",ar:"مشي هادئ 30 دقيقة (يجوز 15 + 15)",q:"30 minute easy walk outdoors",tip:"30 دقيقة بإيقاع هادئ (نحو 100 إلى 115 خطوة في الدقيقة) بجهد 3 إلى 4 من 10، في الخارج أو بفيديو، ويجوز تقسيمها 15 + 15. في الداخل تُحسب +100 خطوة لكل دقيقة. هذا اليوم فيه تمرين للساقين، فلا فترات."},
     walkDaily:{n:"Walk + Reflection",ar:"مشي هادئ 30 دقيقة خارج البيت مع تأمل (يوميًا)",q:"30 minute walking meditation outdoors",tip:"عادة يومية: 30 دقيقة مشي في الخارج بإيقاع مريح (نحو 100 خطوة في الدقيقة)، مع تأمل أو صوت تحبه. يجوز أن تُقسَّم 15 + 15.\nالأفضل بعد الوجبة الأساسية بنحو 20 إلى 30 دقيقة، وتجنّب حرّ الظهيرة.\nالهاتف في الجيب لتُحسب الخطوات فعليًا. هذا غير مشي الكارديو السريع (الاثنين والأربعاء): هناك الجهد 5 إلى 6 من 10، وهنا جهد خفيف.\nيجوز مشاهدة فيديو في الداخل عند تعذّر الخروج (تُحسب +100 خطوة لكل دقيقة)."},
   };
@@ -364,13 +369,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["dbRow",2,"10–12 / arm","lr","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"10–12","r","c"],["bridge",2,"12–15","r","c"],
       ["revCrunch",2,"10–12","r"]]},
-    {name:"Cardio",kind:"cardio",items:[["walk",1,"35 min","m"]]},
+    {name:"Cardio",kind:"cardio",items:[["walk",1,"37 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
       ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
       ["dbRow",2,"10–12 / arm","lr","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"10–12","r","c"],["bridge",2,"12–15","r","c"],
       ["plank",2,"60–75 sec","s"]]},
-    {name:"Cardio",kind:"cardio",items:[["walk",1,"35 min","m"]]},
+    {name:"Cardio",kind:"cardio",items:[["walk",1,"37 min","m"]]},
     {name:"Upper Body",kind:"train",items:[
       ["pushup",3,"8–12","r","a"],["dbRow",3,"10–12 / arm","lr","a"],
       ["pike",2,"10–12","r","b"],["snowAngel",2,"10–15","r","b"],
@@ -398,6 +403,23 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var FLEX=[["pecStretch","2 sets × 45 sec"],
     ["hamStretch","2 sets × 45 sec / side"],["calfStretch","2 sets × 30 sec / side"],["hipFlexor","2 sets × 45 sec / side"],
     ["butterfly","2 sets × 45 sec"],["figure4","2 sets × 45 sec / side"],["frog","2 sets × 45 sec"]];
+  // Minimum day (<= 30 min, for crowded days). Counts as a done day; max MIN_MAX per week. Extended = the full session above.
+  var MIN_MAX=2;
+  var MIN_MORNING=[["catcow","10"],["wallSlide","10"]];
+  var MIN_ITEMS={
+    "Full Body A":[["pushup",2,"8–12","r"],["tempoSquat",2,"10–15","r"],["dbRow",2,"10–12 / arm","lr"],["plank",2,"60–75 sec","s"]],
+    "Full Body B":[["pushup",2,"8–12","r"],["tempoSquat",2,"10–15","r"],["dbRow",2,"10–12 / arm","lr"],["plank",2,"60–75 sec","s"]],
+    "Upper Body":[["pushup",2,"8–12","r"],["dbRow",2,"10–12 / arm","lr"],["pike",2,"10–12","r"],["plank",2,"60–75 sec","s"]],
+    "Lower Body":[["tempoSquat",2,"10–15","r"],["slRdl",2,"10–12 / leg","lr"],["bridge",2,"12–15","r"],["slCalf",2,"15 / leg + ثبات 2 ث","lr"]],
+    "Cardio":[["walkShort",1,"22 min","m"]]
+  };
+  var MIN_POST={
+    "Full Body A":[["hamStretch","30 sec / side"],["pecStretch","30 sec"]],
+    "Full Body B":[["hamStretch","30 sec / side"],["pecStretch","30 sec"]],
+    "Upper Body":[["pecStretch","45 sec"],["hamStretch","30 sec / side"]],
+    "Lower Body":[["hamStretch","30 sec / side"],["standHip","45 sec / side"]]
+  };
+  var MIN_FLEX=[["hamStretch","45 sec / side"],["calfStretch","30 sec / side"],["hipFlexor","45 sec / side"]];
   var EOD=[["steps","Steps","الخطوات (من الآيفون، وأضف +100 لكل دقيقة مشي بفيديو)","خطوة"],["sleep","Sleep","نوم الليلة الماضية (ساعات:دقائق)","7:30"]];
   var EOD_UNIT={steps:"",sleep:""};
   var ROUT_LBL={am:"Morning routine",wk:"Workout",wlk:"Daily walk",post:"Post-workout stretch",flex:"Flexibility session"};
@@ -437,6 +459,15 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }catch(e){}
 
   function el(tag,cls,txt){var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e;}
+  function isMin(ds){ return load("tr:"+ds+":mode")==="min"; }
+  function dayItems(p,ds){
+    if(p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0) return KNEE_ITEMS;
+    if(isMin(ds)&&MIN_ITEMS[p.name]) return MIN_ITEMS[p.name];
+    return p.items;
+  }
+  var WK_MIN=0;
+  (function(){ var w0=new Date(today); w0.setDate(today.getDate()-tdow+WOFF*7);
+    for(var q=0;q<7;q++){ var dq=new Date(w0); dq.setDate(w0.getDate()+q); if(isMin(iso(dq))) WK_MIN++; } })();
 
   // Arabic-Indic (٠-٩) and Persian (۰-۹) digits -> 0-9; keep digits only
   function normDigits(t,dec,len){
@@ -504,7 +535,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var left=el("div"); left.appendChild(el("span","t",DAY_AR[dow]));
     left.appendChild(el("span","d",date.getDate()+"/"+(date.getMonth()+1)));
     if(isT) left.appendChild(el("span","badge","اليوم"));
-    var right=el("span"); right.appendChild(el("span","tag",p.name)); right.appendChild(el("span","chev","▼"));
+    var min=isMin(ds);
+    var right=el("span"); right.appendChild(el("span","tag",p.name+(min?" · Min":""))); right.appendChild(el("span","chev","▼"));
     head.appendChild(left); head.appendChild(right);
     card.appendChild(head);
     card.classList.add("collapsed");
@@ -513,7 +545,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     // One daily session done in one go: warm-up (morning routine) → workout / cardio → stretch / flexibility
     var sKeys=[pre+"am"]; if(p.kind!=="rest") sKeys.push(pre+"wk"); sKeys.push(p.kind==="train"?pre+"post":pre+"flex");
     var sess=el("div","ex routine wkbox sess rcol"); var sh=el("div","row");
-    var stt=el("div","rtitle",p.kind==="train"?"جلسة اليوم: إحماء ← تمرين ← إطالة":p.kind==="cardio"?"جلسة اليوم: إحماء ← كارديو ← مرونة":"جلسة اليوم: إحماء ← مرونة");
+    var stt=el("div","rtitle",(p.kind==="train"?"جلسة اليوم: إحماء ← تمرين ← إطالة":p.kind==="cardio"?"جلسة اليوم: إحماء ← كارديو ← مرونة":"جلسة اليوم: إحماء ← مرونة")+(min?" (حد أدنى ≤ 30 د)":""));
     stt.appendChild(el("span","rchev","▼")); sh.appendChild(stt); sess.appendChild(sh);
     var sDone=el("button","sec rdone",""); sDone.type="button";
     function sAll(){ return sKeys.every(function(k){ return !!load(k); }); }
@@ -523,14 +555,27 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     stt.addEventListener("click",function(){ sess.classList.toggle("rcol"); setTimeout(function(){ if(typeof growAll==="function") growAll(); },0); });
     var sBody=el("div","rlist"); sess.appendChild(sBody); card.appendChild(sess);
     sess.insertBefore(el("div","ar","جلسة واحدة متصلة: ابدأ مؤقت التمرين مع الإحماء ولا توقفه حتى نهاية الإطالة."),sBody);
-    sBody.appendChild(el("div","shd","1. الإحماء: روتين الصباح (≈ 5 دقائق)"));
-    routine(sBody,null,"",MORNING,pre+"am",ds,false,true);
+    var mbar=el("div","modebar");
+    [["full","موسع (اليوم الطبيعي)"],["min","حد أدنى (≤ 30 د)"]].forEach(function(m){
+      var b=el("button","sec"+((m[0]==="min")===min?" on":""),m[1]); b.type="button";
+      b.addEventListener("click",function(){
+        if((m[0]==="min")===min) return;
+        store(pre+"mode",m[0]==="min"?"min":"");
+        try{ sessionStorage.setItem("ui:open",card.id); }catch(e){}
+        location.reload();
+      });
+      mbar.appendChild(b);
+    });
+    sess.insertBefore(mbar,sBody);
+    sess.insertBefore(el("div","ar"+(WK_MIN>MIN_MAX?" warn":""),"أيام الحد الأدنى هذا الأسبوع: "+WK_MIN+" من "+MIN_MAX+(WK_MIN>MIN_MAX?" — تجاوزت الحد: الموسع هو الأصل، والأدنى للضرورة.":". الحد الأدنى يُحسب يومًا منجزًا، وزيادة الأحمال تُجرَّب في الموسع فقط.")),sBody);
+    sBody.appendChild(el("div","shd",min?"1. الإحماء (≈ 3 دقائق)":"1. الإحماء: روتين الصباح (≈ 5 دقائق)"));
+    routine(sBody,null,"",min?MIN_MORNING:MORNING,pre+"am",ds,false,true);
     var wkBody=sBody;
     if(p.kind!=="rest") sBody.appendChild(el("div","shd",p.kind==="train"?"2. التمرين":"2. الكارديو"));
     if(p.kind==="rest") sBody.appendChild(el("p","plain","يوم راحة من المقاومة: إحماء ثم مرونة، والمشي في بطاقته أدناه."));
 
     var kneeDay=(p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0);
-    var items=kneeDay?KNEE_ITEMS:p.items;
+    var items=dayItems(p,ds);
     if(kneeDay) wkBody.appendChild(el("p","plain","نسخة مؤقتة بلا ضغط على الركبة: حُذفت تمارين الساق، وأُضيف Superman. وتوقف عن أي تمرين يعود معه الوخز."));
     var grp=[];
     function flushGroup(){
@@ -599,10 +644,12 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       WALK_ALT.forEach(function(w){ var a=el("a",null,w[0]); a.href=yt(w[1]); a.target="_blank"; a.rel="noopener"; alt.appendChild(a); });
       wkBody.appendChild(alt);
     }
-    if(p.kind==="train"&&POST[p.name]){ sBody.appendChild(el("div","shd","3. الإطالة بعد التمرين (≈ 5 دقائق)")); routine(sBody,null,"والعضلات دافئة",kneeDay?KNEE_POST:POST[p.name],pre+"post",ds,false,true); }
-    if(p.kind!=="train"){ sBody.appendChild(el("div","shd",(p.kind==="rest"?"2":"3")+". جلسة المرونة (15–20 دقيقة)")); routine(sBody,null,"10 حركات، نحو 1.5 دقيقة لكل حركة. شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds,false,true); }
+    if(p.kind==="train"&&POST[p.name]){ sBody.appendChild(el("div","shd",min&&!kneeDay?"3. الإطالة بعد التمرين (≈ 3 دقائق)":"3. الإطالة بعد التمرين (≈ 5 دقائق)")); routine(sBody,null,"والعضلات دافئة",kneeDay?KNEE_POST:(min&&MIN_POST[p.name]?MIN_POST[p.name]:POST[p.name]),pre+"post",ds,false,true); }
+    if(p.kind!=="train"&&min){ sBody.appendChild(el("div","shd",(p.kind==="rest"?"2":"3")+". مرونة مختصرة (≈ 4 دقائق)")); routine(sBody,null,"3 حركات بشد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد.",MIN_FLEX,pre+"flex",ds,false,true); }
+    else if(p.kind!=="train"){ sBody.appendChild(el("div","shd",(p.kind==="rest"?"2":"3")+". جلسة المرونة (15–20 دقيقة)")); routine(sBody,null,"10 حركات، نحو 1.5 دقيقة لكل حركة. شد متوسط بلا ألم، وتنفس بطيء، ولا ارتداد. علّم كل حركة تنجزها، وسأحاسبك على ما تركته",FLEX,pre+"flex",ds,false,true); }
     sPaint();
-    if(WALKDAY[dow]) routine(card,WALKDAY[dow]==="walkInt"?"المشي اليومي: فترات (35 دقيقة)":"المشي اليومي: هادئ (30 دقيقة)","في أي وقت من اليوم",[[WALKDAY[dow],WALKDAY[dow]==="walkInt"?"35 min":"30 min"]],pre+"wlk",ds,true);
+    if(WALKDAY[dow]){ var wid=WALKDAY[dow]; if(min&&wid==="walkInt") wid="walkShort";
+      routine(card,wid==="walkShort"?"المشي اليومي: فترات مختصرة (≈ 22 دقيقة)":wid==="walkInt"?"المشي اليومي: فترات (≈ 37 دقيقة)":"المشي اليومي: هادئ (30 دقيقة)","في أي وقت من اليوم",[[wid,wid==="walkShort"?"22 min":wid==="walkInt"?"37 min":"30 min"]],pre+"wlk",ds,true); }
     if(p.kind!=="cardio") card.appendChild(el("p","plain stepnote",WALKDAY[dow]
       ?"لا تستطيع تبديل ملابسك؟ أدِّ الفترات بالثوب بخطوة أسرع، أو امشِ 50–60 دقيقة متصلة (≈ 6000 خطوة) ومجموع اليوم 10000 على الأقل. مرة واحدة في الأسبوع كحد أقصى."
       :"لا مشي مخصص اليوم. إن كانت خطواتك عند الثامنة مساءً أقل من 6000، فامشِ 20–30 دقيقة قبل النوم. الهدف 8000."));
@@ -663,6 +710,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
     b.addEventListener("click",function(){ copy(report(ds,dow,p),ok); });
 
+    try{ if(sessionStorage.getItem("ui:open")===card.id){ sessionStorage.removeItem("ui:open"); card.classList.remove("collapsed"); sess.classList.remove("rcol"); } }catch(e){}
     root.appendChild(card);
   });
 
@@ -690,7 +738,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         ck.addEventListener("click",function(){ store(ckKey,load(ckKey)?"":"1"); ckPaint(); paintCnt(); if(typeof snapSoon==="function") snapSoon(); });
         ckPaint(); r.appendChild(ck); }
       nm.appendChild(link(id));
-      if(list===MORNING) nm.setAttribute("data-n",list.indexOf(it)+1);
+      if(list===MORNING||list===MIN_MORNING) nm.setAttribute("data-n",list.indexOf(it)+1);
       if(EX[id].tip){
         var tb=el("button","tipbtn","i"); tb.type="button"; tb.setAttribute("aria-label","ملاحظات التمرين");
         var tip=el("div","tip on",EX[id].tip); tb.classList.add("on");
@@ -714,7 +762,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function report(ds,dow,p){
   var pre="tr:"+ds+":";
   var lines=[DAY_EN[dow]+" "+ds+" — "+p.name];
-      (p.kind==="train"&&KNEE_DATES.indexOf(ds)>=0?KNEE_ITEMS:p.items).forEach(function(it,idx){
+      dayItems(p,ds).forEach(function(it,idx){
         var id=it[0],sets=it[1],type=it[3],k=pre+id+":";
         var unit=type==="s"?" sec":type==="m"?" min":"";
         if(type==="lr"){
@@ -741,6 +789,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var fd=load(pre+"e:food").trim(); if(fd) lines.push("Food:\n"+fd);
       var dur=durationFor(ds); if(dur) lines.push("Duration: "+dur);
       var n=load(pre+"note").trim(); if(n) lines.push("Notes: "+n);
+      if(lines.length>1&&isMin(ds)) lines.splice(1,0,"Mode: minimum (<= 30 min)");
       if(lines.length===1) lines.push("(لا نتائج مسجلة)");
       return lines.join("\n");
   }
@@ -812,7 +861,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     var CATS=[["قوة","pushup tempoSquat dbRow doorRow splitSquat pike bridge slBridge slRdl slCalf calf"],
               ["الجذع","revCrunch plank snowAngel superman"],
               ["مرونة وإطالة","wallSlide catcow threadNeedle pecStretch hamStretch calfStretch ddPedal couch butterfly figure4 frog hipFlexor standHip bridgeAm"],
-              ["مشي وفيديوهات","walk walkInt walkEasy warmup lowerVid morningVid morningSearch"]];
+              ["مشي وفيديوهات","walk walkInt walkShort walkEasy warmup lowerVid morningVid morningSearch"]];
     var used={};
     function add(id,lbl){ if(!used[id]) used[id]=[]; if(used[id].indexOf(lbl)<0) used[id].push(lbl); }
     PLAN.forEach(function(p,d){ p.items.forEach(function(it){ add(it[0],DAY_AR[d]); }); if(p.kind==="train"&&POST[p.name]) POST[p.name].forEach(function(it){ add(it[0],DAY_AR[d]+" (بعد التمرين)"); }); if(p.kind!=="train") FLEX.forEach(function(it){ add(it[0],DAY_AR[d]+" (مرونة)"); }); if(WALKDAY[d]) add(WALKDAY[d],DAY_AR[d]); });
