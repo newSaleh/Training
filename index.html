@@ -572,7 +572,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     });
     sess.insertBefore(mbar,sBody);
     var needExt=Math.max(0,EXT_MIN-WK_EXT), warnExt=(WOFF===0&&needExt>0&&WK_LEFT<=needExt);
-    sess.insertBefore(el("div","ar"+(warnExt?" warn":""),"جلسات القوة الموسعة المنجزة هذا الأسبوع: "+WK_EXT+" من "+EXT_MIN+(warnExt?" — ما تبقّى من أيام القوة هذا الأسبوع يجب أن يكون موسعًا.":". الحد الأدنى يُحسب يومًا منجزًا بلا سقف، وزيادة الأحمال تُجرَّب في الموسع فقط.")+" الثوابت اليومية في أي ظرف: بروتين 80 غ فأكثر، سعرات 1500–1900، خطوات 6000 فأكثر."),sBody);
+    sess.insertBefore(el("div","ar"+(warnExt?" warn":""),"جلسات القوة الموسعة المنجزة هذا الأسبوع: "+WK_EXT+" من "+EXT_MIN+(warnExt?" — ما تبقّى من أيام القوة هذا الأسبوع يجب أن يكون موسعًا.":". الحد الأدنى يُحسب يومًا منجزًا بلا سقف، وزيادة الأحمال تُجرَّب في الموسع فقط.")+" الثوابت اليومية في أي ظرف: بروتين 80 غ فأكثر، سعرات 1900–2300، خطوات 6000 فأكثر."),sBody);
     sBody.appendChild(el("div","shd",min?"1. الإحماء (≈ 3 دقائق)":"1. الإحماء: روتين الصباح (≈ 5 دقائق)"));
     routine(sBody,null,"",min?MIN_MORNING:MORNING,pre+"am",ds,false,true);
     var wkBody=sBody;
