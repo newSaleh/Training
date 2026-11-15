@@ -278,7 +278,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     <summary>قواعد ثابتة</summary>
     <ul>
       <li>ابدأ كل يوم تمرين بالإحماء (Warm-up) الموجود أعلى اليوم.</li>
-      <li>الراحة دقيقة ونصف بعد التمرين المنفرد، ودقيقة واحدة بعد كل مجموعة داخل الزوج المتناوب. يتبدل زر المؤقت تلقائيًا بحسب المجموعة التي تسجلها.</li>
+      <li>الراحة دقيقة ونصف بعد التمرين المنفرد، ودقيقة واحدة بعد كل مجموعة داخل الزوج المتناوب. وفي الحد الأدنى 45 ثانية بعد كل مجموعة، والتمارين فيه أزواج متناوبة أيضًا. يتبدل زر المؤقت تلقائيًا بحسب المجموعة التي تسجلها.</li>
       <li>في الأزواج: مجموعة من التمرين الأول ثم مجموعة من الثاني، وهكذا. فإن اختل التكنيك أو ضاق نفَسك فأطل الراحة.</li>
       <li>Space يبدأ المؤقت أو يوقفه مؤقتًا ثم يستأنفه، وEsc يوقفه ويعيده إلى البداية.</li>
       <li>أنهِ كل مجموعة وأنت قادر على 1 إلى 3 تكرارات إضافية، فلا تصل إلى الفشل.</li>
@@ -407,10 +407,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EXT_MIN=2;
   var MIN_MORNING=[["catcow","10"],["wallSlide","10"]];
   var MIN_ITEMS={
-    "Full Body A":[["pushup",2,"8–12","r"],["tempoSquat",2,"10–15","r"],["dbRow",2,"10–12 / arm","lr"],["plank",2,"60–75 sec","s"]],
-    "Full Body B":[["pushup",2,"8–12","r"],["tempoSquat",2,"10–15","r"],["dbRow",2,"10–12 / arm","lr"],["plank",2,"60–75 sec","s"]],
-    "Upper Body":[["pushup",2,"8–12","r"],["dbRow",2,"10–12 / arm","lr"],["pike",2,"10–12","r"],["plank",2,"60–75 sec","s"]],
-    "Lower Body":[["tempoSquat",2,"10–15","r"],["slRdl",2,"10–12 / leg","lr"],["bridge",2,"12–15","r"],["slCalf",2,"15 / leg + ثبات 2 ث","lr"]],
+    "Full Body A":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–15","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
+    "Full Body B":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–15","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
+    "Upper Body":[["pushup",2,"8–12","r","a"],["dbRow",2,"10–12 / arm","lr","a"],["pike",2,"10–12","r","b"],["plank",2,"60–75 sec","s","b"]],
+    "Lower Body":[["tempoSquat",2,"10–15","r","a"],["bridge",2,"12–15","r","a"],["slRdl",2,"10–12 / leg","lr","b"],["slCalf",2,"15 / leg + ثبات 2 ث","lr","b"]],
     "Cardio":[["walkShort",1,"22 min","m"]]
   };
   var MIN_POST={
@@ -592,7 +592,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       var prevPid=idx>0?(items[idx-1][4]||""):"";
       var nextPid=idx+1<items.length?(items[idx+1][4]||""):"";
       var ex=el("div","ex"+(pid?" paired":""));
-      if(pid&&pid!==prevPid) ex.appendChild(el("div","pairlbl","زوج متناوب: مجموعة من كل تمرين بالتناوب، وراحة 1:00 بعد كل مجموعة"));
+      if(pid&&pid!==prevPid) ex.appendChild(el("div","pairlbl","زوج متناوب: مجموعة من كل تمرين بالتناوب، وراحة "+(min?"0:45":"1:00")+" بعد كل مجموعة"));
       var r=el("div","row"); var nm=el("div","name"); nm.appendChild(link(id)); r.appendChild(nm);
       var tipBox=null;
       if(EX[id].tip){
@@ -619,7 +619,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         var by={L:[],R:[]};
         ["L","R"].forEach(function(s){
           var row=el("div","sets"); row.appendChild(el("span","side",s));
-          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(pid){inp.dataset.pair="1"; inp.dataset.pid=pid;} by[s].push(inp); row.appendChild(inp);}
+          for(var i=1;i<=sets;i++){var inp=input(k+s+i,"#"+i,rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(min) inp.dataset.min="1"; if(pid){inp.dataset.pair="1"; inp.dataset.pid=pid;} by[s].push(inp); row.appendChild(inp);}
           ex.appendChild(row);
         });
         seqs=[by.L,by.R];
@@ -628,7 +628,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         var row=el("div","sets");
         if(type==="s") row.appendChild(el("span","side","sec"));
         if(type==="m") row.appendChild(el("span","side","min"));
-        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(pid){inp.dataset.pair="1"; inp.dataset.pid=pid;} seq.push(inp); units.push([inp]); row.appendChild(inp);}
+        for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(min) inp.dataset.min="1"; if(pid){inp.dataset.pair="1"; inp.dataset.pid=pid;} seq.push(inp); units.push([inp]); row.appendChild(inp);}
         ex.appendChild(row);
         seqs=[seq];
       }
@@ -1148,8 +1148,8 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
 
   // Rest timer: one button = start / pause / resume
   var tEl=document.getElementById("timer"),clock=document.getElementById("clock"),tlab=document.getElementById("tlab");
-  var tBtn=tEl.querySelector("button[data-sec]"),REST_SOLO=parseInt(tBtn.getAttribute("data-sec"),10)*1000,REST_PAIR=60000;
-  var REST=REST_SOLO; // current preset: 1:30 for a single exercise, 1:00 inside an alternating pair
+  var tBtn=tEl.querySelector("button[data-sec]"),REST_SOLO=parseInt(tBtn.getAttribute("data-sec"),10)*1000,REST_PAIR=60000,REST_MIN=45000;
+  var REST=REST_SOLO; // current preset: 1:30 single exercise, 1:00 inside an alternating pair, 0:45 on a minimum day
   var endAt=0,tick=null,actx=null,remain=0,state="idle"; // idle | run | pause
   function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+pad(s%60);}
   function beep(){
@@ -1188,10 +1188,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   });
   document.getElementById("tstop").addEventListener("click",function(){setIdle(false);});
   setIdle(false);
-  // The preset follows the set you are logging: inside an alternating pair = 1:00, otherwise 1:30
+  // The preset follows the set you are logging: minimum day = 0:45, inside an alternating pair = 1:00, otherwise 1:30
   function pickRest(e){
     var t=e.target; if(!t||!t.matches||!t.matches(".sets input")) return;
-    var ms=t.dataset.pair?REST_PAIR:REST_SOLO; if(ms===REST) return;
+    var ms=t.dataset.min?REST_MIN:t.dataset.pair?REST_PAIR:REST_SOLO; if(ms===REST) return;
     REST=ms; if(state==="idle") setIdle(tEl.classList.contains("done"));
   }
   document.addEventListener("focusin",pickRest);
