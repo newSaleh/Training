@@ -73,6 +73,12 @@ input,textarea{font-size:16px}
 .sets input.over{background:#c2410c;color:#fff}
 .sets{position:relative}
 .ex.paired{border-inline-end:3px solid var(--accent-soft)}
+/* plank countdown timer (seconds chosen by the user) */
+.pltimer{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.pltimer .plsec{width:54px;height:44px;padding:0 4px;text-align:center;font-size:17px;border:0;border-radius:10px;background:var(--field);color:var(--ink);-webkit-appearance:none;appearance:none}
+.pltimer .plbtn{height:44px;padding:0 14px;border:0;border-radius:10px;background:var(--accent);color:var(--card);font-size:15px;font-weight:600}
+.pltimer.on .plbtn{background:var(--danger)}
+.pltimer .plclk{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:70px;text-align:center}
 .rtitle{font-weight:600;font-size:.95rem}
 .wnav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .wnav button{height:40px;padding:0 12px;font-size:.82rem;white-space:nowrap}
@@ -495,6 +501,51 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   }
   function rangeMax(t){var m=String(t).match(/–\s*(\d+)/); return m?parseInt(m[1],10):0;}
 
+  // Plank countdown: the user types the seconds (remembered on this device), 3-sec get-ready, beeps in the last 3 sec,
+  // and on finishing it writes the seconds into the next empty Plank set.
+  var plActx=null;
+  function plBeep(f,d){ d=d||0.2; try{ if(!plActx) return; var o=plActx.createOscillator(),g=plActx.createGain();
+    o.frequency.value=f; o.connect(g); g.connect(plActx.destination);
+    g.gain.setValueAtTime(0.25,plActx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,plActx.currentTime+d);
+    o.start(); o.stop(plActx.currentTime+d+0.02);}catch(e){} }
+  function plankTimer(inps){
+    var box=el("div","pltimer");
+    var sec=el("input","plsec"); sec.type="text"; sec.inputMode="numeric"; sec.autocomplete="off";
+    sec.value=load("ui:plankSec")||"75"; sec.setAttribute("aria-label","مدة البلانك بالثواني");
+    var btn=el("button","plbtn","▶ ابدأ"); btn.type="button";
+    var clk=el("span","plclk","");
+    box.appendChild(el("span","side","مؤقت")); box.appendChild(sec); box.appendChild(el("span","side","ث"));
+    box.appendChild(btn); box.appendChild(clk);
+    var tick=null,lock=null;
+    function fmtS(x){ return Math.floor(x/60)+":"+("0"+(x%60)).slice(-2); }
+    function stop(msg){ clearInterval(tick); tick=null; btn.textContent="▶ ابدأ"; box.classList.remove("on"); clk.textContent=msg||"";
+      try{ if(lock){ lock.release(); lock=null; } }catch(e){} }
+    sec.addEventListener("input",function(){ var v=normDigits(sec.value).replace(/[^0-9]/g,"").slice(0,3); sec.value=v;
+      if(v) try{ localStorage.setItem("ui:plankSec",v); }catch(e){} });
+    btn.addEventListener("click",function(){
+      if(tick){ stop(); return; }
+      var total=parseInt(sec.value,10); if(!total||total<5){ sec.focus(); return; }
+      try{ if(!plActx){var AC=window.AudioContext||window.webkitAudioContext; if(AC)plActx=new AC();} if(plActx&&plActx.state==="suspended")plActx.resume(); }catch(e){}
+      try{ if(navigator.wakeLock) navigator.wakeLock.request("screen").then(function(w){ lock=w; }).catch(function(){}); }catch(e){}
+      var ready=Date.now()+3000, end=ready+total*1000, last=-1, holding=false;
+      btn.textContent="■ إيقاف"; box.classList.add("on");
+      tick=setInterval(function(){
+        var now=Date.now();
+        if(now<ready){ var r=Math.ceil((ready-now)/1000); if(r!==last){ last=r; plBeep(660); clk.textContent="استعد "+r; } return; }
+        if(!holding){ holding=true; last=-1; plBeep(1046,0.3); }
+        var left=Math.ceil((end-now)/1000);
+        if(left<=0){
+          stop("✓ "+total+" ث"); plBeep(1318,0.6);
+          try{ if(navigator.vibrate) navigator.vibrate([300,100,300]); }catch(e){}
+          for(var i=0;i<inps.length;i++){ var x=inps[i]; if(!x.value&&!x.disabled){ x.value=String(total); x.dispatchEvent(new Event("input",{bubbles:true})); break; } }
+          return;
+        }
+        if(left!==last){ last=left; if(left<=3) plBeep(880); clk.textContent=fmtS(left); }
+      },100);
+    });
+    return box;
+  }
+
   function link(id){
     var a=el("a",null,EX[id].n); a.href=EX[id].url||yt(EX[id].q);
     if(!EX[id].self){ a.target="_blank"; a.rel="noopener"; }
@@ -630,6 +681,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
         if(type==="m") row.appendChild(el("span","side","min"));
         for(var i=1;i<=sets;i++){var inp=input(k+i,type==="m"?"":"#"+i,type==="m"?0:rangeMax(tgt)); inp.dataset.ex=EX[id].n; if(min) inp.dataset.min="1"; if(pid){inp.dataset.pair="1"; inp.dataset.pid=pid;} seq.push(inp); units.push([inp]); row.appendChild(inp);}
         ex.appendChild(row);
+        if(id==="plank") ex.appendChild(plankTimer(seq));
         seqs=[seq];
       }
       seqs.forEach(function(q){
