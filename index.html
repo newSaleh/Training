@@ -330,7 +330,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EX={
     warmup:{n:"Warm-up (5 min)",ar:"إحماء",q:"5 minute full body warm up no equipment"},
     pushup:{n:"Push-up",ar:"الضغط",q:"push up proper form beginner",tip:"1. الجسم مستقيم من الرأس إلى الكعب، والمرفقان للخلف قليلًا.\n2. انزل في 3 ثوانٍ (زر ♩): الأرقام 3 ثم 2 ثم 1 نزول، وعند الصفر (الصفّارة) تكون في الأسفل، ثم اصعد.\nالهدف: 12 / 12 / 12 نظيفة.\nالنزول البطيء (3 ثوانٍ) على المجموعات الثلاث كلها الآن، لأن 12/12/12 ثبتت نظيفة."},
-    tempoSquat:{n:"Tempo Squat",ar:"سكوات بنزول بطيء وتوقف",q:"tempo bodyweight squat",tip:"شغّل زر «4 + توقف».\n1. انزل مع العد 4، 3، 2، 1 حتى تلمس الكرسي.\n2. «قف»: اثبت ثانية.\n3. «↑»: اصعد.\nالهدف: 3 × 15."},
+    tempoSquat:{n:"Goblet Tempo Squat",ar:"سكوات بدمبل أمام الصدر، بنزول بطيء وتوقف",q:"goblet squat dumbbell tempo",tip:"أمسك دمبلًا واحدًا (نحو 10 كغ) عموديًا أمام صدرك بكلتا يديك، والمرفقان للأسفل.\nشغّل زر «4 + توقف».\n1. انزل مع العد 4، 3، 2، 1 حتى تلمس الكرسي.\n2. «قف»: اثبت ثانية.\n3. «↑»: اصعد.\nالهدف: 10 إلى 12. إذا بلغت 12 في كل المجموعات بجهد 6 أو أقل فزِد الوزن."},
     dbRow:{n:"One-arm Dumbbell Row",ar:"سحب دمبل بذراع واحدة",q:"one arm dumbbell row without bench at home",tip:"1. ضع يدًا وركبة على الأرض أو كرسي ثابت، وظهرك مستقيم موازٍ للأرض، والدمبل بيدك الأخرى مدلّى تحت الكتف.\n2. اسحب المرفق نحو الحوض (لا نحو الكتف)، وابدأ بضم لوح الكتف.\n3. اثبت ثانية في الأعلى، ثم انزل في 3 ثوانٍ (زر ♩).\n4. لا تُدر الجذع ولا ترفع الكتف نحو الأذن.\nالوزن الحالي: 9 كغ (على كل طرف قرص 2 + قرص 1.25). سجل 1 نوفمبر: 7.5 كغ × 12 / 12 لكل ذراع. ارفع الوزن حين تبلغ 12 / 12 بنزول نظيف: 10.5 كغ (قرصان 2 على كل طرف) ثم 12.5 كغ (قرص 5 على كل طرف). شدّ الأقفال النجمية قبل كل مجموعة. ألم الكوع أو الظهر = توقف."},
     doorRow:{n:"Doorway Row",ar:"سحب على إطار الباب",q:"doorway row exercise",tip:"1. افتح الباب وأمسك المقبضين من الجهتين، وطرف الباب بين قدميك.\n2. مِل للخلف وأبقِ جسمك مستقيمًا.\n3. اسحب المرفقين نحو الخصر، وابدأ بضم لوحي الكتف.\n4. اثبت ثانيتين، ثم انزل في 3 ثوانٍ (زر ♩).\nالهدف: 12 / 12 / 12 ثبتت سهلة، فابنِ الآن إلى 15 / 15 / 15، ثم اجعل النزول 4 ثوانٍ. ألم الكوع أو الكتف = توقف."},
     splitSquat:{n:"Assisted Split Squat",ar:"طعن ثابت مع الاستناد على الجدار",q:"assisted split squat beginner",tip:"1. ابدأ باليمنى في الأمام، وعددها يحدد عدد اليسرى.\n2. انزل نحو ثلثي المسافة، بلا استناد.\n3. انزل في 3 ثوانٍ (زر ♩).\nالهدف: 8 / 8 بهذا النزول البطيء، ثم 10 / 10. الألم الحاد = توقف."},
@@ -371,13 +371,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
   var PLAN=[
     {name:"Full Body A",kind:"train",items:[
-      ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–15","r","a"],
+      ["pushup",3,"8–12","r","a"],["tempoSquat",3,"10–12","r","a"],
       ["dbRow",2,"10–12 / arm","lr","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"10–12","r","c"],["bridge",2,"12–15","r","c"],
       ["revCrunch",2,"10–12","r"]]},
     {name:"Cardio",kind:"cardio",items:[["walk",1,"37 min","m"]]},
     {name:"Full Body B",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r","a"],["pushup",3,"8–12","r","a"],
+      ["tempoSquat",3,"10–12","r","a"],["pushup",3,"8–12","r","a"],
       ["dbRow",2,"10–12 / arm","lr","b"],["splitSquat",2,"5–8 / leg","lr","b"],
       ["pike",2,"10–12","r","c"],["bridge",2,"12–15","r","c"],
       ["plank",2,"60–75 sec","s"]]},
@@ -387,7 +387,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       ["pike",2,"10–12","r","b"],["snowAngel",2,"10–15","r","b"],
       ["plank",2,"75 sec","s","c"],["superman",2,"10–15","r","c"]]},
     {name:"Lower Body",kind:"train",items:[
-      ["tempoSquat",3,"10–15","r","a"],["revCrunch",2,"10–12","r","a"],
+      ["tempoSquat",3,"10–12","r","a"],["revCrunch",2,"10–12","r","a"],
       ["slRdl",2,"10–12 / leg","lr","b"],["slCalf",2,"15 / leg + ثبات 2 ث","lr","b"],
       ["splitSquat",2,"8–10 / leg","lr"],["bridge",2,"12–15","r"]]},
     {name:"Rest",kind:"rest",items:[]}
@@ -413,10 +413,10 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   var EXT_MIN=2;
   var MIN_MORNING=[["catcow","10"],["wallSlide","10"]];
   var MIN_ITEMS={
-    "Full Body A":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–15","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
-    "Full Body B":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–15","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
+    "Full Body A":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–12","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
+    "Full Body B":[["pushup",2,"8–12","r","a"],["tempoSquat",2,"10–12","r","a"],["dbRow",2,"10–12 / arm","lr","b"],["plank",2,"60–75 sec","s","b"]],
     "Upper Body":[["pushup",2,"8–12","r","a"],["dbRow",2,"10–12 / arm","lr","a"],["pike",2,"10–12","r","b"],["plank",2,"60–75 sec","s","b"]],
-    "Lower Body":[["tempoSquat",2,"10–15","r","a"],["bridge",2,"12–15","r","a"],["slRdl",2,"10–12 / leg","lr","b"],["slCalf",2,"15 / leg + ثبات 2 ث","lr","b"]],
+    "Lower Body":[["tempoSquat",2,"10–12","r","a"],["bridge",2,"12–15","r","a"],["slRdl",2,"10–12 / leg","lr","b"],["slCalf",2,"15 / leg + ثبات 2 ث","lr","b"]],
     "Cardio":[["walkShort",1,"22 min","m"]]
   };
   var MIN_POST={
