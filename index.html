@@ -58,6 +58,7 @@ h1{font-size:1.25rem;font-weight:600;margin:4px 0 2px;text-align:center;letter-s
 .name a::before{content:"▶ ";font-size:.65em;color:var(--accent);vertical-align:1px}
 .target{font-size:.8rem;color:var(--muted);white-space:nowrap;direction:ltr}
 .ar{font-size:.75rem;color:var(--muted)}
+.goal{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:8px;background:var(--accent);color:var(--card);font-size:.9rem;font-weight:700}
 .walkalt summary{font-weight:500;cursor:pointer;font-size:.9rem}
 .walkalt a{display:block;direction:ltr;text-align:right;padding:6px 0;color:var(--ink);text-decoration:none;border-top:1px dashed var(--line)}
 .walkalt a::before{content:"▶ ";font-size:.65em;color:var(--accent);vertical-align:1px}
@@ -368,6 +369,17 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
     walkDaily:{n:"Walk + Reflection",ar:"مشي هادئ 30 دقيقة خارج البيت مع تأمل (يوميًا)",q:"30 minute walking meditation outdoors",tip:"عادة يومية: 30 دقيقة مشي في الخارج بإيقاع مريح (نحو 100 خطوة في الدقيقة)، مع تأمل أو صوت تحبه. يجوز أن تُقسَّم 15 + 15.\nالأفضل بعد الوجبة الأساسية بنحو 20 إلى 30 دقيقة، وتجنّب حرّ الظهيرة.\nالهاتف في الجيب لتُحسب الخطوات فعليًا. هذا غير مشي الكارديو السريع (الاثنين والأربعاء): هناك الجهد 5 إلى 6 من 10، وهنا جهد خفيف.\nيجوز مشاهدة فيديو في الداخل عند تعذّر الخروج (تُحسب +100 خطوة لكل دقيقة)."},
   };
 
+  // Current goal per exercise: shown highlighted under the exercise name (update here when a load changes)
+  var GOAL={
+    pushup:"13 في كل مجموعة",
+    dbRow:"17.5 كغ × 10–12 لكل ذراع",
+    plank:"80 ثانية (اضبط المؤقت على 80)",
+    tempoSquat:"دمبل ≈ 10.5 كغ × 10–12",
+    pike:"12 بلمس الوسادة",
+    slRdl:"12 لكل ساق",
+    bridge:"15",
+    slCalf:"15 لكل ساق"
+  };
   // type: r = reps, lr = reps per leg, s = seconds, m = minutes
   var PLAN=[
     {name:"Full Body A",kind:"train",items:[
@@ -657,6 +669,7 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       nm.appendChild(nb);
       r.appendChild(el("span","target",sets+" × "+tgt)); ex.appendChild(r);
       ex.appendChild(el("div","ar",EX[id].ar));
+      if(GOAL[id]) ex.appendChild(el("div","goal","الهدف اليوم: "+GOAL[id]));
       (function(){
         var pd=new Date(date); pd.setDate(pd.getDate()-7); var pk="tr:"+iso(pd)+":"+id+":", parts=[];
         if(type==="lr"){ var L=[],R=[]; for(var q=1;q<=sets;q++){ var a1=load(pk+"L"+q),c1=load(pk+"R"+q); if(a1)L.push(a1); if(c1)R.push(c1);} if(L.length||R.length) parts.push("L "+(L.join(" / ")||"-")+" | R "+(R.join(" / ")||"-")); }
