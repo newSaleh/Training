@@ -1276,8 +1276,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
   function foodCnt(){ try{ var c=JSON.parse(localStorage.getItem("ui:foodcnt")||"{}"); return (c&&typeof c==="object"&&!Array.isArray(c))?c:{}; }catch(e){ return {}; } }
   function foodPins(){ try{ var c=JSON.parse(localStorage.getItem("ui:foodpin")||"[]"); return Array.isArray(c)?c:[]; }catch(e){ return []; } }
   function setPins(l){ try{ localStorage.setItem("ui:foodpin",JSON.stringify(l)); }catch(e){} }
-  function saveFoods(list){ try{ var r=recentFoods(), c=foodCnt();
-    list.forEach(function(x){ r=r.filter(function(y){return y!==x;}); r.unshift(x); c[x]=(c[x]||0)+1; });
+  // New items are saved only when the box «احفظ الأصناف الجديدة» is ticked; items already in the list just get counted
+  function saveFoods(list,keepNew){ try{ var r=recentFoods(), c=foodCnt();
+    list.forEach(function(x){ if(!keepNew&&r.indexOf(x)<0) return; r=r.filter(function(y){return y!==x;}); r.unshift(x); c[x]=(c[x]||0)+1; });
     r=r.slice(0,40); var keep={}; r.forEach(function(x){ if(c[x]) keep[x]=c[x]; });
     localStorage.setItem("ui:foods",JSON.stringify(r)); localStorage.setItem("ui:foodcnt",JSON.stringify(keep)); }catch(e){} }
   // الترتيب: المثبّتة يدويًا أولًا (بترتيب تثبيتها)، ثم الأكثر استخدامًا، ثم الأحدث
@@ -1301,6 +1302,9 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       bx.appendChild(el("label",null,"الصنف والكمية (مثل: 4 بيض مسلوق)"));
       var it=document.createElement("input"); it.type="text"; it.id="mealItem"; it.autocomplete="off"; bx.appendChild(it);
       var added=el("div","chips"); added.id="mealAdded"; bx.appendChild(added);
+      var kl=el("label",null); kl.style.cssText="display:flex;align-items:center;gap:8px;color:var(--ink)";
+      var kc=document.createElement("input"); kc.type="checkbox"; kc.id="mealKeepNew"; kc.style.cssText="width:22px;height:22px;flex:none";
+      kl.appendChild(kc); kl.appendChild(document.createTextNode("احفظ الأصناف الجديدة في «أصناف سابقة» (للأكل المتكرر فقط)")); bx.appendChild(kl);
       var gact=el("div","acts"); gact.id="mealGrpActs"; bx.appendChild(gact);
       bx.appendChild(el("label",null,"أصناف سابقة (اضغط للإضافة)"));
       var rec=el("div","chips"); rec.id="mealRecent"; bx.appendChild(rec);
@@ -1322,13 +1326,13 @@ button.link{background:transparent;color:var(--muted);height:auto;padding:8px}
       done.addEventListener("click",function(){
         var v=it.value.trim(); if(v) mealItems.push(v);
         if(!mealItems.length){ it.focus(); return; }
-        saveFoods(mealItems);
+        saveFoods(mealItems,document.getElementById("mealKeepNew").checked);
         var line=timeAr(tm.value||"12:00")+": "+mealItems.join(" + ");
         mealOv.classList.remove("open"); if(mealCb) mealCb(line);
       });
     }
     var n=new Date(); document.getElementById("mealTime").value=pad(n.getHours())+":"+pad(n.getMinutes());
-    document.getElementById("mealItem").value="";
+    document.getElementById("mealItem").value=""; document.getElementById("mealKeepNew").checked=false;
     drawMeal(); mealOv.classList.add("open");
     setTimeout(function(){document.getElementById("mealItem").focus();},50);
   }
